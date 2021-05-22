@@ -1,0 +1,423 @@
+@font-face {
+  font-family: formula1Font;
+  src: url(../fonts/Formula1-Regular.ttf);
+}
+:root {
+  --primary: #d90000;
+  --secondary: #ffe5e3;
+}
+
+body {
+  /*background-color: #ffe5e3;  /*#1D2747;*/
+  color: black;
+  height: auto;
+  cursor: default;
+  font-family: formula1Font;
+}
+
+.body-pattern {
+  background-color: var(--secondary);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='hexagons' fill='%23d90000' fill-opacity='0.18' fill-rule='nonzero'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.body-carousel {
+  width: 99%;
+  animation: background-login-animation 10s;
+  animation-iteration-count: infinite;
+  background-size: cover;
+  background-position: center;
+ /* background-image: url('../images/f1-1.jpeg');*/
+}
+
+@keyframes background-login-animation {
+  0% {background-image: url('../images/f1-1.jpeg');}
+  50% {background-image: url('../images/f1-2.jpeg');}
+  100% {background-image: url('../images/f1-3.jpeg');}
+}
+
+.my-btn-light {
+  background-color: white;
+}
+
+.my-btn-light:hover {
+  background-color: whitesmoke;
+}
+
+
+/* -------------------------
+  Scrollbar
+-------------------------- */
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: lightgrey; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: grey; 
+}
+
+/* ------------------------
+  Card
+--------------------------- */
+
+.card {
+  padding: 0;
+  border: 1px solid black;
+  max-height: 250px;
+/*  min-width: 163px;*/
+}
+
+.card-header {
+  border-bottom: 1px solid black;
+  height: 10vh;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.card-subtitle {
+  font-size: 15px;
+}
+
+.card-body {
+  padding-top: 0;
+}
+
+.card-info {
+  font-size: 14px;
+}
+
+.card-col {
+  margin-bottom: 10px;
+}
+
+.header-img {
+  background-size: cover;
+  width: 35%;
+  height: 10vh;
+  right: 0;
+  top: 0;
+  position: absolute;
+}
+
+.header-img-stable {
+  background-size: cover;
+  width: 5vw;
+  height: 28%;
+  right: 0;
+  top: 20px;
+  position: absolute;
+}
+
+.body-img {
+  background-size: cover;
+  width: 30vw;
+}
+
+/* ---------------------------
+  Mega Driver e Turbo Driver
+------------------------------ */
+
+.md-td-container {
+  text-align: center;
+}
+
+.md-btn, .td-btn {
+  width: 45%;
+  margin: auto;
+  border-radius: 5px;
+}
+
+.md-btn {
+  border: 1px solid rgb(255,215,0);
+}
+
+.mega-driver {
+  background-color: gold;
+  color: #212529;
+}
+
+.td-btn {
+  border: 1px solid red;
+}
+
+.turbo-driver {
+  background-color: rgb(153 3 3);
+  /*background-color: red;*/
+}
+
+
+@media screen and (max-width: 992px) {
+  
+}
+
+@media screen and (min-width: 992px) {
+  .md-btn:hover {
+    background-color: rgb(255,215,0, 0.4);
+    cursor: pointer;
+  }
+  
+  .td-btn:hover {
+    background-color: rgb(255,0,0, 0.4);
+    cursor: pointer;
+  }
+}
+
+/* ------------------------
+  Squadra e classifica
+--------------------------- */
+
+.header {
+  border-bottom: 2px solid grey;
+  margin: 10px 0;
+}
+
+.team-name {
+  cursor: pointer;
+}
+
+.footer {
+  border-top: 2px solid grey;
+  margin: 10px 0;
+}
+
+.footer > div {
+  margin-left: 3px;
+}
+
+.main-container {
+  background-color: white;
+  border-radius: 10px;
+  border: 2px solid grey;
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+
+
+/* -------------------------
+  Login
+-------------------------- */
+
+.login-container {
+  width: 90%;
+  max-width: 500px;
+  margin: 10px auto;
+  line-height: 6vh;
+}
+
+.login-btn {
+  margin-top: 30px;
+}
+
+.carousel-inner > .carousel-item {
+  min-height: 930px;
+  background-size: cover;
+  background-position: center center;
+}
+
+.login-outer-container {
+  border-right: 2px solid grey;
+  padding-right: 0;
+  z-index: 1;
+}
+
+.carousel-item {
+  background-size: cover;
+}
+
+/* -------------------------
+  Classifica
+--------------------------- */
+
+.charts-row > .team-name {
+  cursor: default;
+}
+
+.rank-container {
+  padding: 10px;
+  min-height: 305px;
+}
+
+.table {
+  margin-bottom: 0px;
+  text-align: center;
+  border-bottom: white;
+  width: 100%;
+}
+
+tr td:last-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.table-wrapper {
+  max-height: 562px;
+  overflow: auto;
+  display:inline-block;
+}
+
+.cell-wrapper {
+  max-width: 2  00px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+table.table tbody tr td,
+table.table thead tr th,
+table.table thead {
+  border-left: 1px solid rgb(222, 226, 230);
+  border-right: 1px solid rgb(222, 226, 230);
+}
+
+.charts-row-1 {background-color: gold;}
+
+.charts-row-1 > th {background-color: gold;}
+
+.charts-row-2 {
+  background-color: silver;
+}
+
+.charts-row-3 {
+  background-color: #cd7f32;
+}
+
+.my-tab-pane {
+  padding: 5px;
+  border-bottom: 1px solid rgb(222, 226, 230);
+  border-right: 1px solid  rgb(222, 226, 230);
+  border-left: 1px solid  rgb(222, 226, 230);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  min-height: 176px;
+}
+
+.my-driver-row {
+  color: #d90000;
+}
+
+/* -----------------
+  Stats
+------------------ */
+.offcanvas-subtitle {
+  margin-top: 20px;
+}
+
+.offcanvas-text {
+  margin: 5px 0;
+  padding-left: 1rem;
+}
+
+.position-text {
+  font-size: xx-large;
+}
+
+.dropdown-stats {
+  border: none;
+  background-color: inherit;
+  padding: 0;
+}
+
+.personal-data-col, .championship-data-col {
+  line-height: 27px;
+}
+
+@media screen and (max-width: 992px) {
+  .livery-image-container {
+    max-height: 120px;
+    height: 200px;
+    width: auto;
+  }
+
+  .livery-image-div {
+    background-size: cover;
+    /*height: 12vh;*/
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .livery-image-container {
+    height: 200px;
+    width: auto;
+  }
+
+  .livery-image-div {
+    background-size: cover;
+    /*height: 15vh;
+    width: 75%;*/
+  }
+}
+
+
+.flag-icon {
+  height: 20px;
+  border-radius: 10px;
+  border: 1px solid black;
+  margin-left: 5px;
+}
+
+.cell-sizing {
+  width: 16%;
+  min-width: 115px;
+}
+
+.sticky-col {
+  position: sticky;
+  left: -130px;
+  background-color: white;
+}
+
+.td-color { color: red }
+.md-color { color: gold }
+
+
+/* -----------------
+  Graph
+----------------- */
+/*
+.stats-container {
+  //border: 1px solid black;
+  //min-height: 80vh;
+  padding: 2rem;
+  padding-top: 1rem;
+}
+
+.stats-legend {
+  margin-bottom: 10px;
+  min-width: 212px;
+}
+
+.stats-graph {
+  background-color: whitesmoke;
+  min-width: 600px;
+  
+}
+
+@media screen and (max-width: 992px) {
+  .stats-graph {
+    height: 40vh;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .stats-graph {
+    height: 60vh;
+  }
+}*/

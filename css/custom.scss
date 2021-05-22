@@ -1,0 +1,16 @@
+$theme-colors: (
+  "primary": #d90000,
+  "secondary" :#ffe5e3
+);
+
+$container-max-widths: (
+        sm: 540px,
+        md: 720px,
+        lg: 1140px,
+        xl: 1320px,
+        xxl: 1560px
+);
+
+$carousel-transition-duration: 1s;
+
+@import "../node_modules/bootstrap/scss/bootstrap";
