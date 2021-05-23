@@ -1,0 +1,7 @@
+# Protect the htaccess file
+<Files .htaccess>
+Order Allow,Deny
+Deny from all
+</Files>
+
+ErrorDocument 404 /Programmi/Fanta/404.html
