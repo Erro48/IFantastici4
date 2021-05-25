@@ -1,4 +1,14 @@
 <?php
+$_LIVERY = ['Mercedes' => '#00d2be',
+            'Red Bull' => '#0600ef',
+            'McLaren' => '#ff8700',
+            'Ferrari' => '#dc0000',
+            'Aston Martin' => '#006F62',
+            'Alpine' => '#0090FF',
+            'AlphaTauri' => '#2B4562',
+            'Alfa Romeo' => '#900000',
+            'Williams' => '#005AFF',
+            'Haas' => '#FFFFFF'];
 
 // FILE CON FUNZIONI IN PHP
 
@@ -14,18 +24,23 @@ function getUsersId() {
   return $result;
 }
 
-function getDriversInfo() {
+function getDriversInfo($stable_short_name) {
   global $db;
-  $sql = 'SELECT cognome_pilota, nome_pilota, nome_scuderia FROM tpiloti, tscuderie WHERE k_scuderia=id_scuderia ORDER BY id_pilota';
+  if($stable_short_name == true)
+    $sql = 'SELECT id_pilota, cognome_pilota, nome_pilota, nome_breve as "scuderia" FROM tpiloti, tscuderie WHERE k_scuderia=id_scuderia ORDER BY id_pilota';
+  else
+    $sql = 'SELECT id_pilota, cognome_pilota, nome_pilota, nome_scuderia as "scuderia" FROM tpiloti, tscuderie WHERE k_scuderia=id_scuderia ORDER BY id_pilota';
+
   $result = $db->query($sql);
   $drivers = [];
 
   if($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
       array_push($drivers, array(
+        "id_pilota" => $row['id_pilota'],
         "cognome_pilota" => $row['cognome_pilota'],
         "nome_pilota" => $row['nome_pilota'],
-        "nome_scuderia" => $row['nome_scuderia']
+        "nome_scuderia" => $row['scuderia']
       ));
     }
   }
@@ -36,13 +51,14 @@ function getDriversInfo() {
 
 function getStablesInfo() {
   global $db;
-  $sql = 'SELECT nome_scuderia, nome_breve FROM tscuderie ORDER BY id_scuderia';
+  $sql = 'SELECT id_scuderia, nome_scuderia, nome_breve FROM tscuderie ORDER BY id_scuderia';
   $result = $db->query($sql);
   $stables = [];
 
   if($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
       array_push($stables, array(
+        "id_scuderia" => $row['id_scuderia'],
         "nome_scuderia" => $row['nome_scuderia'],
         "nome_breve" => $row['nome_breve']
       ));

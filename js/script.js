@@ -540,6 +540,19 @@ function stringToArray(string) {
   return string.split(",");
 }
 
+function setBorder(id, elem) {
+  console.log("ciao");
+  elem.setAttribute('border-left', '3px solid '+getLiveryByDriverId(id));
+}
+
+function getLiveryByDriverId(driver_id) {
+  return livery[Math.ceil(driver_id/2)];
+}
+
+function getLiveryByStableId(stable_id) {
+  return livery[stable_id-1];
+}
+
 
 /* |>--- | TIME FUNCTIONS | --------------------<| */
 

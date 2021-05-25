@@ -126,7 +126,7 @@
                       <tbody class="tbody">
                       <?php
                         
-                        echo '<script>createDriversChart('.getDriversInfo().');</script>';
+                        echo '<script>createDriversChart('.getDriversInfo(false).');</script>';
                       ?>
                       </tbody>
                   </table>
