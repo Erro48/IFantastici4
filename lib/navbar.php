@@ -118,7 +118,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-        <button type="button" class="btn btn-primary">Carica</button>
+        <button type="button" class="btn btn-primary" onclick="loadScore()">Carica</button>
       </div>
     </div>
   </div>
