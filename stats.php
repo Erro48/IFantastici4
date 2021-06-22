@@ -42,7 +42,7 @@
             <ul class="nav nav-tabs" id="myTab" role="tablist">
 
               <?php
-              $drivers_surname = getDriversByTeamIdToString($_SESSION['id_squadra']);
+              $drivers_surname = getDriversByTeamIdToString($_SESSION['id_squadra'], 1, 1);
               $stable_short_name = getStableByTeamIdToString($_SESSION['id_squadra']);
 
               for($i = 0; $i < count($drivers_surname); $i++) {

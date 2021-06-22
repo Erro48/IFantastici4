@@ -188,7 +188,7 @@
             <div class="row row-cols-1 row-cols-md-3 g-4 text-dark cards-deck d-flex justify-content-center">
 
               <?php
-              $drivers = getDriversByTeamId($_SESSION['id_squadra']);
+              $drivers = getDriversByTeamId($_SESSION['id_squadra'], 1, 1);
               $turbo_mega_driver = getTurboAndMegaDriverByTeamId($_SESSION['id_squadra']);
               $count = 0;
 

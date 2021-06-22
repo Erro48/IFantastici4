@@ -87,16 +87,16 @@ function getTeamInfoByUserId($user_id) {
 }
 
 // get by team id
-function getDriversByTeamId($team_id) {
+function getDriversByTeamId($team_id, $active, $champ){
   global $db;
-  $sql = 'SELECT cognome_pilota, nome_pilota, T.id_pilota, prezzo_base FROM tpiloti T, rpossiede P WHERE T.id_pilota=P.id_pilota AND P.id_squadra='.$team_id.' ORDER BY T.id_pilota';
+  $sql = 'SELECT cognome_pilota, nome_pilota, T.id_pilota, prezzo_base FROM tpiloti T, rpossiede P WHERE T.id_pilota=P.id_pilota AND P.id_squadra='.$team_id.' AND P.attivo='.$active.' AND P.campionato_corrente='.$champ.' ORDER BY T.id_pilota';
   $result = $db->query($sql);
 
   return $result;
 }
 
-function getDriversByTeamIdToString($team_id) {
-  $result = getDriversByTeamId($team_id);
+function getDriversByTeamIdToString($team_id, $active, $champ) {
+  $result = getDriversByTeamId($team_id, $active, $champ);
   $drivers = [];
 
   if($result->num_rows > 0) {
