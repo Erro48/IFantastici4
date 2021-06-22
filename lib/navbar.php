@@ -1,5 +1,12 @@
 <!-- Navbar -->
 
+<?php
+  if(isset($_POST['log-out'])){
+    unset($_SESSION['id_utente']);
+    header("Location: ./index.php");
+  }
+ ?>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top" id="navbar">
   <div class="container-fluid">
     <a class="navbar-brand" href="../Fanta/home.php">I Fanta-stici 4</a>
@@ -134,10 +141,3 @@ myModal.addEventListener('shown.bs.modal', function () {
   myInput.focus()
 })
 </script>
-
-<?php
-  if(isset($_POST['log-out'])){
-    unset($_SESSION['id_utente']);
-    header("Location: ./index.php");
-  }
- ?>
