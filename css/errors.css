@@ -1,0 +1,74 @@
+html, body { height: 100% }
+
+.error-container {
+    padding-top: 3rem;
+    height: 100%;
+}
+
+.error {
+    font-size: xx-large;
+}
+
+.error-code {
+    font-size: 13vh;
+    font-weight: bold;
+    display: flex;
+    align-content: space-between;
+    justify-content: center;
+    align-items: center;
+    color: rgb(48 48 48);
+    height: 4rem;
+    margin-bottom: 0;
+}
+
+.error-tyre {
+    width: 10vh;
+    position: relative;
+    animation: rotation 2s infinite linear;
+}
+
+.error-footer {
+    margin-top: 0;
+    position: relative;
+    /*top: -25px;*/
+    background-color: rgb(48 48 48);
+    border: none;
+    height: 71%;
+    color: #ffe5e3;
+    padding-top: 2rem;
+    border-radius: 10px;
+    /*height: 78%;*/
+}
+
+/* Smartphone */
+@media screen and (max-width: 992px) {
+    .error-footer {
+/*        top: -25px;*/
+        height: 78%;
+    }
+}
+
+@media screen and (min-width: 992px) {
+  .error-footer {
+/*      top: -100px;*/
+      height: 56%;
+  }
+}
+
+.error-string {
+    font-size: x-large;
+}
+
+.error-todo {
+    font-size: large;
+
+}
+
+@keyframes rotation {
+    from {
+      transform: rotate(359deg);
+    }
+    to {
+      transform: rotate(0deg);
+    }
+  }
