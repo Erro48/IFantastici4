@@ -5,3 +5,5 @@ Deny from all
 </Files>
 
 ErrorDocument 404 /Programmi/Fanta/404.html
+
+# DirectoryIndex 403.html
