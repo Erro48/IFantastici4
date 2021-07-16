@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Apr 06, 2021 alle 16:30
+-- Creato il: Lug 16, 2021 alle 10:35
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.3.11
 
@@ -31,34 +31,36 @@ SET time_zone = "+00:00";
 CREATE TABLE `rpossiede` (
   `id_possessione` int(11) NOT NULL,
   `id_squadra` int(11) NOT NULL,
-  `id_pilota` int(11) NOT NULL
+  `id_pilota` int(11) NOT NULL,
+  `attivo` bit(1) NOT NULL DEFAULT b'1',
+  `campionato_corrente` bit(1) NOT NULL DEFAULT b'1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `rpossiede`
 --
 
-INSERT INTO `rpossiede` (`id_possessione`, `id_squadra`, `id_pilota`) VALUES
-(1, 2, 3),
-(2, 2, 14),
-(3, 2, 4),
-(4, 2, 5),
-(5, 2, 11),
-(6, 1, 7),
-(7, 1, 13),
-(8, 1, 6),
-(9, 1, 16),
-(10, 1, 17),
-(11, 3, 1),
-(12, 3, 10),
-(13, 3, 18),
-(14, 3, 12),
-(15, 3, 20),
-(16, 4, 2),
-(17, 4, 8),
-(18, 4, 9),
-(19, 4, 15),
-(20, 4, 19);
+INSERT INTO `rpossiede` (`id_possessione`, `id_squadra`, `id_pilota`, `attivo`, `campionato_corrente`) VALUES
+(1, 2, 3, b'1', b'1'),
+(2, 2, 14, b'1', b'1'),
+(3, 2, 4, b'1', b'1'),
+(4, 2, 5, b'1', b'1'),
+(5, 2, 11, b'1', b'1'),
+(6, 1, 7, b'1', b'1'),
+(7, 1, 13, b'1', b'1'),
+(8, 1, 6, b'1', b'1'),
+(9, 1, 16, b'1', b'1'),
+(10, 1, 17, b'1', b'1'),
+(11, 3, 1, b'1', b'1'),
+(12, 3, 10, b'1', b'1'),
+(13, 3, 18, b'1', b'1'),
+(14, 3, 12, b'1', b'1'),
+(15, 3, 20, b'1', b'1'),
+(16, 4, 2, b'1', b'1'),
+(17, 4, 8, b'1', b'1'),
+(18, 4, 9, b'1', b'1'),
+(19, 4, 15, b'1', b'1'),
+(20, 4, 19, b'1', b'1');
 
 -- --------------------------------------------------------
 
@@ -151,11 +153,10 @@ CREATE TABLE `tsquadre` (
 --
 
 INSERT INTO `tsquadre` (`id_squadra`, `nome_squadra`, `turbo_driver`, `mega_driver`, `mega_driver_flag`, `k_scuderia`) VALUES
-(1, 'Daniele TEAM', 'Gasly', NULL, 0, 1),
-(2, 'Racing Primate', 'Perez', NULL, 0, 5),
+(1, 'Daniele TEAM', 'Norris', NULL, 1, 1),
+(2, 'Racing Primate', 'Perez', NULL, 1, 5),
 (3, 'Jacopo TEAM', 'Ocon', NULL, 0, 2),
-(4, 'Sara TEAM', 'Sainz', NULL, 1, 3),
-(5, 'Team Gay', 'Ocon', NULL, 0, 4);
+(4, 'ST97', 'Sainz', NULL, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -188,7 +189,9 @@ INSERT INTO `tutenti` (`id_utente`, `nome_utente`, `password_utente`, `k_squadra
 -- Indici per le tabelle `rpossiede`
 --
 ALTER TABLE `rpossiede`
-  ADD PRIMARY KEY (`id_possessione`);
+  ADD PRIMARY KEY (`id_possessione`),
+  ADD KEY `rpossiede_ibfk_1` (`id_pilota`),
+  ADD KEY `rpossiede_ibfk_2` (`id_squadra`);
 
 --
 -- Indici per le tabelle `tpiloti`
@@ -228,7 +231,7 @@ ALTER TABLE `tutenti`
 -- AUTO_INCREMENT per la tabella `rpossiede`
 --
 ALTER TABLE `rpossiede`
-  MODIFY `id_possessione` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id_possessione` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT per la tabella `tpiloti`
@@ -252,7 +255,7 @@ ALTER TABLE `tsquadre`
 -- AUTO_INCREMENT per la tabella `tutenti`
 --
 ALTER TABLE `tutenti`
-  MODIFY `id_utente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_utente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Limiti per le tabelle scaricate
