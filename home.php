@@ -4,8 +4,10 @@
     <?php
     session_start();
     include __DIR__."/lib/mysql.php";
+    include __DIR__."/lib/const.php";
     include __DIR__."/lib/functions.php";
 
+    
     if(!isset($_SESSION['id_utente']))
       header("Location: ./index.php");
     ?>

@@ -1,16 +1,42 @@
 <?php
-$_LIVERY = ['Mercedes' => '#00d2be',
-            'Red Bull' => '#0600ef',
-            'McLaren' => '#ff8700',
-            'Ferrari' => '#dc0000',
-            'Aston Martin' => '#006F62',
-            'Alpine' => '#0090FF',
-            'AlphaTauri' => '#2B4562',
-            'Alfa Romeo' => '#900000',
-            'Williams' => '#005AFF',
-            'Haas' => '#FFFFFF'];
-
 // FILE CON FUNZIONI IN PHP
+
+/* -------------------------------------------------
+  GENERAL FUNCTIONS
+----------------------------------------------------- */
+
+
+function today() {
+  return new DateTime("now");
+}
+
+function dateTimeToString($date, $format) {
+  echo $date->format('Y-m-d H:i:s');
+  return $date->format($format);
+}
+
+function stringToDateTime($string) {
+  global $DEFAULT_DATETIME_FORMAT;
+
+  $dateTime = DateTime::createFromFormat($DEFAULT_DATETIME_FORMAT, $string);
+  return $dateTime;
+}
+
+function diffDate($origin, $target) {
+  global $DEFAULT_DATETIME_FORMAT;
+
+  if(is_string($origin)) {
+    $origin = stringToDateTime($origin);
+  }
+
+  if(is_string($target)) {
+    $target = stringToDateTime($target);
+  }
+  
+  $interval = $origin->diff($target);
+  return $interval->format('%R%a');
+}
+
 
 /* -------------------------------------------------
   GETTER
@@ -118,7 +144,15 @@ function getTurboAndMegaDriverByTeamId($team_id) {
 
 function getStableByTeamId($team_id) {
   global $db;
-  $sql = 'SELECT nome_breve, prezzo_base FROM tscuderie S, tsquadre T WHERE k_scuderia=id_scuderia AND id_squadra='.$team_id;
+  //echo stringToDateTime('15/08/2021')->format('d-m-Y');
+  $diff_date = diffDate(today(), stringToDateTime('15/08/2021'));
+
+  if($diff_date > 0)
+    $sql = 'SELECT nome_breve, prezzo_base FROM tscuderie S, tsquadre T WHERE k_scuderia=id_scuderia AND id_squadra='.$team_id;
+  else
+    $sql = 'SELECT nome_breve, prezzo_base FROM tscuderie S, tsquadre T WHERE k_2scuderia=id_scuderia AND id_squadra='.$team_id;
+
+  
   $result = $db->query($sql);
 
   return $result;
