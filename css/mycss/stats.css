@@ -1,0 +1,63 @@
+/* -----------------
+  Stats
+------------------ */
+
+.offcanvas-subtitle { margin-top: 20px; }
+  
+.offcanvas-text {
+    margin: 5px 0;
+    padding-left: 1rem;
+}
+  
+.position-text { font-size: xx-large; }
+  
+.dropdown-stats {
+    border: none;
+    background-color: inherit;
+    padding: 0;
+}
+  
+.personal-data-col, .championship-data-col {
+    line-height: 27px;
+}
+  
+@media screen and (max-width: 992px) {
+    .livery-image-container {
+        max-height: 120px;
+        height: 200px;
+        width: auto;
+    }
+  
+    .livery-image-div {
+        background-size: cover;
+        /*height: 12vh;*/
+        width: 100%;
+    }
+}
+  
+@media screen and (min-width: 992px) {
+    .livery-image-container {
+        height: 200px;
+        width: auto;
+    }
+  
+    .livery-image-div {
+        background-size: cover;
+        /*height: 15vh;
+        width: 75%;*/
+    }
+}
+  
+.cell-sizing {
+    width: 16%;
+    min-width: 115px;
+}
+  
+.sticky-col {
+    position: sticky;
+    left: -130px;
+    background-color: white;
+}
+  
+.td-color { color: red }
+.md-color { color: gold }

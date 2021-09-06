@@ -50,7 +50,7 @@ function setInfoIcon() {
   box.setAttribute('color', '#d90000');
   box.setAttribute('data-bs-toggle', 'tooltip');
   box.setAttribute('data-bs-placement', 'right');
-  box.setAttribute('title', 'Ruota il dispositivo per vedere meglio la tabella');
+  box.setAttribute('title', 'Ruota il dispositivo per vedere meglio');
   box.classList.add("h-100");
   box.classList.add("ms-1");
   box.classList.add("d-md-none");
@@ -60,15 +60,14 @@ function setInfoIcon() {
   container.appendChild(box);
 }
 
-
 /* -------------------------------------------------
   GETTER
 ----------------------------------------------------- */
 
-function getGpByIndex(index, all_rows) {
-  for(let i = 1; i < all_rows.length; i++) {
+function getGpByIndex(index, csv_data) {
+  for(let i = 1; i < csv_data.length; i++) {
     if(i == index) {
-      return all_rows[i].split(",")[0];
+      return csv_data[i][0];
     }
   }
 
@@ -81,11 +80,10 @@ function getGps(date_flag) {
   for(let gp of stringToArray(getCookie("gps"))) {
     date_flag ? gps.push(gp) : gps.push(gp.split("-")[0]);
   }
-
   return gps;
 }
 
-function getTotalPerEachGP(drivers_indexes, all_rows, last_gp_index) {
+function getTotalPerEachGP(drivers_indexes, csv_data, last_gp_index) {
   let total_arr = [];
   let driver_arr = [];
 
@@ -93,9 +91,9 @@ function getTotalPerEachGP(drivers_indexes, all_rows, last_gp_index) {
     driver_arr = [];
     // scorro i gp
     for(let i = 1; i < last_gp_index+1; i++) {
-      let val = parseInt(all_rows[i].split(",")[drivers_indexes[j]]);
+      let val = castScore(csv_data[i][drivers_indexes[j]]);
       if(i > 1) {
-        val += parseInt(driver_arr[i-2]);
+        val += castScore(driver_arr[i-2]);
       }
 
       driver_arr.push(val);
@@ -143,16 +141,36 @@ function getFlagElement(gp_location, position, tooltip_flag) {
   return tag;
 }
 
+function getLastGpTeamScore(drivers_indexes, stable_index) {
+  let score = scoreConverterToArray(getCookie('mod_scores_data'), 31);
+  let last_gp_index = getLastGpIndex(score);
+
+  let total = castScore(score[last_gp_index][castScore(stable_index) + 20]);
+  
+  for(let i = 0; i < drivers_indexes.length; i++) {
+    total += castScore(score[last_gp_index][drivers_indexes[i]]);
+  }
+
+
+  return total;
+}
+
 
 /* |>--- | DRIVERS FUNCTIONS | --------------------<| */
 
-function getPersonalDrivers() {
+function getPersonalDriversFromCards() {
   let arr = [], cards = document.getElementsByClassName('card');
+  
   for(let i = 0; i < 5; i++) {
     arr.push(cards[i].id.split('-')[0]);
   }
 
   return arr;
+}
+
+function getPersonalDrivers() {
+  let team = getCookie('team');
+  return team.split(",").slice(0,5);
 }
 
 function getDriverIndex(driver) {
@@ -176,51 +194,52 @@ function getDriversIndexes(drivers_list) {
   return drivers_indexes;
 }
 
-function getDriversTotalScore(drivers_list, all_rows, last_gp_index) {
+function getDriversTotalScore(drivers_list, csv_data, last_gp_index) {
   let drivers_total = new Array(drivers_list.length).fill(0);
   let drivers_index_list = getDriversIndexes(drivers_list);
 
+  console.log(drivers_list)
+
+
   for(let j = 0; j < drivers_list.length; j++){
     for(let i = 1; i <= last_gp_index; i++){
-      let tmp_val = all_rows[i].split(",")[drivers_index_list[j]];
-      drivers_total[j] += parseInt(tmp_val);
+      let tmp_val = csv_data[i][drivers_index_list[j]];
+      drivers_total[j] += castScore(tmp_val);
     }
-
-    
   }
 
   return drivers_total;
 }
 
-function getDriversLastScore(drivers_list, all_rows, last_gp_index) {
+function getDriversLastScore(drivers_list, csv_data, last_gp_index) {
   let drivers_last = [0, 0, 0, 0, 0];
   let drivers_index_list = getDriversIndexes(drivers_list);
 
   for(let j = 0; j < drivers_list.length; j++){
-    drivers_last[j] = all_rows[last_gp_index].split(",")[drivers_index_list[j]];
+    drivers_last[j] = csv_data[last_gp_index][drivers_index_list[j]];
   }
 
   return drivers_last;
 }
 
-function getDriversPartialPerEachGp(drivers_indexes, all_rows, last_gp_index) {
+function getDriversPartialPerEachGp(drivers_indexes, csv_data, last_gp_index) {
   let partial_results = [];
 
   for(let i = 0; i < drivers_indexes.length; i++) {
     partial_results.push({
       driver: drivers_indexes[i],
-      score: getDriverPartialPerEachGp(drivers_indexes[i], all_rows, last_gp_index)
+      score: getDriverPartialPerEachGp(drivers_indexes[i], csv_data, last_gp_index)
     });
   }
 
   return partial_results;
 }
 
-function getDriverPartialPerEachGp(driver_index, all_rows, last_gp_index) {
+function getDriverPartialPerEachGp(driver_index, csv_data, last_gp_index) {
   let partial_result = [];
 
   for(let i = 1; i <= last_gp_index; i++) {
-    partial_result.push(parseInt(all_rows[i].split(",")[driver_index]));
+    partial_result.push(castScore(csv_data[i][driver_index]));
   }
 
   return partial_result;
@@ -229,8 +248,13 @@ function getDriverPartialPerEachGp(driver_index, all_rows, last_gp_index) {
 
 /* |>--- | STABLES FUNCTIONS | --------------------<| */
 
-function getPersonalStable() {
+function getPersonalStableFromCard() {
   return document.getElementsByClassName('card')[5].id.split('-')[0]
+}
+
+function getPersonalStable() {
+  let team = getCookie('team');
+  return team.split(",")[5];
 }
 
 function getStableIndex(stable) {
@@ -243,37 +267,37 @@ function getStableIndex(stable) {
   return -1;
 }
 
-function getStableTotalScore(stable, all_rows, last_gp_index) {
+function getStableTotalScore(stable, csv_data, last_gp_index) {
   let stable_total = 0;
   let stable_index = getStableIndex(stable);
 
   for(let i = 1; i <= last_gp_index; i++){
-    let tmp_val = all_rows[i].split(",")[20 + stable_index];
-    stable_total += parseInt(tmp_val);
+    let tmp_val = csv_data[i][20 + stable_index];
+    stable_total += castScore(tmp_val);
   }
 
   return stable_total;
 }
 
-function getStablesTotalScore(stable_list, all_rows, last_gp_index) {
+function getStablesTotalScore(stable_list, csv_data, last_gp_index) {
   let arr = [];
   for(let i = 0; i < stable_list.length; i++) {
-    arr.push(getStableTotalScore(stable_list[i], all_rows, last_gp_index));
+    arr.push(getStableTotalScore(stable_list[i], csv_data, last_gp_index));
   }
 
   return arr;
 }
 
-function getStableLastScore(stable, all_rows, last_gp_index) {
+function getStableLastScore(stable, csv_data, last_gp_index) {
   let stable_index = getStableIndex(stable);
-  return all_rows[last_gp_index].split(",")[20 + stable_index];
+  return csv_data[last_gp_index][20 + stable_index];
 }
 
-function getStablePartialPerEachGp(stable_index, all_rows, last_gp_index) {
+function getStablePartialPerEachGp(stable_index, csv_data, last_gp_index) {
   let partial_result = [];
 
   for(let i = 1; i <= last_gp_index; i++) {
-    partial_result.push(parseInt(all_rows[i].split(",")[20 + stable_index]));
+    partial_result.push(castScore(csv_data[i][20 + stable_index]));
   }
 
   return partial_result;
@@ -282,7 +306,7 @@ function getStablePartialPerEachGp(stable_index, all_rows, last_gp_index) {
 
 /* |>--- | PROMISES | --------------------<| */
 
-function getLastGpIndexPromise() {
+/*function getLastGpIndexPromise() {
   return new Promise(function(resolve, reject) {
     $.ajax({
           url: '../Fanta/data/score.csv',
@@ -298,7 +322,33 @@ function getLastGpIndexPromise() {
           resolve(i-1);
         });
   });
+}*/
+
+function getLastGpIndex(csv_data) {
+  let i = 0;
+  //let data = scoreConverterToArray(csv_data);
+  while(csv_data[i][1] != "") { i++; }
+
+  return (i-1);
 }
+
+function scoreConverterToArray(score, row_len) {
+  score = score.split(",");
+  let data = [];
+  
+  let len = score.length/row_len;
+
+  let i = 0;
+  while(i < len - 1) {
+    data.push(score.slice(0, row_len));
+    score = score.slice(row_len);
+
+    i++;
+  }
+
+  return data;
+}
+
 
 function getMegaDriverInfoPromise() {
   return new Promise(function(resolve, reject) {
@@ -316,7 +366,7 @@ function getMegaDriverInfoPromise() {
       });
   });
 }
-
+/*
 function getDriverScorePromise(driver, filename) {
   return new Promise(function(resolve, reject) {
     $.ajax({
@@ -328,11 +378,20 @@ function getDriverScorePromise(driver, filename) {
         let driver_list = all_rows[0].split(",");
         let driver_index = getDriverIndex(driver);
 
+        /*let data_score = getCookie('scores_data');
+        let last_gp_score = data_score[last_gp_index][driver_index];
+
+        resolve(last_gp_score);
+
+        let last_gp_index = getLastGpIndex(getCookie('scores_data'));
+
+
         getLastGpIndexPromise().then(
           function (last_gp_index) {
             let last_gp_score = all_rows[last_gp_index].split(",")[driver_index];
 
-            resolve(parseInt(last_gp_score));
+            console.log(castScore(last_gp_score));
+            resolve(castScore(last_gp_score));
           });
 
         },
@@ -341,6 +400,15 @@ function getDriverScorePromise(driver, filename) {
         }
       });
     });
+}*/
+
+function getDriverScore(driver, gp_index, mode) {
+  let driver_index = getDriverIndex(driver);
+  if(typeof driver_index === 'undefined') return null;
+  
+  let score = mode == 'score' ? scoreConverterToArray(getCookie('scores_data'), 31) : scoreConverterToArray(getCookie('mod_scores_data'), 31);
+  
+  return castScore(score[gp_index][driver_index]);
 }
 
 function getTeamsInfoPromise() {
@@ -359,7 +427,7 @@ function getTeamsInfoPromise() {
     });
   });
 }
-
+/*
 function getLastGpBaseScorePromise() {
   return new Promise(function(resolve, reject) {
     $.ajax({
@@ -368,14 +436,25 @@ function getLastGpBaseScorePromise() {
         }).done(function(response){
           let all_rows = response.split(/\r?\n|\r/);
 
-
-          getLastGpIndexPromise().then(
-            function(last_gp_index) {
-              if(last_gp_index == 0) resolve(null);
-              else resolve(all_rows[last_gp_index]);
-          });
+          let last_gp_index = getLastGpIndex(scoreConverterToArray(getCookie('scores_data')));
+          if(last_gp_index == 0) return null;
+          else return all_rows[last_gp_index];
         });
   });
+}*/
+
+function getLastGpBaseScore() {
+  let score = scoreConverterToArray(getCookie('scores_data'), 31);
+  let last_gp_index = getLastGpIndex(score);
+  if(last_gp_index == 0) return null;
+  else return score[last_gp_index];
+}
+
+function getLastGpModScore() {
+  let score = scoreConverterToArray(getCookie('mod_scores_data'), 31);
+  let last_gp_index = getLastGpIndex(score);
+  if(last_gp_index == 0) return null;
+  else return score[last_gp_index];
 }
 
 function getFileContentPromise(filename) {
@@ -413,12 +492,16 @@ function getDriversAndStableFromTeamIdPromise(team_id) {
 ----------------------------------------------------- */
 
 function sumArray(arr){
-  let tmp = parseInt(arr[0]);
+  let tmp = castScore(arr[0]);
   for(let i = 1; i < arr.length; i++) {
-    tmp += parseInt(arr[i]);
+    tmp += castScore(arr[i]);
   }
 
   return tmp;
+}
+
+function castScore(score) {
+  return parseFloat(score);
 }
 
 function export_csv(arrayHeader, arrayData, delimiter, fileName) {
@@ -455,9 +538,10 @@ function writeRowIn(filename, row, index) {
       else
       arrayData.push(all_rows[i].split(","));
     }
-
+    
     // riscrivo tutto dentro filename
     export_csv(arrayHeader, arrayData, ",", filename);
+    console.log("mod_score.csv aggiornato!");
   });
 
 }
@@ -469,46 +553,75 @@ function loadScore() {
 
   getTeamsInfoPromise().then(
     function(teams_info) {
-      getLastGpBaseScorePromise().then(
+      let score = getLastGpBaseScore();
+      let last_gp_index = getLastGpIndex(scoreConverterToArray(getCookie('scores_data'), 31));
+
+      if(score == null) return;
+
+      let elements = JSON.parse(teams_info);  // squadre
+      let teams_info_obj = [];
+      let new_score = new Array(31);
+
+      new_score[0] = score[0];
+
+      for(let i = 0; i < elements.length; i++) {
+        let team = JSON.parse(elements[i]);
+        teams_info_obj.push(team)
+
+      // inserisce i piloti
+        for(let j = 0; j < team.drivers.length; j++){
+          if(castScore(team.turbo_driver) == castScore(team.drivers[j])) {
+            // turbo driver
+            new_score[team.drivers[j]] = 2*castScore(score[team.drivers[j]]);
+          } else if(castScore(team.mega_driver) == castScore(team.drivers[j])) {
+            // mega driver
+            new_score[team.drivers[j]] = 3*castScore(score[team.drivers[j]]);
+          }else {
+            new_score[team.drivers[j]] = castScore(score[team.drivers[j]]);
+          }
+        }
+      }
+
+      // inserisco le scuderie
+      for(let i = 0; i < 10; i++) {
+        new_score[i+21] = castScore(score[i+21]);
+      }
+
+      writeRowIn("mod_score.csv", new_score, last_gp_index);
+
+//      console.log(teams_info_obj)
+
+      let last_score_JSON = [];
+      for(let i = 0; i < teams_info_obj.length; i++) {
+        let last_score = getLastGpTeamScore(teams_info_obj[i].drivers, teams_info_obj[i].id_scuderia);
+        last_score_JSON.push(JSON.parse('{"id_squadra": "' + teams_info_obj[i].id_squadra + '", "last_score": "' + last_score + '"}'))
+      }
+
+      console.log(last_score_JSON);
+
+      updateTeamsScore(last_score_JSON);
+
+      
+
+/*
+      LastGpBaseScorePromise().then(
         function(score) {
 
-          if(score == null) return;
-
-          let elements = JSON.parse(teams_info);  // squadre
-          let new_score = new Array(31);
-
-          new_score[0] = score.split(",")[0];
-
-          for(let i = 0; i < elements.length; i++) {
-            let team = JSON.parse(elements[i]);
-
-          // inserisce i piloti
-            for(let j = 0; j < team.drivers.length; j++){
-              if(parseInt(team.turbo_driver) == parseInt(team.drivers[j])) {
-                // turbo driver
-                new_score[team.drivers[j]] = 2*parseInt(score.split(",")[team.drivers[j]]);
-              } else if(parseInt(team.mega_driver) == parseInt(team.drivers[j])) {
-                // mega driver
-                new_score[team.drivers[j]] = 3*parseInt(score.split(",")[team.drivers[j]]);
-              }else {
-                new_score[team.drivers[j]] = parseInt(score.split(",")[team.drivers[j]]);
-              }
-            }
-          }
-
-          // inserisco le scuderie
-          for(let i = 0; i < 10; i++) {
-            new_score[i+21] = parseInt(score.split(",")[i+21]);
-          }
-
-          getLastGpIndexPromise().then(
-            function(last_gp_index) {
-              // scrivo in mod_score.csv
-              writeRowIn("mod_score.csv", new_score, last_gp_index);
-            }
-          );
-        });
+          
+        });*/
     });
+}
+
+function updateTeamsScore(last_score) {
+  let today_string = today().getDate() + '/' + (today().getMonth()+1) + '/' +  today().getFullYear();
+  $.ajax({
+    type: 'POST',
+    url: 'http://ifantastici4.redirectme.net:9001/Programmi/Fanta/lib/request.php',
+    data: { update_teams_score: last_score,
+            last_gp_date: getLastGpDate() }
+  }).done(function(response){
+      console.log(response)
+  });
 }
 
 function isCharacterALetter(char) {
@@ -538,6 +651,10 @@ function stringToArray(string) {
     string = string.substring(1, string.length - 1);
   }
   return string.split(",");
+}
+
+function arrayToString() {
+  
 }
 
 function setBorder(id, elem) {
@@ -580,4 +697,12 @@ function diffDate(date1, date2) {
   const diff_days = Math.ceil(diff_time / (1000 * 60 * 60 * 24)) - 1; // -1 perchè le modifiche si fermano a sabato
 
   return diff_days;
+}
+
+
+
+/* |>--- | TMP FUNCTIONS | --------------------<| */
+
+function printOnConsoleTeamHistory(team_id) {
+
 }

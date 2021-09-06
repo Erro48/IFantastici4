@@ -22,14 +22,17 @@
 
     <link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"> 
     <link href="./css/custom.css" rel="stylesheet">
-    <link href="./css/style.css" rel="stylesheet">
+    <link href="./css/mycss/style.css" rel="stylesheet">
+    <link href="./css/mycss/home.css" rel="stylesheet">
     
 
 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="./js/script.js"></script>
     <script src="./js/home_script.js"></script>
+    <script src="./js/graph_script.js"></script>
   </head>
   <body class="body-pattern">
     <!-- Navbar -->
@@ -38,136 +41,102 @@
     <div class="container">
       <div class="row">
         <!-- classifica -->
-        <div class="col-12 col-xl-6 order-xl-1 order-2">
+        <div class="col-12 col-xl-7 order-xl-1 order-2">
           <div class="container main-container rank-container">
             <div class="header">
               <h3>Classifica</h3>
             </div>
 
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Squadre</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Piloti</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Scuderie</button>
-              </li>
-            </ul>
+            <!-- Tab squadre -->
+            <div class="table-responsive">
+            <!-- classifica squadre -->
+              <table id="team-chart" class="table table-sm align-middle table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Squadra</th>
+                    <th scope="col">Proprietario</th>
+                    <th scope="col">Punti</th>
+                    <th scope="col" id="last_gp_header">
+                      <script>document.getElementById("last_gp_header").innerHTML = getLastGpLocation();</script>
+                    </th>
+                    <th scope="col">Int.</th>
+                    <th scope="col">Led.</th>
+                  </tr>
+                </thead>
+                <tbody class="tbody">
 
+                  <?php
+
+                    // prendo le squadre con le relative info
+                    $user_ids_res = getUsersId();
+                    
+                    $teams = [];
+
+                    for($i = 0; $i < $user_ids_res->num_rows; $i++) {
+                      $user_ids = $user_ids_res->fetch_assoc();
+
+                      $team_res = getTeamInfoByUserId($user_ids['id_utente']);
+                      $tmp = $team_res->fetch_assoc();
+
+                      $team = array(
+                        "id_squadra" => $tmp['id_squadra'],
+                        "nome_squadra" => $tmp['nome_squadra'],
+                        "nome_utente" => $tmp['nome_utente']
+                      );
+
+                      array_push($teams, $team);
+                    }
+
+                    echo '<script>createTeamChart('.json_encode($teams).');</script>'
+
+                  ?>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+          <div class="container main-container graph-container">
+            <div class="header">
+              <h3>Grafico</h3>
+            </div>
+            <div class="graph-content">
+              <canvas id="team_chart" width="400" height="400"></canvas>
+            <?php
+
+              // prendo le squadre con le relative info
+              $user_ids_res = getUsersId();
+
+              $teams = [];
+
+              for($i = 0; $i < $user_ids_res->num_rows; $i++) {
+                $user_ids = $user_ids_res->fetch_assoc();
+
+                $team_res = getTeamInfoByUserId($user_ids['id_utente']);
+                $tmp = $team_res->fetch_assoc();
+
+                $team = array(
+                  "id_squadra" => $tmp['id_squadra'],
+                  "nome_squadra" => $tmp['nome_squadra'],
+                  "nome_utente" => $tmp['nome_utente']
+                );
+
+                array_push($teams, $team);
+              }
+
+              echo '<script>createTeamGraph('.json_encode($teams).');</script>'
+
+            ?>
             
-            <div class="tab-content" id="myTabContent">
-              <div class="tab-pane fade show active my-tab-pane" id="home" role="tabpanel" aria-labelledby="home-tab">
-
-              <!-- Tab squadre -->
-                <div class="table-responsive">
-                <!-- classifica squadre -->
-                  <table id="team-chart" class="table table-sm align-middle table-striped">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Squadra</th>
-                        <th scope="col">Proprietario</th>
-                        <th scope="col">Punti</th>
-                        <th scope="col" id="last_gp_header">
-                          <script>document.getElementById("last_gp_header").innerHTML = getLastGpLocation();</script>
-                        </th>
-                        <th scope="col">Int.</th>
-                        <th scope="col">Led.</th>
-                      </tr>
-                    </thead>
-                    <tbody class="tbody">
-
-                      <?php
-
-                        // prendo le squadre con le relative info
-                        $user_ids_res = getUsersId();
-                        
-                        $teams = [];
-
-                        for($i = 0; $i < $user_ids_res->num_rows; $i++) {
-                          $user_ids = $user_ids_res->fetch_assoc();
-
-                          $team_res = getTeamInfoByUserId($user_ids['id_utente']);
-                          $tmp = $team_res->fetch_assoc();
-
-                          $team = array(
-                            "id_squadra" => $tmp['id_squadra'],
-                            "nome_squadra" => $tmp['nome_squadra'],
-                            "nome_utente" => $tmp['nome_utente']
-                          );
-
-                          array_push($teams, $team);
-                        }
-
-                        echo '<script>createTeamChart('.json_encode($teams).');</script>'
-
-                      ?>
-                    </tbody>
-                  </table>
-                </div>
-
-              </div>
-              
-              <!-- Tab piloti -->
-              <div class="tab-pane fade my-tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                <div class="table-responsive">
-                  <table id="driver-chart" class="table table-sm align-middle table-wrapper table-striped">
-                      <thead>
-                        <tr>
-                          <th scope="col">#</th>
-                          <th scope="col">Cognome</th>
-                          <th scope="col">Nome</th>
-                          <th scope="col">Punti</th>
-                          <th scope="col">Scuderia</th>
-                          <th scope="col">Int.</th>
-                          <th scope="col">Led.</th>
-                        </tr>
-                      </thead>
-                      <tbody class="tbody">
-                      <?php
-                        
-                        echo '<script>createDriversChart('.getDriversInfo(false).');</script>';
-                      ?>
-                      </tbody>
-                  </table>
-                </div>
-                
-                
-              </div>
-
-              <!-- Tab scuderie -->
-              <div class="tab-pane fade my-tab-pane" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                <div class="table-responsive">
-                  <table id="stable-chart" class="table table-sm align-middle table-wrapper table-striped">
-                      <thead>
-                        <tr>
-                          <th scope="col">#</th>
-                          <th scope="col">Nome</th>
-                          <th scope="col">Nome breve</th>
-                          <th scope="col">Punti</th>
-                          <th scope="col">Int.</th>
-                          <th scope="col">Led.</th>
-                        </tr>
-                      </thead>
-                      <tbody class="tbody">
-                      <?php
-                        
-                        echo '<script>createStableChart('.getStablesInfo().');</script>';
-                      ?>
-                      </tbody>
-                  </table>
-                </div>
-              </div>
             </div>
           </div>
         </div>
 
         <!-- squadra -->
         <!-- appena riesco a ridimensionare le card col torna a md e non lg -->
-        <div class="col-12 col-xl-6 order-1">
-          <div class="container main-container team-container">
+        <div class="col-12 col-xl-5 order-1">
+          <div class="container main-container team-container sticky-top" style="top: 76px; z-index: 1">
             <div class="header">
               <?php
               // seleziono il nome della squadra

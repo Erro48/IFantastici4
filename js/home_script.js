@@ -4,31 +4,79 @@
 ----------------------------------------------------- */
 
 window.onload = function(){
-    readTeamScore();
-    setCardsBackground();
-    checkMegaDriver();
+  getScoresDatasPromise().then(
+    function(scores_data) {
+      setCookie('scores_data', scores_data, 1);
 
-    let drivers = getPersonalDrivers();
-    let arr = [];
 
-    for(let i = 0; i < drivers.length; i++) {
-      arr.push(drivers[i]);
+      getModScoresDatasPromise().then(
+        function(mod_scores_data) {
+          setCookie('mod_scores_data', mod_scores_data, 1);
+          
+          createTeamScoreFile(mod_scores_data);
+
+          // prendo i piloti e la scuderia della squadra, e li metto nei cookie
+          let drivers = getPersonalDriversFromCards();
+          let arr = [];
+
+          for(let i = 0; i < drivers.length; i++) {
+            arr.push(drivers[i]);
+          }
+
+          arr.push(getPersonalStableFromCard());
+          setCookie("team", arr, 1);
+
+          readCSVFile(mod_scores_data);
+          setCardsBackground();
+          checkMegaDriver();
+          
+          
+        }
+      )
     }
-
-    arr.push(getPersonalStable());
-    setCookie("team", arr, 1);
-  
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl)
-    });
+  );
+  // attivo di tooltip di bootstrap
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+  });
 }
-  
-function readTeamScore() {
+
+function createTeamScoreFile(score) {
+
+}
+
+/* Promise per prendere i punteggi dei file score.csv e mod_score.csv */
+function getScoresDatasPromise() {
+  return new Promise(function(resolve, reject) {
     $.ajax({
-          url: '../Fanta/data/mod_score.csv',
-          dataType: 'text',
-        }).done(readCSVFile);
+      url: '../Fanta/data/score.csv',
+      dataType: 'text'
+    }).done(function(response) {
+      let all_rows = response.split(/\r?\n|\r/);
+      let data = [];
+      for(let i = 0; i < all_rows.length; i++) {
+        data.push(all_rows[i].split(','));
+      }
+      resolve(data);
+    })
+  });
+}
+
+function getModScoresDatasPromise() {
+  return new Promise(function(resolve, reject) {
+    $.ajax({
+      url: '../Fanta/data/mod_score.csv',
+      dataType: 'text'
+    }).done(function(response) {
+      let all_rows = response.split(/\r?\n|\r/);
+      let data = [];
+      for(let i = 0; i < all_rows.length; i++) {
+        data.push(all_rows[i].split(','));
+      }
+      resolve(data);
+    })
+  });
 }
   
 function setCardsBackground(){
@@ -63,7 +111,36 @@ function checkMegaDriver(){
       // prendo i punti dell'ultima gara di md
       // se punti base == putni effettivi o se non ci sono ancora punti --> md è per prossima gara
       // altrimenti era per gara scorsa, quindi toglierlo
+
+      /*let data_score = scoreConverterToArray(getCookie("scores_data"));
+      let driver_list = data_score[0];
+      let driver_index = getDriverIndex(mega_driver);
+      let last_gp_score = data_score[getLastGpIndex(data_score)][driver_index];*/
+      
+      let last_gp_index = getLastGpIndex(scoreConverterToArray(getCookie('scores_data'), 31));
+      let base_score = getDriverScore(mega_driver, last_gp_index, "score");
+      let mod_score = getDriverScore(mega_driver, last_gp_index, "mod_score");
+
+      if(base_score == null || mod_score == null) {
+        // md non settato
+        return;
+      } else if(base_score == 0 || mod_score == 0) {
+        // tabella vuota
+        return;
+      } else if(base_score == mod_score) {
+        // md è per il prossimo gp
+        return;
+      } else {
+        // erano per lo scorso gp
+        // devo settare a null il md
+        $.ajax({
+          type: "POST",
+          url: '../Fanta/lib/request.php',
+          data: { set_md_null : mega_driver }
+        });
+      }
   
+      /*
       getDriverScorePromise(mega_driver, "score.csv").then(
         function(base_score) {
           getDriverScorePromise(mega_driver, "mod_score.csv").then(
@@ -84,7 +161,7 @@ function checkMegaDriver(){
                 });
               }
           });
-        });
+        });*/
     });
 }
 
@@ -107,16 +184,16 @@ function getStableCard(stable) {
 }
   
 function getObjectElements(object) {
-let arr = [];
+  let arr = [];
 
-for(const property in object) {
-    arr.push(`${object[property]}`);
-}
+  for(const property in object) {
+      arr.push(`${object[property]}`);
+  }
 
-arr.push(0);  // intervallo
-arr.push(0);  // leader
+  arr.push(0);  // intervallo
+  arr.push(0);  // leader
 
-return arr;
+  return arr;
 }
 
 
@@ -143,66 +220,66 @@ function setLiveryColors(card, index) {
 }
 
 function setStablesCardBackground(card, index) {
-let header = card.getElementsByClassName('card-header')[0];
+  let header = card.getElementsByClassName('card-header')[0];
 
-header.style.backgroundColor = livery[parseInt(index-1)];
-if(parseInt((index-1)/2) == 9){
-    header.style.color = 'black';
-}
+  header.style.backgroundColor = livery[castScore(index-1)];
+  if(castScore((index-1)/2) == 9){
+      header.style.color = 'black';
+  }
 }
 
 function setMegaDriver(elem) {
-let driver = getDriverFromTdMdDiv(elem);
-let turbo_driver = getDriverFromTdMdDiv(document.getElementsByClassName('turbo-driver')[0]);
+  let driver = getDriverFromTdMdDiv(elem);
+  let turbo_driver = getDriverFromTdMdDiv(document.getElementsByClassName('turbo-driver')[0]);
 
-let mega_driver_flag;
+  let mega_driver_flag;
 
-// prendo md (se settato) e md flag
-getMegaDriverInfoPromise().then(
-    function(response) {
-    old_mega_driver = JSON.parse(response).md_surname;
-    mega_driver_flag = JSON.parse(response).md_flag;
+  // prendo md (se settato) e md flag
+  getMegaDriverInfoPromise().then(
+      function(response) {
+      old_mega_driver = JSON.parse(response).md_surname;
+      mega_driver_flag = JSON.parse(response).md_flag;
 
-// controlla che non siamo in race weekend
-    let next_gp = getCookie("next_gp");
-    let next_gp_date = formatDate(next_gp.split('-')[1]);
+  // controlla che non siamo in race weekend
+      let next_gp = getCookie("next_gp");
+      let next_gp_date = formatDate(next_gp.split('-')[1]);
 
-    if(diffDate(next_gp_date, today()) <= 0) {
-    alert("Le modifiche della squadra sono chiuse.");
+      if(diffDate(next_gp_date, today()) <= 0) {
+      alert("Le modifiche della squadra sono chiuse.");
 
-    } else if(mega_driver_flag == 1){
-    alert("Hai giù usato il MD.");
+      } else if(mega_driver_flag == 1){
+      alert("Hai giù usato il MD.");
 
-    } else if(!driver.localeCompare(turbo_driver)) {
-    alert("Il MD non può essere un pilota che è anche TD.");
+      } else if(!driver.localeCompare(turbo_driver)) {
+      alert("Il MD non può essere un pilota che è anche TD.");
 
-    } else {
-    // md_flag == 0
-    // setta MD
-    let change_mega_driver = confirm("Stai cambiando il MD. Dopo averlo impostato non puoi più modificare la tua scelta. Vuoi procedere?");
-    if(change_mega_driver){
-        changeMegaDriver(driver);
-    }
-    }
-});
+      } else {
+      // md_flag == 0
+      // setta MD
+      let change_mega_driver = confirm("Stai cambiando il MD. Dopo averlo impostato non puoi più modificare la tua scelta. Vuoi procedere?");
+      if(change_mega_driver){
+          changeMegaDriver(driver);
+      }
+      }
+  });
 
 }
 
 function setTurboDriver(elem){
-let driver = getDriverFromTdMdDiv(elem);
-let price = document.getElementById(driver + '-price').innerHTML.split(" ")[1].split(".")[0];
+  let driver = getDriverFromTdMdDiv(elem);
+  let price = document.getElementById(driver + '-price').innerHTML.split(" ")[1].split(".")[0];
 
-// controlla che non siamo in race weekend
-let next_gp = getCookie("next_gp");
-let next_gp_date = formatDate(next_gp.split('-')[1]);
+  // controlla che non siamo in race weekend
+  let next_gp = getCookie("next_gp");
+  let next_gp_date = formatDate(next_gp.split('-')[1]);
 
-if(diffDate(next_gp_date, today()) <= 0){
-    alert("Le modifiche della squadra sono chiuse.");
-}else if(parseInt(price) > 20){
-    alert("Non puoi scegliere come turbo driver un pilota con un prezzo maggiore di 20.00$");
-}else{
-    changeTurboDriver(driver);
-}
+  if(diffDate(next_gp_date, today()) <= 0){
+      alert("Le modifiche della squadra sono chiuse.");
+  }else if(castScore(price) > 20){
+      alert("Non puoi scegliere come turbo driver un pilota con un prezzo maggiore di 20.00$");
+  }else{
+      changeTurboDriver(driver);
+  }
 }
 
 
@@ -210,18 +287,24 @@ if(diffDate(next_gp_date, today()) <= 0){
   PRINT
 ----------------------------------------------------- */
 
-function printTeamTotalScore(drivers_total_score, stable_total_score) {
-    if(drivers_total_score == null)
+function printTeamTotalScore(team_id /*drivers_total_score, stable_total_score*/) {
+    if(team_id == null)
       document.getElementById('total-points').innerHTML = "-";
-    else
-      document.getElementById('total-points').innerHTML = (sumArray(drivers_total_score) + stable_total_score);
+    else {
+      getTeamTotalScore(team_id).then(
+        function(response) {
+          document.getElementById('total-points').innerHTML = response/*(sumArray(drivers_total_score) + stable_total_score)*/;
+        }
+      )
+    }
+      
 }
 
 function printTeamLastGpScore(drivers_last_score, stable_last_score) {
   if(drivers_last_score == null)
       document.getElementById('raceweek-points').innerHTML = "-";
   else
-      document.getElementById('raceweek-points').innerHTML = (sumArray(drivers_last_score) + parseInt(stable_last_score));
+      document.getElementById('raceweek-points').innerHTML = (sumArray(drivers_last_score) + castScore(stable_last_score));
 
       document.getElementById('raceweek-points').parentNode.childNodes[1].appendChild(getFlagElement(getLastGpLocation(), 'top', true));
  }
@@ -306,62 +389,60 @@ for(let i = 0; i < object.length; i++) {
 }
 
 
-  /* -------------------------------------------------
+/* -------------------------------------------------
   OTHER FUNCTIONS
 ----------------------------------------------------- */
 
-function readCSVFile(response) {
+function readCSVFile(csv_data) {
     // prendo i miei 5 piloti + la scuderia
     let drivers_list = getPersonalDrivers();
     let stable = getPersonalStable();
+    let team_id = getCookie('id_squadra');
   
     // prendo ultimo gp
-    getLastGpIndexPromise().then(
-      function(last_gp_index) {
-        let all_rows = response.split(/\r?\n|\r/);
+    let last_gp_index = getLastGpIndex(csv_data);
+    let gps = [];
+    for(let i = 1; i < csv_data.length; i++) {
+      gps.push(csv_data[i][0]);
+    }
 
-        let gps = [];
-        for(let i = 1; i < all_rows.length; i++) {
-          gps.push(all_rows[i].split(",")[0]);
-        }
 
-        setCookie("gps", gps, 1);
-  
-        if(last_gp_index == 0){
-          // tabella vuota
-          printTeamTotalScore(null);
-          printTeamLastGpScore(null);
-          printDriversLastGpScore(null);
-          printStableLastGpScore(null);
-  
-          setCookie("next_gp", getGpByIndex(last_gp_index, all_rows), 1);
-          setCookie("last_gp", null, 1);
-  
-          return;
-        }
-  
-        // prendo i punteggi totali di ogni pilota e della scuderia
-        let drivers_total_score = getDriversTotalScore(drivers_list, all_rows, last_gp_index);
-        let stable_total_score = getStableTotalScore(stable, all_rows, last_gp_index);
-  
-        // prendo i punteggi dell'ultimo weekend di ogni pilota e della scuderia
-        let drivers_last_score = getDriversLastScore(drivers_list, all_rows, last_gp_index);
-        let stable_last_score = getStableLastScore(stable, all_rows, last_gp_index);
 
-        setCookie("next_gp", getGpByIndex(last_gp_index + 1, all_rows), 1);
-        setCookie("last_gp", getGpByIndex(last_gp_index, all_rows), 1);
-  
-        // stampo i punteggi (totali e parziali)
-        printTeamTotalScore(drivers_total_score, stable_total_score);
-        printTeamLastGpScore(drivers_last_score, stable_last_score);
-        printDriversLastGpScore(drivers_last_score);
-        printStableLastGpScore(stable_last_score);
-  
-      },
-      function(error) {
-        console.log(error.message);
-      }
-    );
+    setCookie("gps", gps, 1);
+
+    if(last_gp_index == 0){
+      // tabella vuota
+      printTeamTotalScore(null);
+      printTeamLastGpScore(null);
+      printDriversLastGpScore(null);
+      printStableLastGpScore(null);
+
+      setCookie("next_gp", getGpByIndex(last_gp_index, csv_data), 1);
+      setCookie("last_gp", null, 1);
+
+      return;
+    }
+    
+
+    // prendo i punteggi totali di ogni pilota e della scuderia
+    let drivers_total_score = getDriversTotalScore(drivers_list, csv_data, last_gp_index);
+    let stable_total_score = getStableTotalScore(stable, csv_data, last_gp_index);
+
+    // prendo i punteggi dell'ultimo weekend di ogni pilota e della scuderia
+    let drivers_last_score = getDriversLastScore(drivers_list, csv_data, last_gp_index);
+    let stable_last_score = getStableLastScore(stable, csv_data, last_gp_index);
+
+    setCookie("next_gp", getGpByIndex(last_gp_index + 1, csv_data), 1);
+    setCookie("last_gp", getGpByIndex(last_gp_index, csv_data), 1);
+
+    // stampo i punteggi (totali e parziali)
+    //printTeamTotalScore(drivers_total_score, stable_total_score);
+    printTeamTotalScore(team_id/*drivers_total_score, stable_total_score*/);
+    printTeamLastGpScore(drivers_last_score, stable_last_score);
+    printDriversLastGpScore(drivers_last_score);
+    printStableLastGpScore(stable_last_score);
+
+    return csv_data;
 }
 
 function changeTeamName(){
@@ -423,14 +504,31 @@ function changeTurboDriver(driver) {
   });
 }
 
-function recursiveGetDrive(json_elem, drivers_list, all_rows, last_gp_index, i) {
+function getTeamTotalScore(team_id) {
+  return new Promise(function(resolve){
+    $.ajax({
+      type: "POST",
+      url: '../Fanta/lib/request.php',
+      data: { get_team_score : team_id },
+      datatype: 'json',
+      success: function(response) {
+        resolve(response);
+      },
+      error: function(err) {
+        reject(err)
+      }
+    });
+  });
+}
+
+function recursiveGetDrive(json_elem, drivers_list, scores_list, all_rows, last_gp_index, i) {
   if(i == json_elem.length) {
     // ha preso tutte le squadre
     let team_obj = [];
     
     for(let j = 0; j < drivers_list.length; j++) {
-      let driver_total = getDriversTotalScore(drivers_list[j].slice(0, 5), all_rows, last_gp_index);
-      let stable_total = getStableTotalScore(drivers_list[j][5], all_rows, last_gp_index);
+      /*let driver_total = getDriversTotalScore(drivers_list[j].slice(0, 5), all_rows, last_gp_index);
+      let stable_total = getStableTotalScore(drivers_list[j][5], all_rows, last_gp_index);*/
 
       let d_indexes = getDriversIndexes(drivers_list[j]);
       let driver_partial = getDriversPartialPerEachGp(d_indexes, all_rows, last_gp_index);
@@ -441,26 +539,35 @@ function recursiveGetDrive(json_elem, drivers_list, all_rows, last_gp_index, i) 
 
       let team_partial = sumArray(driver_partial) + stable_partial[last_gp_index-1];
 
-      let team_total = sumArray(driver_total) + stable_total;
 
       team_obj.push(
         {
           team_name: json_elem[j].nome_squadra,
           team_owner: json_elem[j].nome_utente,
-          score: team_total,
+          score: scores_list[j],
           partial: team_partial
         });
+
     }
 
     team_obj = sortTeamsByScore(team_obj);
     printChart(team_obj, "team");
 
+    
+
   }else{
     getDriversAndStableFromTeamIdPromise(json_elem[i].id_squadra).then(
       function(drivers_team) {
         drivers_list.push(drivers_team);
+
+        getTeamTotalScore(json_elem[i].id_squadra).then(
+          function(scores_team) {
+            scores_list.push(scores_team);
+            recursiveGetDrive(json_elem, drivers_list, scores_list, all_rows, last_gp_index, i+1);
+          }
+        )
+
         
-        recursiveGetDrive(json_elem, drivers_list, all_rows, last_gp_index, i+1);
     });
   }
   
@@ -488,100 +595,80 @@ function formatDriversPartial(drivers_partial) {
 }
 
 function createTeamChart(json_elem) {
-  
-  getLastGpIndexPromise().then(
-    function(last_gp_index) {
-      getFileContentPromise("mod_score.csv").then(
-        function(response) {
-          let all_rows = response.split(/\r?\n|\r/);
-          let drivers_list = [];
+  let mod_score = scoreConverterToArray(getCookie('mod_scores_data'), 31);
+  let last_gp_index = getLastGpIndex(mod_score);
 
-          recursiveGetDrive(json_elem, drivers_list, all_rows, last_gp_index, 0);
-        }
-      );
-    }
-  );
+  let drivers_list = [];
+  let scores_list = [];
+  recursiveGetDrive(json_elem, drivers_list, scores_list, mod_score, last_gp_index, 0);
 }
 
 function createDriversChart(json_elem) {
-  getLastGpIndexPromise().then(
-    function(last_gp_index) {
-      getFileContentPromise("score.csv").then(
-        function(response) {
-          let all_rows = response.split(/\r?\n|\r/);
-          let drivers_list = [];
+  let score = scoreConverterToArray(getCookie('scores_data'), 31);
+  let last_gp_index = getLastGpIndex(score);
 
-          for(let i = 1; i <= 20; i++) {
-            drivers_list.push(all_rows[0].split(",")[i]);
-          }
+  let drivers_list = [];
 
-          let driver_total = getDriversTotalScore(drivers_list, all_rows, last_gp_index);
-          let drivers_obj = [];
+  for(let i = 1; i <= 20; i++) {
+    drivers_list.push(score[0][i]);
+  }
 
-          for(let i = 0; i < json_elem.length; i++) {
-            drivers_obj.push({
-              driver_surname: json_elem[i].cognome_pilota,
-              driver_name: json_elem[i].nome_pilota,
-              score: driver_total[i],
-              driver_stable: json_elem[i].nome_scuderia
-            });
-          }
+  let driver_total = getDriversTotalScore(drivers_list, score, last_gp_index);
+  let drivers_obj = [];
 
-          drivers_obj = sortTeamsByScore(drivers_obj);
+  for(let i = 0; i < json_elem.length; i++) {
+    drivers_obj.push({
+      driver_surname: json_elem[i].cognome_pilota,
+      driver_name: json_elem[i].nome_pilota,
+      score: driver_total[i],
+      driver_stable: json_elem[i].nome_scuderia
+    });
+  }
 
-          let tmp = [];
-          for(let i = 0; i < drivers_obj.length; i++) {
-            tmp.push(drivers_obj[i].driver_surname);
-          }
+  drivers_obj = sortTeamsByScore(drivers_obj);
 
-          setCookie("ordered_drivers_chart", tmp, 1);
+  let tmp = [];
+  for(let i = 0; i < drivers_obj.length; i++) {
+    tmp.push(drivers_obj[i].driver_surname);
+  }
 
-          printChart(drivers_obj, "driver");
-          
-        }
-      );
-    }
-  );
+  setCookie("ordered_drivers_chart", tmp, 1);
+
+
+  printChart(drivers_obj, "driver");
 }
 
 function createStableChart(json_elem) {
-  getLastGpIndexPromise().then(
-    function(last_gp_index) {
-      getFileContentPromise("score.csv").then(
-        function(response) {
-          let all_rows = response.split(/\r?\n|\r/);
-          let stables_list = [];
+  let score = scoreConverterToArray(getCookie('scores_data'), 31);
+  let last_gp_index = getLastGpIndex(score);
 
-          for(let i = 21; i <= 30; i++) {
-            stables_list.push(all_rows[0].split(",")[i]);
-          }
+  let stables_list = [];
 
-          let stables_total = getStablesTotalScore(stables_list, all_rows, last_gp_index);
-          let stables_obj = [];
+  for(let i = 21; i <= 30; i++) {
+    stables_list.push(score[0][i]);
+  }
 
-          for(let i = 0; i < json_elem.length; i++) {
-            stables_obj.push({
-              stable_name: json_elem[i].nome_scuderia,
-              stable_short_name: json_elem[i].nome_breve,
-              score: stables_total[i]
-            });
-          }
+  let stables_total = getStablesTotalScore(stables_list, score, last_gp_index);
+  let stables_obj = [];
 
-          stables_obj = sortTeamsByScore(stables_obj);
+  for(let i = 0; i < json_elem.length; i++) {
+    stables_obj.push({
+      stable_name: json_elem[i].nome_scuderia,
+      stable_short_name: json_elem[i].nome_breve,
+      score: stables_total[i]
+    });
+  }
 
-          let tmp = [];
-          for(let i = 0; i < stables_obj.length; i++) {
-            tmp.push(stables_obj[i].stable_name);
-          }
+  stables_obj = sortTeamsByScore(stables_obj);
 
-          setCookie("ordered_stables_chart", tmp, 1);
+  let tmp = [];
+  for(let i = 0; i < stables_obj.length; i++) {
+    tmp.push(stables_obj[i].stable_name);
+  }
 
-          printChart(stables_obj, "stable");
-          
-        }
-      );
-    }
-  );
+  setCookie("ordered_stables_chart", tmp, 1);
+
+  printChart(stables_obj, "stable");
 }
 
 function sortTeamsByScore(object) {

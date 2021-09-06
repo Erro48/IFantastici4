@@ -7,7 +7,7 @@
   }
  ?>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top" id="navbar">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary " id="navbar">
   <div class="container-fluid">
     <a class="navbar-brand" href="../Fanta/home.php">I Fanta-stici 4</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,7 +20,13 @@
           <a class="nav-link active" aria-current="page" href="../Fanta/home.php">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="../Fanta/stats.php">Statistiche</a>
+          <a class="nav-link disabled" aria-current="page" href="../Fanta/stats.php">Statistiche</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="../Fanta/drivers.php">Piloti</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="../Fanta/stables.php">Scuderie</a>
         </li>
         <li class="nav-item">
           <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Asta</a>
@@ -125,7 +131,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-        <button type="button" class="btn btn-primary" onclick="loadScore()">Carica</button>
+        <button type="button" id="btn-modal" class="btn btn-primary" onclick="loadScore()">Carica</button>
       </div>
     </div>
   </div>

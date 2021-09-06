@@ -11,7 +11,6 @@ function today() {
 }
 
 function dateTimeToString($date, $format) {
-  echo $date->format('Y-m-d H:i:s');
   return $date->format($format);
 }
 
@@ -28,7 +27,7 @@ function diffDate($origin, $target) {
   if(is_string($origin)) {
     $origin = stringToDateTime($origin);
   }
-
+  
   if(is_string($target)) {
     $target = stringToDateTime($target);
   }
@@ -45,6 +44,22 @@ function diffDate($origin, $target) {
 function getUsersId() {
   global $db;
   $sql = 'SELECT id_utente FROM tutenti';
+  $result = $db->query($sql);
+
+  return $result;
+}
+
+function getDrivers() {
+  global $db;
+  $sql = 'SELECT id_pilota, cognome_pilota, nome_pilota, nome_scuderia FROM tpiloti, tscuderie WHERE k_scuderia=id_scuderia ORDER BY id_pilota';
+  $result = $db->query($sql);
+
+  return $result;
+}
+
+function getStables() {
+  global $db;
+  $sql = 'SELECT * FROM tscuderie ORDER BY id_scuderia';
   $result = $db->query($sql);
 
   return $result;
@@ -143,9 +158,9 @@ function getTurboAndMegaDriverByTeamId($team_id) {
 }
 
 function getStableByTeamId($team_id) {
-  global $db;
+  global $db, $SUMMER_BREAK_DATE;
   //echo stringToDateTime('15/08/2021')->format('d-m-Y');
-  $diff_date = diffDate(today(), stringToDateTime('15/08/2021'));
+  $diff_date = diffDate(today(), stringToDateTime($SUMMER_BREAK_DATE));
 
   if($diff_date > 0)
     $sql = 'SELECT nome_breve, prezzo_base FROM tscuderie S, tsquadre T WHERE k_scuderia=id_scuderia AND id_squadra='.$team_id;
@@ -172,13 +187,13 @@ function getStableByTeamIdToString($team_id) {
 ------------------------------------------ */
 
 function printDriverCard($driver, $td_md_info) {
-  echo '<div class="col card-col">
+  echo '<div class="col card-col skeleton">
           <div id="'.$driver['cognome_pilota'].'-card" class="card text-white bg-dark xs-3">
             <div class="card-header">
               <div class="row">
                 <div class="col-9">
-                  <div class="card-title">'.$driver['cognome_pilota'].'</div>
-                  <div class="card-subtitle">'.$driver['nome_pilota'].'</div>
+                  <div class="card-title skeleton skeleton-text">'.$driver['cognome_pilota'].'</div>
+                  <div class="card-subtitle skeleton skeleton-text">'.$driver['nome_pilota'].'</div>
                 </div>
 
                 <div class="col-1 col-sm-3 d-none d-sm-block header-img" style="background-image: url(./images/drivers/'.strtolower($driver['cognome_pilota']).'.png);">

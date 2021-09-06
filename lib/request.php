@@ -3,6 +3,8 @@
 // FILE CON FUNZIONI PER RICHIESTE AJAX DI JS
 
   include __DIR__."/mysql.php";
+  include __DIR__."/const.php";
+  include __DIR__."/functions.php";
   session_start();
 
   if(isset($_POST["new_team_name"])){
@@ -77,19 +79,22 @@
       echo $row['id_scuderia'];
     }
   } elseif(isset($_POST['get_teams'])) {
-    $sql = 'SELECT id_squadra, turbo_driver, mega_driver, id_scuderia FROM tsquadre, tscuderie WHERE id_scuderia=k_scuderia';
+    $sql = 'SELECT nome_squadra, id_squadra, turbo_driver, mega_driver, id_scuderia, punteggio_squadra, punteggio_precedente_squadra FROM tsquadre, tscuderie WHERE id_scuderia=k_scuderia';
     $result = $db->query($sql);
 
     $json_obj = [];
 
     if($result->num_rows > 0) {
       while($row = $result->fetch_assoc()) {
-        $sql_2 = 'SELECT P.id_pilota as "idpilota" FROM tpiloti P, tsquadre S, rpossiede R WHERE S.id_squadra='.$row['id_squadra'].' AND R.id_squadra=S.id_squadra AND R.id_pilota=P.id_pilota';
+        $sql_2 = 'SELECT P.id_pilota as "idpilota" FROM tpiloti P, tsquadre S, rpossiede R WHERE S.id_squadra='.$row['id_squadra'].' AND R.id_squadra=S.id_squadra AND R.id_pilota=P.id_pilota AND R.attivo=1';
         $result_2 = $db->query($sql_2);
         $obj = new stdClass();
 
         $obj->id_squadra = $row['id_squadra'];
+        $obj->nome_squadra = $row['nome_squadra'];
         $obj->id_scuderia = $row['id_scuderia'];
+        $obj->punteggio = $row['punteggio_squadra'];
+        $obj->punteggio_precedente = $row['punteggio_precedente_squadra'];
 
 // select turbo driver
         $sql_3 = 'SELECT id_pilota as "id_turbo_driver" FROM tsquadre S, tscuderie, tpiloti WHERE id_scuderia=S.k_scuderia AND turbo_driver=cognome_pilota AND id_squadra='.$row['id_squadra'];
@@ -127,7 +132,7 @@
     echo json_encode($json_obj);
 
   } elseif(isset($_POST['get_drivers_by_team_id'])) {
-    $sql = 'SELECT P.cognome_pilota FROM tpiloti P, rpossiede R WHERE R.id_squadra='.$_POST['get_drivers_by_team_id'].' AND R.id_pilota=P.id_pilota';
+    $sql = 'SELECT P.cognome_pilota FROM tpiloti P, rpossiede R WHERE R.id_squadra='.$_POST['get_drivers_by_team_id'].' AND R.id_pilota=P.id_pilota AND R.attivo=1';
     $result = $db->query($sql);
     $obj = [];
 
@@ -136,8 +141,14 @@
         array_push($obj, $row['cognome_pilota']);
       }
     }
+    
+    $diff_date = diffDate(today(), stringToDateTime($SUMMER_BREAK_DATE));
 
-    $sql = 'SELECT nome_breve FROM tsquadre, tscuderie WHERE id_squadra='.$_POST['get_drivers_by_team_id'].' AND id_scuderia=k_scuderia';
+    if($diff_date > 0)
+      $sql = 'SELECT nome_breve FROM tsquadre, tscuderie WHERE id_squadra='.$_POST['get_drivers_by_team_id'].' AND id_scuderia=k_scuderia';
+    else
+      $sql = 'SELECT nome_breve FROM tsquadre, tscuderie WHERE id_squadra='.$_POST['get_drivers_by_team_id'].' AND id_scuderia=k_2scuderia';
+
     $result = $db->query($sql);
 
     if($result->num_rows > 0) {
@@ -200,6 +211,81 @@
     }
 
     echo json_encode($stable);
+
+  } elseif(isset($_POST['get_team_score'])) {
+    global $db;
+    $sql = 'SELECT punteggio_squadra FROM tsquadre WHERE id_squadra='.$_POST['get_team_score'];
+    $result = $db->query($sql);
+
+    if($result->num_rows > 0) {
+      $row = $result->fetch_assoc();
+      echo $row['punteggio_squadra'];
+    }
+  } elseif(isset($_POST['update_teams_score'])) {
+    global $db;
+    $score = $_POST['update_teams_score'];
+    $last_gp_date = $_POST['last_gp_date'];
+
+    for($i = 0; $i < count($score); $i++) {
+      $last_gp_date_sql = 'SELECT ultimo_aggiornamento_punteggio_squadra as last_score_update FROM tsquadre WHERE id_squadra='.$score[$i]['id_squadra'];
+      $last_gp_date_res = $db->query($last_gp_date_sql);
+
+      $row = $last_gp_date_res->fetch_assoc();
+      $last_score_update = $row['last_score_update']; // non serve
+
+      $last_gp_date = str_replace('/', '-', $last_gp_date);
+
+      $origin = new DateTime($last_gp_date);
+      $target = new DateTime($last_score_update);
+
+      $day = strval(explode('-', $last_gp_date)[0]);
+      $month = strval(explode('-', $last_gp_date)[1]);
+      $year = strval(explode('-', $last_gp_date)[2]);
+
+
+      $from_unix_time = mktime(0, 0, 0, $month, $day, $year);
+      $day_before = strtotime("yesterday", $from_unix_time);
+      $formatted = date('d-m-Y', $day_before);
+      $origin = new DateTime(date('Y-m-d', $day_before));
+
+      $interval = $origin->diff($target);
+      $diff_days = intval($interval->format('%R%a'));
+
+      // positivo se last_score_update è dopo last_gp_date
+
+      $sql = 'SELECT punteggio_squadra as last_score, punteggio_precedente_squadra as old_score FROM tsquadre WHERE id_squadra='.$score[$i]['id_squadra'];
+      $res = $db->query($sql);
+
+      $row = $res->fetch_assoc();
+      $last_score = $row['last_score'];
+      $old_score = $row['old_score'];
+
+      if($diff_days <= 0) {
+        // inserisco i punti del gp
+        $new_score = $last_score + $score[$i]['last_score'];
+        $sql = 'UPDATE tsquadre 
+                SET punteggio_squadra='.$new_score.', punteggio_precedente_squadra='.$last_score.', ultimo_aggiornamento_punteggio_squadra=\''.date("Y-m-d").'\' 
+                WHERE id_squadra='.$score[$i]['id_squadra'];
+
+        $res = $db->query($sql);
+
+
+        echo $sql;
+
+      } else {
+        // aggiorno i punti del gp
+
+      }
+    }
+
+    
+
+
+    /*
+      se la data del gp è dopo l'ultimo aggiornamento, allora devo inserire
+      se la data del gp è prima, devo aggiornare
+    */
+
   } else {
     echo "Ajax fallito: nessuna funzione associata";
   }

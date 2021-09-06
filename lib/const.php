@@ -10,7 +10,9 @@ $_LIVERY = ['Mercedes' => '#00d2be',
 'Williams' => '#005AFF',
 'Haas' => '#FFFFFF'];
 
-$DEFAULT_DATETIME_FORMAT = 'd/m/Y';
+$DEFAULT_DATETIME_FORMAT = 'j/m/Y';
 $REVERSED_DATETIME_FORMAT = 'Y/m/d';
+
+$SUMMER_BREAK_DATE = '27/08/2021';
 
 ?>

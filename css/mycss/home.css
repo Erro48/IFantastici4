@@ -1,0 +1,85 @@
+/* ------------------------
+  Card
+--------------------------- */
+
+.card {
+    padding: 0;
+    border: 1px solid black;
+    max-height: 250px;
+  /*  min-width: 163px;*/
+}
+  
+.card-header {
+    border-bottom: 1px solid black;
+    height: 10vh;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.card-subtitle { font-size: 15px; }
+.card-body { padding-top: 0; }
+.card-info { font-size: 14px; }
+.card-col { margin-bottom: 10px; }
+
+.header-img {
+    background-size: cover;
+    width: 35%;
+    height: 10vh;
+    right: 0;
+    top: 0;
+    position: absolute;
+}
+
+.header-img-stable {
+    background-size: cover;
+    width: 5vw;
+    height: 28%;
+    right: 0;
+    top: 20px;
+    position: absolute;
+}
+
+.body-img {
+    background-size: cover;
+    width: 30vw;
+}
+
+/* ---------------------------
+  Mega Driver e Turbo Driver
+------------------------------ */
+
+.md-td-container { text-align: center; }
+  
+.md-btn, .td-btn {
+    width: 45%;
+    margin: auto;
+    border-radius: 5px;
+}
+  
+.md-btn { border: 1px solid rgb(255,215,0); }
+.td-btn { border: 1px solid red; }
+  
+.mega-driver {
+    background-color: gold;
+    color: #212529;
+}
+
+.turbo-driver { background-color: rgb(153 3 3); }
+
+@media screen and (max-width: 992px) {
+}
+  
+@media screen and (min-width: 992px) {
+    .md-btn:hover {
+        background-color: rgb(255,215,0, 0.4);
+        cursor: pointer;
+    }
+    
+    .td-btn:hover {
+        background-color: rgb(255,0,0, 0.4);
+        cursor: pointer;
+    }
+}

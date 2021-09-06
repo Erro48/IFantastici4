@@ -4,6 +4,7 @@
     <?php
     session_start();
     include __DIR__."/lib/mysql.php";
+    include __DIR__."/lib/const.php";
     include __DIR__."/lib/functions.php";
 
     if(!isset($_SESSION['id_utente']))
@@ -20,7 +21,8 @@
 
     <link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"> 
     <link href="./css/custom.css" rel="stylesheet">
-    <link href="./css/style.css" rel="stylesheet">
+    <link href="./css/mycss/style.css" rel="stylesheet">
+    <link href="./css/mycss/stats.css" rel="stylesheet">
   
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -85,9 +87,7 @@
             <div class="container-fluid">
               <div class="header pt-2 d-flex">
                 <h3>Tabella</h3>
-                <span id="info-icon-container">
-                  
-                </span>
+                <span id="info-icon-container"></span>
               </div>
               <div class="table-responsive mb-2">
                   <table id="stats-chart" class="table table-sm align-middle table-wrapper table-striped">

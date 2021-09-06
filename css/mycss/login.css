@@ -1,0 +1,41 @@
+.body-carousel {
+    width: 99%;
+    animation: background-login-animation 10s;
+    animation-iteration-count: infinite;
+    background-size: cover;
+    background-position: center;
+    /* background-image: url('../images/f1-1.jpeg');*/
+}
+
+@keyframes background-login-animation {
+    0% {background-image: url('../images/f1-1.jpeg');}
+    50% {background-image: url('../images/f1-2.jpeg');}
+    100% {background-image: url('../images/f1-3.jpeg');}
+}
+
+/* -------------------------
+  Login
+-------------------------- */
+
+.login-container {
+    width: 90%;
+    max-width: 500px;
+    margin: 10px auto;
+    line-height: 6vh;
+}
+  
+.login-btn { margin-top: 30px; }
+  
+.carousel-inner > .carousel-item {
+    min-height: 930px;
+    background-size: cover;
+    background-position: center center;
+}
+  
+.login-outer-container {
+    border-right: 2px solid grey;
+    padding-right: 0;
+    z-index: 1;
+}
+  
+.carousel-item { background-size: cover; }
