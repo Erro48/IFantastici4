@@ -265,7 +265,7 @@ function printStableCard($stable) {
        </div>';
 }
 
-function printNavItem($label, $active) {
+function printNavItem($label, $active, $driver) {
   $show = "";
   $display = "d-none d-sm-block";
 
@@ -275,6 +275,8 @@ function printNavItem($label, $active) {
   }
 
   $label_ = str_replace(" ", "_", $label);
+
+  if($driver) { $label = substr($label, 0, 3); }
 
   echo '
         <li class="nav-item my-nav-item '.$display.'" role="presentation">
@@ -298,18 +300,15 @@ function printDriverTabPane($label, $active) {
     <div class="row">
         <div class="col-12 col-lg-6 personal-data-col">
             <div class="row">
-              <div class="col-6">Cognome</div>
-              <div class="col-6 d-flex align-items-center justify-content-end text-end">'.$label.'</div>
+              <div class="col-12 d-flex align-items-center">'.$label.'</div>
             </div>
 
             <div class="row">
-              <div class="col-6">Nome</div>
-              <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
+              <div class="col-12">Nome</div>
             </div>
 
             <div class="row">
-              <div class="col-6">Scuderia</div>
-              <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
+              <div class="col-12">Scuderia</div>
             </div>
 
             <div class="row">
@@ -326,14 +325,7 @@ function printDriverTabPane($label, $active) {
               <div class="col-6">Posizione</div>
               <div class="col-6 d-flex align-items-center justify-content-end text-end position-text">-</div>
             </div>
-        </div>
-        
-        <div class="d-lg-none d-flex justify-content-center">
-            <hr class=" w-100">
-        </div>
-        
 
-        <div class="col-12 col-lg-6 championship-data-col">
             <div class="row">
               <div class="col-6">Punti Totali</div>
               <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
@@ -353,41 +345,15 @@ function printDriverTabPane($label, $active) {
               <div class="col-7">Peggior Risultato</div>
               <div class="col-5 d-flex align-items-center justify-content-end text-end">-</div>
             </div>
+        </div>
+        
+        <div class="d-lg-none d-flex justify-content-center">
+            <hr class=" w-100">
+        </div>
+        
 
-            <div class="row">
-              <div class="col-6">
-                <div class="dropdown">
-                  <button class="dropdown-toggle dropdown-stats" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    Volte migliore in totale
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#" onclick="changeNumberOfTimes(this);">Volte peggiore in totale</a></li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
-            </div>
-
-            <div class="row">
-              <div class="col-6">
-                <div class="dropdown">
-                  <button class="dropdown-toggle dropdown-stats" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    Volte migliore in team
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#" onclick="changeNumberOfTimes(this)">Volte peggiore in team</a></li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
-            </div>
-
-            <div class="row">
-              <div class="col-7">Numero di volte td</div>
-              <div class="col-5 d-flex align-items-center justify-content-end text-end">-</div>
-            </div>
+        <div class="col-12 col-lg-6 championship-data-col">
+            
         </div>
     </div>
   </div>

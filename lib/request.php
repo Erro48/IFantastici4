@@ -164,7 +164,7 @@
     global $db;
     $sql = 'SELECT cognome_pilota, nome_pilota, P.prezzo_reale as prezzo_reale, P.prezzo_base as prezzo_base, nome_scuderia 
     FROM tpiloti P, tscuderie S, tsquadre Q, rpossiede R 
-    WHERE Q.id_squadra='.$_POST['get_drivers_data'].' AND R.id_squadra='.$_POST['get_drivers_data'].' AND R.id_pilota=P.id_pilota AND P.k_scuderia=S.id_scuderia 
+    WHERE Q.id_squadra='.$_POST['get_drivers_data'].' AND R.id_squadra='.$_POST['get_drivers_data'].' AND R.id_pilota=P.id_pilota AND P.k_scuderia=S.id_scuderia AND R.attivo=1 AND R.campionato_corrente=1 
     ORDER BY P.id_pilota';
     $result = $db->query($sql);
 
@@ -188,10 +188,20 @@
 
   } elseif(isset($_POST['get_stable_data'])) {
     global $db;
-    $sql = 'SELECT nome_scuderia, nome_breve, S.prezzo_reale, S.prezzo_base, FP.cognome_pilota as "primo_pilota", SP.cognome_pilota as "secondo_pilota"
-    FROM tscuderie S, tsquadre Q, tpiloti FP, tpiloti SP 
-    WHERE id_squadra='.$_POST['get_stable_data'].' AND Q.k_scuderia=id_scuderia AND FP.k_scuderia=id_scuderia AND SP.k_scuderia=id_scuderia AND FP.id_pilota!=SP.id_pilota AND FP.id_pilota<SP.id_pilota';
+
+    $diff_date = diffDate(today(), stringToDateTime($SUMMER_BREAK_DATE));
+
+    if($diff_date > 0) {
+      $sql = 'SELECT nome_scuderia, nome_breve, S.prezzo_reale, S.prezzo_base, FP.cognome_pilota as "primo_pilota", SP.cognome_pilota as "secondo_pilota"
+      FROM tscuderie S, tsquadre Q, tpiloti FP, tpiloti SP 
+      WHERE id_squadra='.$_POST['get_stable_data'].' AND Q.k_scuderia=id_scuderia AND FP.k_scuderia=id_scuderia AND SP.k_scuderia=id_scuderia AND FP.id_pilota!=SP.id_pilota AND FP.id_pilota<SP.id_pilota';  
+    } else {
+      $sql = 'SELECT nome_scuderia, nome_breve, S.prezzo_reale, S.prezzo_base, FP.cognome_pilota as "primo_pilota", SP.cognome_pilota as "secondo_pilota"
+      FROM tscuderie S, tsquadre Q, tpiloti FP, tpiloti SP 
+      WHERE id_squadra='.$_POST['get_stable_data'].' AND Q.k_2scuderia=id_scuderia AND FP.k_2scuderia=id_scuderia AND SP.k_2scuderia=id_scuderia AND FP.id_pilota!=SP.id_pilota AND FP.id_pilota<SP.id_pilota';
     
+    }
+      
     $result = $db->query($sql);
 
     $stable;

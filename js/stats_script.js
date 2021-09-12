@@ -17,11 +17,7 @@ function getNumberOfTimesDriverHasBeenTheBest(drivers_indexes, base_all_rows, la
     let gps_score = base_all_rows[i].split(",").slice(1, 21);
     let max = Math.max(...gps_score);
 
-    console.log(max);
-
     let best_index = gps_score.indexOf(max.toString());
-
-    console.log(best_index);
 
     if(drivers_indexes.indexOf(best_index) != -1) {
       all_time_best[drivers_indexes.indexOf(best_index)] += 1;
@@ -247,16 +243,20 @@ function printPersonalDriversData(drivers_datas, personal_section) {
     let rows = personal_section[i].getElementsByClassName('row');
     let drivers_data_property = Object.getOwnPropertyNames(drivers_datas[0]);
     let j;
-
+    
     for(j = 0; j < rows.length - 1; j++) {
-      rows[j].childNodes[3].innerHTML = drivers_datas[i][drivers_data_property[j]];
       if(j == 3 || j == 4) {
+        rows[j].childNodes[3].innerHTML = drivers_datas[i][drivers_data_property[j]];
         rows[j].childNodes[3].innerHTML += "$";
+      } if(j == 5) {
+        // imposto la posizione
+        rows[j].childNodes[3].innerHTML = getChartPosition(rows[0].childNodes[1].innerHTML, "driver") + '°';
+      } else {
+        rows[j].childNodes[1].innerHTML = drivers_datas[i][drivers_data_property[j]];
       }
     }
 
-    // imposto la posizione
-    rows[j].childNodes[3].innerHTML = getChartPosition(rows[0].childNodes[3].innerHTML, "driver") + '°';
+    
   }
 }
 
@@ -276,31 +276,35 @@ function printPersonalStableData(stable_data, personal_section) {
   rows[i].childNodes[3].innerHTML = getChartPosition(rows[0].childNodes[3].innerHTML, "stable") + '°';
 }
 
-function printChampionshipDriversData(drivers_data) {
-  let champ_section = document.getElementsByClassName('championship-data-col');
+function printChampionshipDriversData(drivers_data, champ_section) {
+  let offset = 6;
+
+  console.log(champ_section);
   
   // faccio i piloti
   for(let i = 0; i < champ_section.length - 1; i++) {
     let rows = champ_section[i].getElementsByClassName('row');
+
+    console.log(drivers_data)
     
-    rows[0].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].total;
-    rows[1].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].average;
+    rows[6].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].total;
+    rows[7].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].average;
 
     // per gp mettere un tooltip
     //rows[2].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].best_result.score + " (" + drivers_data[i].best_result.gp.split("-")[0] + ")";
-    rows[2].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].best_result.score + " ";
-    rows[2].getElementsByClassName("text-end")[0].appendChild(getFlagElement(drivers_data[i].best_result.gp.split("-")[0], 'left', true));
+    rows[8].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].best_result.score + " ";
+    rows[8].getElementsByClassName("text-end")[0].appendChild(getFlagElement(drivers_data[i].best_result.gp.split("-")[0], 'left', true));
 
-    rows[3].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].worst_result.score + " ";
-    rows[3].getElementsByClassName("text-end")[0].appendChild(getFlagElement(drivers_data[i].worst_result.gp.split("-")[0], 'left', true));
+    rows[9].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].worst_result.score + " ";
+    rows[9].getElementsByClassName("text-end")[0].appendChild(getFlagElement(drivers_data[i].worst_result.gp.split("-")[0], 'left', true));
 
 
     //rows[3].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].worst_result.score + " (" + drivers_data[i].worst_result.gp.split("-")[0] + ")";
     
-    rows[4].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].all_best;
+    /*rows[4].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].all_best;
     rows[5].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].team_best;
 
-    rows[6].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].td_times;
+    rows[6].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].td_times;*/
     
 
   }
@@ -432,6 +436,8 @@ function loadPersonalData(team_id) {
 }
 
 function loadChampionshipData(team_id) {
+
+
   getFileContentPromise("mod_score.csv").then(
     function(mod_content) {
       getFileContentPromise("score.csv").then(
@@ -439,7 +445,7 @@ function loadChampionshipData(team_id) {
           getLastGpIndexPromise().then(
             function(last_gp_index) {
               let mod_all_rows = mod_content.split(/\r?\n|\r/);
-              let base_all_rows = base_content.split(/\r?\n|\r/);
+              let base_all_rows = scoreConverterToArray(base_content, 31);
     
               let team_members_list = stringToArray(getCookie("team"));
               let drivers_list = team_members_list.slice(0, 5);
@@ -453,6 +459,8 @@ function loadChampionshipData(team_id) {
               // pilota |--| scuderia
               let drivers_total = getDriversTotalScore(drivers_list, base_all_rows, last_gp_index);
               let stable_total = getStableTotalScore(stable, base_all_rows, last_gp_index);
+
+              console.log(drivers_total)
               
     
               // media
@@ -493,29 +501,29 @@ function loadChampionshipData(team_id) {
     
 
               // # migliore / peggiore in totale
-              let all_best = getNumberOfTimesDriverHasBeenTheBest(drivers_indexes, base_all_rows, last_gp_index);
+              /*let all_best = getNumberOfTimesDriverHasBeenTheBest(drivers_indexes, base_all_rows, last_gp_index);
               let all_worst = getNumberOfTimesDriverHasBeenTheWorst(drivers_indexes, base_all_rows, last_gp_index);
 
-              /* TODO */
+              
               let all_best_stable = getNumberOfTimesStableHasBeenTheBest(stable_index, base_all_rows, last_gp_index);
               let all_worst_stable = getNumberOfTimesStableHasBeenTheWorst(stable_index, base_all_rows, last_gp_index);
 
               setCookie("all_best", all_best, 1);
               setCookie("all_worst", all_worst, 1);
               setCookie("all_best_stable", all_best_stable, 1);
-              setCookie("all_worst_stable", all_worst_stable, 1);
+              setCookie("all_worst_stable", all_worst_stable, 1);*/
 
 
               // # migliore / peggiore in squadra
-              let team_best = getNumberOfTimeDriverHasBeenTheBestInTeam(drivers_indexes, base_all_rows, last_gp_index);
+              /*let team_best = getNumberOfTimeDriverHasBeenTheBestInTeam(drivers_indexes, base_all_rows, last_gp_index);
               let team_worst = getNumberOfTimeDriverHasBeenTheWorstInTeam(drivers_indexes, base_all_rows, last_gp_index);
     
               setCookie("team_best", team_best, 1);
-              setCookie("team_worst", team_worst, 1);
+              setCookie("team_worst", team_worst, 1);*/
 
 
               // numero di volte td
-              let td_times = getTimesHasBeenTurboDriver(drivers_indexes, base_all_rows, mod_all_rows, last_gp_index)
+              //let td_times = getTimesHasBeenTurboDriver(drivers_indexes, base_all_rows, mod_all_rows, last_gp_index)
               
 
               // creazione oggetti
@@ -527,12 +535,12 @@ function loadChampionshipData(team_id) {
                   total: drivers_total[i],
                   average: drivers_avg[i],
                   best_result: drivers_max[i],
-                  worst_result: drivers_min[i],
+                  worst_result: drivers_min[i]/*,
                   all_best: all_best[i],
                   all_worst: all_worst[i],
                   team_best: team_best[i],
                   team_worst: team_worst[i],
-                  td_times: td_times[i]
+                  td_times: td_times[i]*/
                 });
               }
 
@@ -540,12 +548,14 @@ function loadChampionshipData(team_id) {
                 total: stable_total,
                 average: stable_avg,
                 best_result: stable_max,
-                worst_result: stable_min,
+                worst_result: stable_min/*,
                 all_best: all_best_stable,
-                all_worst: all_worst_stable
+                all_worst: all_worst_stable*/
               }
 
-              printChampionshipDriversData(drivers_data);
+              let personal_section = document.getElementsByClassName('personal-data-col');
+
+              printChampionshipDriversData(drivers_data, personal_section);
 
               printChampionshipStableData(stable_data);
     
@@ -621,7 +631,7 @@ function loadTabPane(elem) {
   
 }
 
-function getLastGpIndex(all_rows, gp_location) {
+/*function getLastGpIndex(all_rows, gp_location) {
   for(let i = 1; i < all_rows.length; i++){
     if(all_rows[i].split("-")[0].localeCompare(gp_location) == 0) {
       return i;
@@ -629,7 +639,7 @@ function getLastGpIndex(all_rows, gp_location) {
   }
 
   return -1;
-}
+}*/
 
 function createStatsChart() {
   let team = stringToArray(getCookie("team"));

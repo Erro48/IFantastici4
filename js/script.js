@@ -198,9 +198,6 @@ function getDriversTotalScore(drivers_list, csv_data, last_gp_index) {
   let drivers_total = new Array(drivers_list.length).fill(0);
   let drivers_index_list = getDriversIndexes(drivers_list);
 
-  console.log(drivers_list)
-
-
   for(let j = 0; j < drivers_list.length; j++){
     for(let i = 1; i <= last_gp_index; i++){
       let tmp_val = csv_data[i][drivers_index_list[j]];
@@ -306,7 +303,7 @@ function getStablePartialPerEachGp(stable_index, csv_data, last_gp_index) {
 
 /* |>--- | PROMISES | --------------------<| */
 
-/*function getLastGpIndexPromise() {
+function getLastGpIndexPromise() {
   return new Promise(function(resolve, reject) {
     $.ajax({
           url: '../Fanta/data/score.csv',
@@ -322,7 +319,7 @@ function getStablePartialPerEachGp(stable_index, csv_data, last_gp_index) {
           resolve(i-1);
         });
   });
-}*/
+}
 
 function getLastGpIndex(csv_data) {
   let i = 0;

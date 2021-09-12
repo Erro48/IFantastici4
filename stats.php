@@ -41,47 +41,58 @@
                 <h3>Statistiche</h3>
             </div>
 
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <div class="row">
+              <!-- colonna stats piloti/scuderia -->
+              <div class="col-12 col-sm-6">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
 
-              <?php
-              $drivers_surname = getDriversByTeamIdToString($_SESSION['id_squadra'], 1, 1);
-              $stable_short_name = getStableByTeamIdToString($_SESSION['id_squadra']);
+                <?php
+                $drivers_surname = getDriversByTeamIdToString($_SESSION['id_squadra'], 1, 1);
+                $stable_short_name = getStableByTeamIdToString($_SESSION['id_squadra']);
 
-              for($i = 0; $i < count($drivers_surname); $i++) {
-                if($i == 0) {
-                  printNavItem($drivers_surname[$i], 'true');
-                } else {
-                  printNavItem($drivers_surname[$i], 'false');
+                for($i = 0; $i < count($drivers_surname); $i++) {
+                  if($i == 0) {
+                    printNavItem($drivers_surname[$i], 'true', 1);
+                  } else {
+                    printNavItem($drivers_surname[$i], 'false', 1);
+                  }
                 }
-              }
 
-              printNavItem($stable_short_name, 'false');
+                printNavItem($stable_short_name, 'false', 0);
 
-              ?>
-
-              
-              <li class="nav-item my-nav-item d-sm-none" >
-                <button class="nav-link" id="other-tab" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" aria-selected="false">Altro</button>
-              </li>
-            </ul>
+                ?>
 
 
-            <div class="tab-content" id="myTabContent">
+                  <li class="nav-item my-nav-item d-sm-none" >
+                    <button class="nav-link" id="other-tab" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" aria-selected="false">Altro</button>
+                  </li>
+                </ul>
 
-            <?php
-            //echo '<script>loadTeamsMembersData('.$_SESSION['id_squadra'].');</script>';
-            
-            for($i = 0; $i < count($drivers_surname); $i++) {
-              if($i == 0) {
-                printDriverTabPane($drivers_surname[$i], true);
-              } else {
-                printDriverTabPane($drivers_surname[$i], false);
-              }
-            }
+                <div class="tab-content" id="myTabContent">
 
-            printStableTabPane($stable_short_name, false);
-            ?>
+                <?php
+                //echo '<script>loadTeamsMembersData('.$_SESSION['id_squadra'].');</script>';
+                
+                for($i = 0; $i < count($drivers_surname); $i++) {
+                  if($i == 0) {
+                    printDriverTabPane($drivers_surname[$i], true);
+                  } else {
+                    printDriverTabPane($drivers_surname[$i], false);
+                  }
+                }
+
+                printStableTabPane($stable_short_name, false);
+                ?>
+                </div>
+              </div> <!-- /div stats piloti/scuderia -->
+
+              <!-- colonna stats squadra -->
+              <div class="col-12 col-sm-6">
+                
+              </div>
             </div>
+
+            
 
             <!-- tabella -->
             <div class="container-fluid">
