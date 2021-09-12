@@ -24,7 +24,6 @@
     <link href="./css/custom.css" rel="stylesheet">
     <link href="./css/mycss/style.css" rel="stylesheet">
     <link href="./css/mycss/home.css" rel="stylesheet">
-    
 
 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -137,6 +136,7 @@
         <!-- appena riesco a ridimensionare le card col torna a md e non lg -->
         <div class="col-12 col-xl-5 order-1">
           <div class="container main-container team-container sticky-top" style="top: 76px; z-index: 1">
+          
             <div class="header">
               <?php
               // seleziono il nome della squadra

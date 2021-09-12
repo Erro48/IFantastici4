@@ -663,18 +663,23 @@ function loadScore(load_score_obj) {
       // scrivo i punteggi in mod_score.csv
       writeRowIn("mod_score.csv", new_score, gp_index);
 
+      console.log(teams_info_obj)
+
       let teams_score = [new_score[0]];
       for(let i = 0; i < teams_info_obj.length; i++) {
         let tmp_score = 0;
         for(let j = 0; j < teams_info_obj[i].drivers.length; j++) {
-          tmp_score += new_score[teams_info_obj[i].drivers[j]];
+          tmp_score += castScore(new_score[teams_info_obj[i].drivers[j]]);
         }
+        console.log(new_score[parseInt(teams_info_obj[i].id_scuderia) + 20])
+        tmp_score += castScore(new_score[parseInt(teams_info_obj[i].id_scuderia) + 20]);
 
         teams_score.push(tmp_score);
       }
 
-      writeRowIn("teams_score.csv", teams_score, gp_index);
+      console.log(teams_score)
 
+      writeRowIn("teams_score.csv", teams_score, gp_index);
 
 
 
@@ -684,9 +689,10 @@ function loadScore(load_score_obj) {
         last_score_JSON.push(JSON.parse('{"id_squadra": "' + teams_info_obj[i].id_squadra + '", "last_score": "' + last_score + '"}'))
       }
 
-      console.log(last_score_JSON);
-
       updateTeamsScore(last_score_JSON);
+
+      setCookie('scores_data', null, 1);
+      setCookie('mod_scores_data', null, 1);
     }
   )
 }

@@ -22,7 +22,6 @@ function getTeamsScorePerEachGpPromise() {
     $.ajax({
         type: "POST",
         url: '../Fanta/data/teams_score.csv',
-        data: { get_md_info : "" },
         datatype: 'text',
         success: function(response) {
           resolve(response)
@@ -98,11 +97,14 @@ function createTeamGraph(json_elem) {
       data = data.split('\r').map(function(e) { return e.replace('\n', '') }).map(function(e) { return e.split(',') });
       transposed_data = transposeArr(data);
 
+      console.log(data[0])
+      console.log(scoreConverterToArray(data[0], 5))
+
       getTeamsInfoPromise().then(
         function(teams_info) {
           let datasets_arr = [];
           
-          for(let i = 0; i < data[0].length-1; i++) {
+          for(let i = 0; i < JSON.parse(teams_info).length; i++) {
             let team_name = JSON.parse(JSON.parse(teams_info)[i]).nome_squadra;
             
             datasets_arr.push({

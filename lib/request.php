@@ -79,7 +79,13 @@
       echo $row['id_scuderia'];
     }
   } elseif(isset($_POST['get_teams'])) {
-    $sql = 'SELECT nome_squadra, id_squadra, turbo_driver, mega_driver, id_scuderia, punteggio_squadra, punteggio_precedente_squadra FROM tsquadre, tscuderie WHERE id_scuderia=k_scuderia';
+    $diff_date = diffDate(today(), stringToDateTime($SUMMER_BREAK_DATE));
+
+    if($diff_date > 0)
+      $sql = 'SELECT nome_squadra, id_squadra, turbo_driver, mega_driver, id_scuderia, punteggio_squadra, punteggio_precedente_squadra FROM tsquadre, tscuderie WHERE id_scuderia=k_scuderia';
+    else
+      $sql = 'SELECT nome_squadra, id_squadra, turbo_driver, mega_driver, id_scuderia, punteggio_squadra, punteggio_precedente_squadra FROM tsquadre, tscuderie WHERE id_scuderia=k_2scuderia';
+    
     $result = $db->query($sql);
 
     $json_obj = [];
