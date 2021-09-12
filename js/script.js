@@ -329,6 +329,13 @@ function getLastGpIndex(csv_data) {
   return (i-1);
 }
 
+function getGpIndex(gp, csv_data) {
+  let i = 1;
+  while(csv_data[i][0].split("-")[0] != gp) { i++; }
+
+  return i;
+}
+
 function scoreConverterToArray(score, row_len) {
   score = score.split(",");
   let data = [];
@@ -498,6 +505,7 @@ function sumArray(arr){
 }
 
 function castScore(score) {
+  if(score == '') return 0;
   return parseFloat(score);
 }
 
@@ -514,7 +522,7 @@ function export_csv(arrayHeader, arrayData, delimiter, fileName) {
   let hiddenElement = document.createElement('a');
   hiddenElement.href = csvUrl;
   hiddenElement.target = '_blank';
-  hiddenElement.download = fileName + '.csv';
+  hiddenElement.download = fileName; // + '.csv';
   hiddenElement.click();
 }
 
@@ -538,13 +546,13 @@ function writeRowIn(filename, row, index) {
     
     // riscrivo tutto dentro filename
     export_csv(arrayHeader, arrayData, ",", filename);
-    console.log("mod_score.csv aggiornato!");
+    console.log(filename + " aggiornato!");
   });
 
 }
 
 // carico i file da score.csv a mod_score.csv, mettendo i valori in base a td e md
-function loadScore() {
+function oldLoadScore() {
   // ciclo tutte le squadre
   // - per ogni ciclo prendo td e md
 
@@ -607,6 +615,80 @@ function loadScore() {
           
         });*/
     });
+}
+
+function loadScore(load_score_obj) {
+  let gp_index = getGpIndex(load_score_obj.gp.split('-')[0], scoreConverterToArray(getCookie('scores_data'), 31));
+  let score_row = [load_score_obj.gp];
+
+  score_row = score_row.concat(load_score_obj.drivers_score);
+  score_row = score_row.concat(load_score_obj.stables_score);
+
+  // scrivo i punteggi in score.csv
+  writeRowIn('score.csv', score_row, gp_index);
+
+  getTeamsInfoPromise().then(
+    function(teams_info) {
+      if(score_row == null) return;
+
+      let teams = JSON.parse(teams_info);  // squadre
+      let teams_info_obj = [];
+      let new_score = new Array(31);
+
+      new_score[0] = score_row[0];
+
+      for(let i = 0; i < teams.length; i++) {
+        let team = JSON.parse(teams[i]);
+        teams_info_obj.push(team);
+
+      // inserisce i piloti
+        for(let j = 0; j < team.drivers.length; j++){
+          if(castScore(team.turbo_driver) == castScore(team.drivers[j])) {
+            // turbo driver
+            new_score[team.drivers[j]] = 2*castScore(score_row[team.drivers[j]]);
+          } else if(castScore(team.mega_driver) == castScore(team.drivers[j])) {
+            // mega driver
+            new_score[team.drivers[j]] = 3*castScore(score_row[team.drivers[j]]);
+          }else {
+            new_score[team.drivers[j]] = castScore(score_row[team.drivers[j]]);
+          }
+        }
+      }
+
+      // inserisco le scuderie
+      for(let i = 0; i < 10; i++) {
+        new_score[i+21] = castScore(score_row[i+21]);
+      }
+
+      // scrivo i punteggi in mod_score.csv
+      writeRowIn("mod_score.csv", new_score, gp_index);
+
+      let teams_score = [new_score[0]];
+      for(let i = 0; i < teams_info_obj.length; i++) {
+        let tmp_score = 0;
+        for(let j = 0; j < teams_info_obj[i].drivers.length; j++) {
+          tmp_score += new_score[teams_info_obj[i].drivers[j]];
+        }
+
+        teams_score.push(tmp_score);
+      }
+
+      writeRowIn("teams_score.csv", teams_score, gp_index);
+
+
+
+
+      let last_score_JSON = [];
+      for(let i = 0; i < teams_info_obj.length; i++) {
+        let last_score = getLastGpTeamScore(teams_info_obj[i].drivers, teams_info_obj[i].id_scuderia);
+        last_score_JSON.push(JSON.parse('{"id_squadra": "' + teams_info_obj[i].id_squadra + '", "last_score": "' + last_score + '"}'))
+      }
+
+      console.log(last_score_JSON);
+
+      updateTeamsScore(last_score_JSON);
+    }
+  )
 }
 
 function updateTeamsScore(last_score) {

@@ -8,6 +8,7 @@ window.onload = function(){
     function(scores_data) {
       setCookie('scores_data', scores_data, 1);
 
+      setGpsInSession(scores_data);
 
       getModScoresDatasPromise().then(
         function(mod_scores_data) {
@@ -44,6 +45,19 @@ window.onload = function(){
 
 function createTeamScoreFile(score) {
 
+}
+
+function setGpsInSession(score) {
+  let gps = [];
+  for(let i = 1; i < score.length; i++) {
+    gps.push(score[i][0]);
+  }
+
+  $.ajax({
+    type: "POST",
+    url: '../Fanta/lib/request.php',
+    data: { set_gps_session : gps }
+  });
 }
 
 /* Promise per prendere i punteggi dei file score.csv e mod_score.csv */

@@ -296,6 +296,8 @@
       se la data del gp è prima, devo aggiornare
     */
 
+  } elseif(isset($_POST['set_gps_session'])) {
+    $_SESSION['gps'] = $_POST['set_gps_session'];
   } else {
     echo "Ajax fallito: nessuna funzione associata";
   }
