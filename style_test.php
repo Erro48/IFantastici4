@@ -6,6 +6,7 @@
     include __DIR__."/lib/mysql.php";
     include __DIR__."/lib/const.php";
     include __DIR__."/lib/functions.php";
+    include __DIR__."/lib/tracks_layout.php";
 
     
     if(!isset($_SESSION['id_utente']))
@@ -25,32 +26,6 @@
     <link href="./css/style.css" rel="stylesheet">
     
     <style>
-/*.tmp-header-img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.skeleton {
-  animation: skeleton-loading 1s linear infinite alternate;
-}
-
-.skeleton-text {
-  width: 100%;
-  height: .5rem;
-  margin-bottom: .25rem;
-  border-radius: .125rem;
-}
-
-.skeleton-text:last-child {
-  margin-bottom: 0;
-  width: 80%;
-}
-
-@keyframes skeleton-loading {
-  0% { background-color: hsl(200, 20%, 70%) }
-  100% { background-color: hsl(200, 20%, 95%) }
-}*/
 .no-js #loader { display: none;  }
 .js #loader { display: block; position: absolute; left: 100px; top: 0; }
 .se-pre-con {
@@ -89,7 +64,7 @@
     <div class="se-pre-con"></div>
     <!-- Navbar -->
     <?php include __DIR__."/lib/navbar.php";?>
-
+    
     <div class="container">
       <div class="row">
         <!-- classifica -->
