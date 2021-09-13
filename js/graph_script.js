@@ -94,11 +94,9 @@ function createTeamGraph(json_elem) {
 
   getTeamsScorePerEachGpPromise().then(
     function(data) {
-      data = data.split('\r').map(function(e) { return e.replace('\n', '') }).map(function(e) { return e.split(',') });
+      data = data.split('\n').map(function(e) { return e.split(',') });
       transposed_data = transposeArr(data);
 
-      console.log(data[0])
-      console.log(scoreConverterToArray(data[0], 5))
 
       getTeamsInfoPromise().then(
         function(teams_info) {
