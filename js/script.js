@@ -743,12 +743,11 @@ function arrayToString() {
 }
 
 function setBorder(id, elem) {
-  console.log("ciao");
   elem.setAttribute('border-left', '3px solid '+getLiveryByDriverId(id));
 }
 
 function getLiveryByDriverId(driver_id) {
-  return livery[Math.ceil(driver_id/2)];
+  return livery[Math.ceil(driver_id/2) - 1];
 }
 
 function getLiveryByStableId(stable_id) {

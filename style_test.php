@@ -6,7 +6,6 @@
     include __DIR__."/lib/mysql.php";
     include __DIR__."/lib/const.php";
     include __DIR__."/lib/functions.php";
-    include __DIR__."/lib/tracks_layout.php";
 
     
     if(!isset($_SESSION['id_utente']))
@@ -23,34 +22,22 @@
 
     <link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"> 
     <link href="./css/custom.css" rel="stylesheet">
-    <link href="./css/style.css" rel="stylesheet">
-    
-    <style>
-.no-js #loader { display: none;  }
-.js #loader { display: block; position: absolute; left: 100px; top: 0; }
-.se-pre-con {
-	position: fixed;
-	left: 0px;
-	top: 0px;
-	width: 100%;
-	height: 100%;
-	z-index: 9999;
-	width: 100px;
-  height: 100px;
-  background: url(./images/Icons/soft_tyre.png) center no-repeat;
-  background-size: cover;
-}
-    </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+    <link href="./css/mycss/style.css" rel="stylesheet">
+    <link href="./css/mycss/home.css" rel="stylesheet">
 
-<script>
-  // Wait for window load
-	$(window).load(function() {
-		// Animate loader off screen
-		$(".se-pre-con").fadeOut("slow");;
-	});
-</script>
+    <style>
+    .game-period-image--background {
+        /*position: absolute;*/
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: -1;
+        padding: 10px;
+    }
+    </style>
 
 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -59,16 +46,335 @@
     <script src="./js/script.js"></script>
     <script src="./js/home_script.js"></script>
     <script src="./js/graph_script.js"></script>
+    <script src="./js/tracks_layout.js"></script>
+
+    <script>
+      window.onload = function() {
+        createTrackSlot(getLastGpLocation());
+      }
+
+      function createTrackSlot(gp_location) {
+        let score = scoreConverterToArray(getCookie('scores_data'), 31);
+        let last_gp_date = getGpDate(gp_location);
+        let last_gp_index = getGpIndex(gp_location, score);
+
+        let track_slot = document.getElementById('track-slot');
+        let header = createTrackHeader(score, gp_location);
+        let body = createTrackBody(score, gp_location);
+        let footer = createTrackFooter();
+        
+
+        track_slot.appendChild(header);
+        track_slot.appendChild(body);
+        track_slot.appendChild(footer);
+      }
+
+      function createTrackHeader(score, gp) {
+        let header = document.createElement('ul');
+        header.classList.add('track-slot-header');
+        header.classList.add('nav');
+        header.classList.add('nav-tabs');
+        header.classList.add('accordion-header');
+        header.setAttribute('id', 'track-slot-header');
+
+
+        // ACCORDION
+        let accordion_btn_container = document.createElement('li');
+        accordion_btn_container.classList.add('nav-item');
+        accordion_btn_container.classList.add('d-lg-none');
+
+        let accordion_btn = document.createElement('button');
+        accordion_btn.classList.add('accordion-button');
+        accordion_btn.classList.add('collapsed');
+        accordion_btn.setAttribute('type', 'button');
+        accordion_btn.setAttribute('data-bs-toggle', 'collapse');
+        accordion_btn.setAttribute('data-bs-target', '#track-slot-body');
+        accordion_btn.setAttribute('aria-expanded', 'true');
+        accordion_btn.setAttribute('aria-controls', 'track-slot-body');
+
+        accordion_btn_container.appendChild(accordion_btn);
+
+
+
+
+
+        let prevs_gp = document.createElement('li');
+        let header_gps = [];
+        let nexts_gp = document.createElement('li');
+
+        prevs_gp.classList.add('header-elem');
+        prevs_gp.classList.add('nav-item');
+        prevs_gp.classList.add('nav-link');
+        prevs_gp.id = 'prev-arrow';
+        prevs_gp.innerHTML = '<<';
+
+        nexts_gp.classList.add('header-elem');
+        nexts_gp.classList.add('nav-item');
+        nexts_gp.classList.add('nav-link');
+        nexts_gp.id = 'next-arrow';
+        nexts_gp.innerHTML = '>>';
+
+        for(let i = 0; i < 3; i++) {
+          let gp_location;
+          header_gps.push(document.createElement('li'));
+          header_gps[i].classList.add('header-elem');
+          header_gps[i].classList.add('nav-item');
+          header_gps[i].classList.add('nav-link');
+
+          /*if(i == 0) {
+            // prev
+            let index = getLastGpIndex(score) - 1;
+            gp_location = getGpByIndex(index, score).split('-')[0];
+          } else if(i == 1) {
+            // last
+            gp_location = getLastGpLocation();
+          } else {
+            // next
+            gp_location = getNextGpLocation();
+          } */
+          
+          let gp_index = getGpIndex(gp, score);
+          if(i == 0) {
+            gp_location = getGpByIndex(gp_index-1, score).split('-')[0];
+          } else if(i == 1) {
+            gp_location = gp;
+          } else {
+            gp_location = getGpByIndex(gp_index+1, score).split('-')[0];
+          }
+
+          let gp_flag = getFlagElement(gp_location, 'top', false);
+          let gp_txt = document.createElement('div');
+          gp_txt.classList.add('gp-location');
+          gp_txt.classList.add('d-none');
+          gp_txt.classList.add('d-sm-flex');
+          gp_txt.innerHTML = gp_location.substring(0, 3);
+
+          if(i != 1) {
+            header_gps[i].setAttribute('onclick', 'loadTrackLayoutSlot(\'' + gp_location + '\')'); 
+          }
+
+          header_gps[i].appendChild(gp_flag);
+          header_gps[i].appendChild(gp_txt);
+        }
+        
+        header_gps[1].classList.add('active');
+        header_gps[1].classList.add('last-gp');
+
+
+        header.appendChild(prevs_gp);
+        for(let i = 0; i < 3; i++ ) { header.appendChild(header_gps[i]); }
+        header.appendChild(nexts_gp);
+
+        
+
+        header.appendChild(accordion_btn_container);
+        return header;
+      }
+
+      function createTrackBody(score, gp) {
+        let gp_index = getGpIndex(gp, score);
+
+        /*
+        class="accordion-collapse collapse show"
+        aria-labelledby="headingOne"
+        data-bs-parent="#accordionExample"
+        */
+        let body = document.createElement('div');
+        body.classList.add('track-slot-body');
+        body.classList.add('accordion-collapse');
+        body.classList.add('collapse');
+        body.classList.add('row');
+        body.setAttribute('id', 'track-slot-body');
+        body.setAttribute('aria-labelledby', 'track-slot-header');
+        body.setAttribute('data-bs-parent', '#accordionExample');
+
+        let gp_location = document.createElement('div');
+        let gp_date = document.createElement('div');
+        let track_layout = document.createElement('div');
+        let track_rank = document.createElement('div');
+
+        gp_location.innerHTML = getGpByIndex(gp_index, score).split('-')[0];
+        gp_location.classList.add('gp-location');
+        
+        gp_date.innerHTML = getGpByIndex(gp_index, score).split('-')[1];
+        gp_date.classList.add('gp-date');
+
+        track_layout.classList.add('track-layout');
+        track_layout.appendChild(getTrackLayout(getGpByIndex(gp_index, score).split('-')[0]));
+
+        track_rank = getTrackRank(gp_index);
+        console.log(track_rank)
+
+        body.appendChild(gp_location);
+        body.appendChild(gp_date);
+        body.appendChild(track_layout);
+        body.appendChild(track_rank);
+
+        return body;
+      }
+
+      function createTrackFooter() {
+        let footer = document.createElement('div');
+        return footer;
+      }
+
+      function getTrackRank(gp_index) {
+        let score = scoreConverterToArray(getCookie('scores_data'), 31);
+
+        let rank_container = document.createElement('div');
+        rank_container.classList.add('track-rank');
+
+        let drivers_rank = document.createElement('div');
+        drivers_rank.classList.add('row');
+        let drivers_total = [];
+
+        for(let i = 1; i <= 20; i++) {
+          drivers_total.push(getDriverPartialPerEachGp(i, score, gp_index)[gp_index - 1]);
+        }
+        let ordered_indexes = calculateRank(drivers_total, 3);
+        for(let i = 0; i < ordered_indexes.length; i++) {
+          let div = document.createElement('div');
+          div.classList.add('col-4');
+          div.classList.add('track-rank-elem');
+
+          div.style.borderLeft = '3px solid ' + getLiveryByDriverId(ordered_indexes[i]);
+
+          div.appendChild(createRankElement(score[0][ordered_indexes[i]].substring(0, 3), score[gp_index][ordered_indexes[i]], true))
+          drivers_rank.appendChild(div);
+        }
+
+
+
+
+        let teams_rank = document.createElement('div');
+        let stable_div = document.createElement('div');
+        let team_div = document.createElement('div');
+        
+
+        teams_rank.classList.add('row');
+
+        stable_div.classList.add('col-6');
+        stable_div.classList.add('track-rank-elem');
+        team_div.classList.add('col-6');
+        team_div.classList.add('track-rank-elem');
+
+        let stable_total = [];
+        for(let i = 1; i <= 10; i++) {
+          stable_total.push(getStablePartialPerEachGp(i, score, gp_index)[gp_index - 1]);
+        }
+        let best_stable = calculateRank(stable_total, 1)[0];
+
+        stable_div.appendChild(createRankElement(score[0][20 + best_stable], score[gp_index][20 + best_stable], false));
+        stable_div.style.borderLeft = '3px solid ' + getLiveryByStableId(best_stable);
+
+
+        getFileContentPromise('teams_score.csv').then(
+          function(teams_score) {
+            teams_score = teams_score.split('\n').map(function(e) { return e.split(',') });
+            let last_score = teams_score[gp_index].slice(1).map(function(e) { return castScore(e)});
+            let best_team = calculateRank(last_score, 1);
+
+            
+            getTeamsInfoPromise().then(
+              function(teams_obj) {
+                teams_obj = JSON.parse(teams_obj).map(function(e) { return JSON.parse(e)});
+                
+
+                team_div.appendChild(createRankElement(
+                  teams_obj[teams_score[0][best_team] - 1].nome_squadra,
+                  teams_score[gp_index][best_team],
+                  false
+                  ));
+                
+                
+                teams_rank.appendChild(stable_div);
+                teams_rank.appendChild(team_div);
+              }
+            )
+          }
+        )
+
+
+                
+        rank_container.appendChild(drivers_rank);
+        rank_container.appendChild(teams_rank);
+        return rank_container;
+      }
+
+      function calculateRank(arr, rank_dim) {
+        let ordered_indexes = [];
+        for(let i = 0; i < rank_dim; i++) {
+          let max = 0, max_index = -1;
+          for(let j = 0; j < arr.length; j++) {
+            if(arr[j] >= max) {
+              max = arr[j];
+              max_index = j; 
+            }
+          }
+
+          ordered_indexes.push(max_index + 1);
+          arr[max_index] = 0;
+        }
+
+        return ordered_indexes;
+      }
+
+      function createRankElement(value, score, driver_flag) {
+        let div = document.createElement('div');
+        div.classList.add('row');
+
+        let val_txt = document.createElement('div');
+        let score_txt = document.createElement('div');
+
+        val_txt.classList.add('rank-name');
+        score_txt.classList.add('rank-score');
+
+        if(driver_flag == false) {
+          val_txt.classList.add('col-12');
+          score_txt.classList.add('col-12');
+          val_txt.classList.add('col-sm-6');
+          score_txt.classList.add('col-sm-6');
+        } else {
+          val_txt.classList.add('col-6');
+          score_txt.classList.add('col-6');
+        }
+
+        val_txt.innerHTML = value;
+        score_txt.innerHTML = ' (' + score + ')';
+
+        div.appendChild(val_txt);
+        div.appendChild(score_txt);
+
+        return div;
+      }
+
+      function loadTrackLayoutSlot(gp_location) {
+        let track_slot = document.getElementById('track-slot');
+
+        while (track_slot.firstChild) {
+          track_slot.removeChild(track_slot.firstChild);
+        }
+
+        createTrackSlot(gp_location);
+
+      }
+    </script>
   </head>
   <body class="body-pattern">
-    <div class="se-pre-con"></div>
     <!-- Navbar -->
     <?php include __DIR__."/lib/navbar.php";?>
-    
-    <div class="container">
+
+    <div class="container-fluid">
       <div class="row">
+        <!-- tracciato -->
+        <div class="col-12 col-xl-3 accordion" id="accordionExample">
+          <div class="container main-container sticky-top accordion-item" id="track-slot" style="top: 76px; z-index: 1">
+
+          </div>
+        </div>
+
         <!-- classifica -->
-        <div class="col-12 col-xl-7 order-xl-1 order-2">
+        <div class="col-12 col-xl-5 order-xl-1 order-2">
           <div class="container main-container rank-container">
             <div class="header">
               <h3>Classifica</h3>
@@ -159,50 +465,12 @@
             </div>
           </div>
         </div>
-        
-
-        <!--<div class="row">
-
-          <div class="card">
-            <div class="header">
-              <img class="tmp-header-img skeleton" src="https://source.unsplash.com/100x100/?nature">
-              <div class="title" data-title>
-                <div class="skeleton skeleton-text">Lorem ipsum dolor sit.</div>
-                <div class="skeleton skeleton-text">Lorem, ipsum dolor.</div>
-              </div>
-            </div>
-            <div data-body>
-              <div class="skeleton skeleton-text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-              <div class="skeleton skeleton-text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-              <div class="skeleton skeleton-text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-              <div class="skeleton skeleton-text">Lorem ipsum dolor sit amet.</div>
-            </div>
-          </div>
-
-          <template id="card-template">
-          <div class="card">
-            <div class="header">
-              <img class="tmp-header-img skeleton" src="https://source.unsplash.com/100x100/?nature">
-              <div class="title" data-title>
-                <div class="skeleton skeleton-text"></div>
-                <div class="skeleton skeleton-text"></div>
-              </div>
-            </div>
-            <div data-body>
-              <div class="skeleton skeleton-text"></div>
-              <div class="skeleton skeleton-text"></div>
-              <div class="skeleton skeleton-text"></div>
-              <div class="skeleton skeleton-text"></div>
-            </div>
-          </div>
-          </template> 
-        </div> -->
-        
 
         <!-- squadra -->
         <!-- appena riesco a ridimensionare le card col torna a md e non lg -->
-        <div class="col-12 col-xl-5 order-1">
+        <div class="col-12 col-xl-4 order-1">
           <div class="container main-container team-container sticky-top" style="top: 76px; z-index: 1">
+          
             <div class="header">
               <?php
               // seleziono il nome della squadra
@@ -275,8 +543,8 @@
                 <div id="raceweek-points" class="col-1 order-2"></div>
               </div>
             </div>
-        </div>
-      </div><!-- /squadra -->
+        </div><!-- /squadra -->
+      </div>
     </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

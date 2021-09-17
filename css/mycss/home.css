@@ -83,3 +83,38 @@
         cursor: pointer;
     }
 }
+
+/* ---------------------------
+  Track slot
+------------------------------ */
+
+.header-elem {
+    margin: 0 auto;
+    text-align: center;
+    width: 15%;
+    display: flex;
+}
+
+.track-rank-elem {
+    border: 1px solid gray;
+    border-radius: 7px;
+}
+
+.rank-name {
+    font-weight: bold;
+    font-size: medium;
+    padding-right: 0;
+}
+
+.rank-score {
+    color: gray;
+}
+
+.header-elem .flag-icon { margin: 0 auto; }
+
+.header-elem .gp-location {
+    margin: 0 auto;
+}
+
+#prev-arrow { display: inline; text-align: right; }
+#next-arrow { text-align: left; }
