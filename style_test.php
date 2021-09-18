@@ -74,25 +74,25 @@
         header.classList.add('track-slot-header');
         header.classList.add('nav');
         header.classList.add('nav-tabs');
-        header.classList.add('accordion-header');
+       /* header.classList.add('accordion-header');*/
         header.setAttribute('id', 'track-slot-header');
 
 
         // ACCORDION
-        let accordion_btn_container = document.createElement('li');
+        /*let accordion_btn_container = document.createElement('li');
         accordion_btn_container.classList.add('nav-item');
         accordion_btn_container.classList.add('d-lg-none');
 
         let accordion_btn = document.createElement('button');
         accordion_btn.classList.add('accordion-button');
-        accordion_btn.classList.add('collapsed');
+        //accordion_btn.classList.add('collapsed');
         accordion_btn.setAttribute('type', 'button');
         accordion_btn.setAttribute('data-bs-toggle', 'collapse');
         accordion_btn.setAttribute('data-bs-target', '#track-slot-body');
         accordion_btn.setAttribute('aria-expanded', 'true');
         accordion_btn.setAttribute('aria-controls', 'track-slot-body');
 
-        accordion_btn_container.appendChild(accordion_btn);
+        accordion_btn_container.appendChild(accordion_btn);*/
 
 
 
@@ -167,26 +167,21 @@
 
         
 
-        header.appendChild(accordion_btn_container);
+        /*header.appendChild(accordion_btn_container);*/
         return header;
       }
 
       function createTrackBody(score, gp) {
         let gp_index = getGpIndex(gp, score);
 
-        /*
-        class="accordion-collapse collapse show"
-        aria-labelledby="headingOne"
-        data-bs-parent="#accordionExample"
-        */
         let body = document.createElement('div');
         body.classList.add('track-slot-body');
-        body.classList.add('accordion-collapse');
-        body.classList.add('collapse');
+        /*body.classList.add('accordion-collapse');
+        body.classList.add('collapse');*/
         body.classList.add('row');
-        body.setAttribute('id', 'track-slot-body');
+        /*body.setAttribute('id', 'track-slot-body');
         body.setAttribute('aria-labelledby', 'track-slot-header');
-        body.setAttribute('data-bs-parent', '#accordionExample');
+        body.setAttribute('data-bs-parent', '#accordionExample');*/
 
         let gp_location = document.createElement('div');
         let gp_date = document.createElement('div');
@@ -367,8 +362,8 @@
     <div class="container-fluid">
       <div class="row">
         <!-- tracciato -->
-        <div class="col-12 col-xl-3 accordion" id="accordionExample">
-          <div class="container main-container sticky-top accordion-item" id="track-slot" style="top: 76px; z-index: 1">
+        <div class="col-12 col-xl-3">
+          <div class="container main-container sticky-top" id="track-slot" style="top: 76px; z-index: 1">
 
           </div>
         </div>
