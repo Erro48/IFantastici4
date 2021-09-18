@@ -74,45 +74,25 @@
         header.classList.add('track-slot-header');
         header.classList.add('nav');
         header.classList.add('nav-tabs');
-       /* header.classList.add('accordion-header');*/
         header.setAttribute('id', 'track-slot-header');
 
-
-        // ACCORDION
-        /*let accordion_btn_container = document.createElement('li');
-        accordion_btn_container.classList.add('nav-item');
-        accordion_btn_container.classList.add('d-lg-none');
-
-        let accordion_btn = document.createElement('button');
-        accordion_btn.classList.add('accordion-button');
-        //accordion_btn.classList.add('collapsed');
-        accordion_btn.setAttribute('type', 'button');
-        accordion_btn.setAttribute('data-bs-toggle', 'collapse');
-        accordion_btn.setAttribute('data-bs-target', '#track-slot-body');
-        accordion_btn.setAttribute('aria-expanded', 'true');
-        accordion_btn.setAttribute('aria-controls', 'track-slot-body');
-
-        accordion_btn_container.appendChild(accordion_btn);*/
-
-
-
-
-
-        let prevs_gp = document.createElement('li');
+        let prevs_gp = createHeaderArrows(0, gp, score); //document.createElement('li');
         let header_gps = [];
-        let nexts_gp = document.createElement('li');
+        let nexts_gp = createHeaderArrows(1, gp, score); //document.createElement('li');
 
-        prevs_gp.classList.add('header-elem');
+        /*prevs_gp.classList.add('header-elem');
         prevs_gp.classList.add('nav-item');
         prevs_gp.classList.add('nav-link');
         prevs_gp.id = 'prev-arrow';
         prevs_gp.innerHTML = '<<';
+        prevs_gp.setAttribute('onclick', 'createAllGpView(0, \'' + gp + '\')');*/
 
-        nexts_gp.classList.add('header-elem');
+        /*nexts_gp.classList.add('header-elem');
         nexts_gp.classList.add('nav-item');
         nexts_gp.classList.add('nav-link');
         nexts_gp.id = 'next-arrow';
         nexts_gp.innerHTML = '>>';
+        nexts_gp.setAttribute('onclick', 'createAllGpView(1, \'' + gp + '\')'); */
 
         for(let i = 0; i < 3; i++) {
           let gp_location;
@@ -120,18 +100,6 @@
           header_gps[i].classList.add('header-elem');
           header_gps[i].classList.add('nav-item');
           header_gps[i].classList.add('nav-link');
-
-          /*if(i == 0) {
-            // prev
-            let index = getLastGpIndex(score) - 1;
-            gp_location = getGpByIndex(index, score).split('-')[0];
-          } else if(i == 1) {
-            // last
-            gp_location = getLastGpLocation();
-          } else {
-            // next
-            gp_location = getNextGpLocation();
-          } */
           
           let gp_index = getGpIndex(gp, score);
           if(i == 0) {
@@ -150,10 +118,12 @@
           gp_txt.innerHTML = gp_location.substring(0, 3);
 
           if(i != 1) {
-            header_gps[i].setAttribute('onclick', 'loadTrackLayoutSlot(\'' + gp_location + '\')'); 
+            if(gp_location != '')
+              header_gps[i].setAttribute('onclick', 'loadTrackLayoutSlot(\'' + gp_location + '\')'); 
           }
 
-          header_gps[i].appendChild(gp_flag);
+          if(gp_location != '')
+            header_gps[i].appendChild(gp_flag);
           header_gps[i].appendChild(gp_txt);
         }
         
@@ -221,6 +191,15 @@
 
         let drivers_rank = document.createElement('div');
         drivers_rank.classList.add('row');
+        let drivers_rank_title = document.createElement('div');
+        drivers_rank_title.classList.add('col-12');
+        drivers_rank_title.classList.add('rank-title');
+        drivers_rank_title.innerHTML = 'Piloti';
+
+        drivers_rank.appendChild(drivers_rank_title);
+
+
+
         let drivers_total = [];
 
         for(let i = 1; i <= 20; i++) {
@@ -229,7 +208,7 @@
         let ordered_indexes = calculateRank(drivers_total, 3);
         for(let i = 0; i < ordered_indexes.length; i++) {
           let div = document.createElement('div');
-          div.classList.add('col-4');
+          div.classList.add('col');
           div.classList.add('track-rank-elem');
 
           div.style.borderLeft = '3px solid ' + getLiveryByDriverId(ordered_indexes[i]);
@@ -241,33 +220,95 @@
 
 
 
-        let teams_rank = document.createElement('div');
-        let stable_div = document.createElement('div');
-        let team_div = document.createElement('div');
+        let stables_rank = document.createElement('div');
+        let best_stable_div = document.createElement('div');
+        let worst_stable_div = document.createElement('div');
+
         
+        
+        stables_rank.classList.add('row');
+        
+        best_stable_div.classList.add('col');
+        best_stable_div.classList.add('track-rank-elem');
+        worst_stable_div.classList.add('col');
+        worst_stable_div.classList.add('track-rank-elem');
+        //team_div.classList.add('col-6');
+        //team_div.classList.add('track-rank-elem');
+        
+        let stable_title = document.createElement('div');
+        stable_title.classList.add('col-12');
+        stable_title.classList.add('rank-title');
+        stable_title.innerHTML = 'Scuderie';
+        
+        let stable_subtitle = document.createElement('div');
+        stable_subtitle.classList.add('row');
+        stable_subtitle.classList.add('rank-subtitle');
+        let best_txt = document.createElement('div');
+        let worst_txt = document.createElement('div');
+        best_txt.classList.add('col');
+        best_txt.innerHTML = 'Migliore';
 
-        teams_rank.classList.add('row');
+        worst_txt.classList.add('col');
+        worst_txt.innerHTML = 'Peggiore';
+        stable_subtitle.appendChild(best_txt);
+        stable_subtitle.appendChild(worst_txt);
 
-        stable_div.classList.add('col-6');
-        stable_div.classList.add('track-rank-elem');
-        team_div.classList.add('col-6');
-        team_div.classList.add('track-rank-elem');
 
+        stables_rank.appendChild(stable_title);
+        stables_rank.appendChild(stable_subtitle);
+        
         let stable_total = [];
         for(let i = 1; i <= 10; i++) {
           stable_total.push(getStablePartialPerEachGp(i, score, gp_index)[gp_index - 1]);
         }
         let best_stable = calculateRank(stable_total, 1)[0];
+        let worst_stable = calculateRank(stable_total, -1)[0];
 
-        stable_div.appendChild(createRankElement(score[0][20 + best_stable], score[gp_index][20 + best_stable], false));
-        stable_div.style.borderLeft = '3px solid ' + getLiveryByStableId(best_stable);
 
+        best_stable_div.appendChild(createRankElement(score[0][20 + best_stable], score[gp_index][20 + best_stable], false));
+        best_stable_div.style.borderLeft = '3px solid ' + getLiveryByStableId(best_stable);
+        worst_stable_div.appendChild(createRankElement(score[0][20 + worst_stable], score[gp_index][20 + worst_stable], false));
+        worst_stable_div.style.borderLeft = '3px solid ' + getLiveryByStableId(worst_stable);
+
+        
+        let teams_rank = document.createElement('div');
+        let best_team_div = document.createElement('div');
+        let worst_team_div = document.createElement('div');
+        let team_title = document.createElement('div');
+
+        teams_rank.classList.add('row');
+
+        best_team_div.classList.add('col');
+        best_team_div.classList.add('track-rank-elem');
+        worst_team_div.classList.add('col');
+        worst_team_div.classList.add('track-rank-elem');
+
+        team_title.classList.add('col-12');
+        team_title.classList.add('rank-title');
+        team_title.innerHTML = 'Squadre';
+
+        let team_subtitle = document.createElement('div');
+        team_subtitle.classList.add('row');
+        team_subtitle.classList.add('rank-subtitle');
+        let team_best_txt = document.createElement('div');
+        let team_worst_txt = document.createElement('div');
+        team_best_txt.classList.add('col');
+        team_best_txt.innerHTML = 'Migliore';
+
+        team_worst_txt.classList.add('col');
+        team_worst_txt.innerHTML = 'Peggiore';
+        team_subtitle.appendChild(team_best_txt);
+        team_subtitle.appendChild(team_worst_txt);
+
+        teams_rank.appendChild(team_title);
+        teams_rank.appendChild(team_subtitle);
 
         getFileContentPromise('teams_score.csv').then(
           function(teams_score) {
             teams_score = teams_score.split('\n').map(function(e) { return e.split(',') });
             let last_score = teams_score[gp_index].slice(1).map(function(e) { return castScore(e)});
             let best_team = calculateRank(last_score, 1);
+            let worst_team = calculateRank(last_score, -1);
 
             
             getTeamsInfoPromise().then(
@@ -275,15 +316,24 @@
                 teams_obj = JSON.parse(teams_obj).map(function(e) { return JSON.parse(e)});
                 
 
-                team_div.appendChild(createRankElement(
+                best_team_div.appendChild(createRankElement(
                   teams_obj[teams_score[0][best_team] - 1].nome_squadra,
                   teams_score[gp_index][best_team],
                   false
                   ));
+
+                worst_team_div.appendChild(createRankElement(
+                  teams_obj[teams_score[0][worst_team] - 1].nome_squadra,
+                  teams_score[gp_index][worst_team],
+                  false
+                  ));
                 
                 
-                teams_rank.appendChild(stable_div);
-                teams_rank.appendChild(team_div);
+                stables_rank.appendChild(best_stable_div);
+                stables_rank.appendChild(worst_stable_div);
+                teams_rank.appendChild(best_team_div);
+                teams_rank.appendChild(worst_team_div);
+                //teams_rank.appendChild(team_div);
               }
             )
           }
@@ -292,24 +342,44 @@
 
                 
         rank_container.appendChild(drivers_rank);
+        rank_container.appendChild(stables_rank);
         rank_container.appendChild(teams_rank);
         return rank_container;
       }
 
       function calculateRank(arr, rank_dim) {
         let ordered_indexes = [];
-        for(let i = 0; i < rank_dim; i++) {
-          let max = 0, max_index = -1;
-          for(let j = 0; j < arr.length; j++) {
-            if(arr[j] >= max) {
-              max = arr[j];
-              max_index = j; 
-            }
-          }
+        let tmp_arr = arr.slice();
 
-          ordered_indexes.push(max_index + 1);
-          arr[max_index] = 0;
+        if(rank_dim > 0) {
+          for(let i = 0; i < Math.abs(rank_dim); i++) {
+            let max = 0, max_index = -1;
+            for(let j = 0; j < tmp_arr.length; j++) {
+              if(tmp_arr[j] >= max) {
+                max = tmp_arr[j];
+                max_index = j; 
+              }
+            }
+
+            ordered_indexes.push(max_index + 1);
+            tmp_arr[max_index] = 0;
+          }
+        } else {
+          for(let i = 0; i < Math.abs(rank_dim); i++) {
+            let min = tmp_arr[0], min_index = -1;
+            for(let j = 0; j < tmp_arr.length; j++) {
+              console.log(min + ' ' + tmp_arr[j])
+              if(tmp_arr[j] <= min) {
+                min = tmp_arr[j];
+                min_index = j; 
+              }
+            }
+
+            ordered_indexes.push(min_index + 1);
+            tmp_arr[min_index] = 0;
+          }
         }
+        
 
         return ordered_indexes;
       }
@@ -330,8 +400,8 @@
           val_txt.classList.add('col-sm-6');
           score_txt.classList.add('col-sm-6');
         } else {
-          val_txt.classList.add('col-6');
-          score_txt.classList.add('col-6');
+          val_txt.classList.add('col');
+          score_txt.classList.add('col');
         }
 
         val_txt.innerHTML = value;
@@ -353,6 +423,44 @@
         createTrackSlot(gp_location);
 
       }
+
+      function createHeaderArrows(side, gp, score) {
+        let dropdown_container = document.createElement('li');
+        let dropdown_btn = document.createElement('button');
+        let dropdown_ul = document.createElement('ul');
+
+        dropdown_container.classList.add('btn-group');
+        side == 0 ? dropdown_container.classList.add('dropend') : dropdown_container.classList.add('dropstart');
+
+        dropdown_btn.classList.add('btn');
+        dropdown_btn.classList.add('dropdown-toggle');
+        dropdown_btn.classList.add('dropdown-arrows');
+        dropdown_btn.setAttribute('type', 'button');
+        dropdown_btn.setAttribute('data-bs-toggle', 'dropdown');
+        dropdown_btn.setAttribute('aria-expanded', 'false');
+        dropdown_btn.innerHTML = side == 0 ? '<<' : '>>';
+
+        dropdown_ul.classList.add('dropdown-menu');
+
+
+        let all_gps = getCookie('gps').split(',').map(function(e) { return e.split('-')[0]; });
+        let gp_index = getGpIndex(gp, score);
+        let selected_gps = side == 0 ? all_gps.slice(0, gp_index - 2) : all_gps.slice(gp_index + 1) ;
+
+        console.log(selected_gps);
+        for(let i = 0; i < selected_gps.length; i++) {
+          let dropdown_li = document.createElement('li');
+          dropdown_li.setAttribute('onclick', 'loadTrackLayoutSlot(\'' + selected_gps[i] + '\')');
+          dropdown_li.innerHTML = selected_gps[i];
+          dropdown_ul.appendChild(dropdown_li);
+        }
+
+
+        dropdown_container.appendChild(dropdown_btn);
+        dropdown_container.appendChild(dropdown_ul);
+
+        return dropdown_container;
+      }
     </script>
   </head>
   <body class="body-pattern">
@@ -362,9 +470,9 @@
     <div class="container-fluid">
       <div class="row">
         <!-- tracciato -->
-        <div class="col-12 col-xl-3">
-          <div class="container main-container sticky-top" id="track-slot" style="top: 76px; z-index: 1">
-
+        <div class="col-12 col-xl-3 order-3 order-lg-1">
+          <div class="container main-container sticky-top" id="track-slot">
+            
           </div>
         </div>
 

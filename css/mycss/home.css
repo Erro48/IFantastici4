@@ -88,16 +88,24 @@
   Track slot
 ------------------------------ */
 
+#track-slot {
+    top: 76px;
+    z-index: 1;
+    min-height: 65vh;
+}
+
 .header-elem {
     margin: 0 auto;
     text-align: center;
-    width: 15%;
+    width: 20%;
     display: flex;
 }
 
 .track-rank-elem {
     border: 1px solid gray;
     border-radius: 7px;
+    padding: 2px 5px;
+    margin: 2px;
 }
 
 .rank-name {
@@ -106,15 +114,38 @@
     padding-right: 0;
 }
 
-.rank-score {
-    color: gray;
-}
+.rank-score { color: gray; }
 
 .header-elem .flag-icon { margin: 0 auto; }
-
-.header-elem .gp-location {
-    margin: 0 auto;
-}
+.header-elem .gp-location { margin: 0 auto; }
 
 #prev-arrow { display: inline; text-align: right; }
 #next-arrow { text-align: left; }
+
+.dropdown-arrows.dropdown-toggle::after { content: none; }
+.dropdown-arrows.dropdown-toggle::before { content: none; }
+
+.track-slot-body .gp-location {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.track-slot-body .gp-date {
+    color: gray;
+    font-size: medium;
+}
+
+.track-slot-body .track-container{
+    margin: .5rem;
+}
+
+.rank-title {
+    text-align: center;
+    font-size: large;
+}
+
+.rank-subtitle {
+    font-size: small;
+    color: gray;
+    text-transform: lowercase;
+}
