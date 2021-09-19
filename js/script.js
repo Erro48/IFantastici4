@@ -785,8 +785,9 @@ function diffDate(date1, date2) {
 
 
 
-/* |>--- | TMP FUNCTIONS | --------------------<| */
+/* |>--- | LOADER | --------------------<| */
 
-function printOnConsoleTeamHistory(team_id) {
-
+function removeLoader() {
+  $('.loader').fadeOut(1000);
+  $('.container-fluid').fadeIn(1000);
 }

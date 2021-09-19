@@ -224,3 +224,67 @@ table.table thead {
 #top-btn:hover {
   background-color: #555;
 }
+
+/* ------------------
+ Loader
+-------------------- */
+
+.content {
+  display: none;
+}
+
+.loader-container {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: absolute;
+}
+
+.loader {
+  height: 100px;
+  width: 400px;
+  background-size: cover;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+}
+
+.loader>div {
+  height: 100px;
+  width: 100px;
+  background-size: cover;
+  margin: 0 auto;
+  animation: jump 1s infinite ease-in-out alternate;
+}
+
+#firstLoader {
+  background-image: url('../../images/Icons/hard_tyre.png');
+  animation-delay: 0s;
+}
+
+#secondLoader {
+  background-image: url('../../images/Icons/medium_tyre.png');
+  animation-delay: 333ms;
+}
+
+#thirdLoader {
+  background-image: url('../../images/Icons/soft_tyre.png');
+  animation-delay: 666ms;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes zoom {
+  100% { transform: scale(1.2); }
+}
+
+@keyframes jump {
+  from { transform: translateY(0) }
+  to { transform: translateY(-5rem) }
+}
