@@ -205,17 +205,17 @@
 
             <div class="footer">
               <div class="row">
-                <div class="col-10 order-1">
+                <div class="col-8 order-1">
                   Totale
                 </div>
-                <div id="total-points" class="col-1 order-2"></div>
+                <div id="total-points" class="col-4 order-2"></div>
               </div>
 
               <div class="row">
-                <div class="col-10 order-1">
+                <div class="col-8 order-1">
                   Raceweek
                 </div>
-                <div id="raceweek-points" class="col-1 order-2"></div>
+                <div id="raceweek-points" class="col-4 order-2"></div>
               </div>
             </div>
         </div>
