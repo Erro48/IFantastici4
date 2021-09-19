@@ -49,9 +49,15 @@
     <script src="./js/tracks_layout.js"></script>
 
     <script>
-      window.onload = function() {
+      /*window.onload = function() {
         createTrackSlot(getLastGpLocation());
-      }
+      }*/
+
+      $(window).on('load', function() {
+        createTrackSlot(getLastGpLocation());
+        setTimeout(removeLoader, 2000);
+      })
+
 
       function createTrackSlot(gp_location) {
         let score = scoreConverterToArray(getCookie('scores_data'), 31);
@@ -285,7 +291,7 @@
 
         stables_rank.appendChild(best_stable_div);
         stables_rank.appendChild(worst_stable_div);
-        
+
         return stables_rank;
       }
 
@@ -481,8 +487,9 @@
   <body class="body-pattern">
     <!-- Navbar -->
     <?php include __DIR__."/lib/navbar.php";?>
+    <?php include __DIR__."/lib/loader.php";?>
 
-    <div class="container-fluid">
+    <div class="content container-fluid">
       <div class="row">
         <!-- tracciato -->
         <div class="col-12 col-xl-3 order-3 order-lg-1">

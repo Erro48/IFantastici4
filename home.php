@@ -32,15 +32,24 @@
     <script src="./js/script.js"></script>
     <script src="./js/home_script.js"></script>
     <script src="./js/graph_script.js"></script>
+    <script src="./js/tracks_layout.js"></script>
   </head>
   <body class="body-pattern">
     <!-- Navbar -->
     <?php include __DIR__."/lib/navbar.php";?>
+    <?php include __DIR__."/lib/loader.php";?>
 
-    <div class="container">
+    <div class="content container-fluid">
       <div class="row">
+        <!-- tracciato -->
+        <div class="col-12 col-xl-3 order-3 order-lg-1">
+          <div class="container main-container sticky-top" id="track-slot">
+            
+          </div>
+        </div>
+
         <!-- classifica -->
-        <div class="col-12 col-xl-7 order-xl-1 order-2">
+        <div class="col-12 col-xl-5 order-xl-1 order-2">
           <div class="container main-container rank-container">
             <div class="header">
               <h3>Classifica</h3>
@@ -134,7 +143,7 @@
 
         <!-- squadra -->
         <!-- appena riesco a ridimensionare le card col torna a md e non lg -->
-        <div class="col-12 col-xl-5 order-1">
+        <div class="col-12 col-xl-4 order-1">
           <div class="container main-container team-container sticky-top" style="top: 76px; z-index: 1">
           
             <div class="header">
