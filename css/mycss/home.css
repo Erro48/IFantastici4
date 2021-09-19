@@ -106,11 +106,11 @@
     border-radius: 7px;
     padding: 2px 5px;
     margin: 2px;
+    font-size: small;
 }
 
 .rank-name {
     font-weight: bold;
-    font-size: medium;
     padding-right: 0;
 }
 

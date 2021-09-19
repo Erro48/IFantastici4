@@ -189,70 +189,82 @@
         let rank_container = document.createElement('div');
         rank_container.classList.add('track-rank');
 
+        let drivers_rank = getDriversTrackSlotRank(score, gp_index);
+        let stables_rank = getStablesBestAndWorst(score, gp_index);
+        let teams_rank = getTeamsBestAndWorst(score, gp_index);
+      
+        rank_container.appendChild(drivers_rank);
+        rank_container.appendChild(stables_rank);
+        rank_container.appendChild(teams_rank);
+        return rank_container;
+      }
+
+      function getDriversTrackSlotRank(score, gp_index) {
         let drivers_rank = document.createElement('div');
-        drivers_rank.classList.add('row');
         let drivers_rank_title = document.createElement('div');
+
+        let drivers_total = [];
+        let ordered_indexes;
+        
+        drivers_rank.classList.add('row');
         drivers_rank_title.classList.add('col-12');
         drivers_rank_title.classList.add('rank-title');
         drivers_rank_title.innerHTML = 'Piloti';
 
         drivers_rank.appendChild(drivers_rank_title);
 
-
-
-        let drivers_total = [];
-
         for(let i = 1; i <= 20; i++) {
           drivers_total.push(getDriverPartialPerEachGp(i, score, gp_index)[gp_index - 1]);
         }
-        let ordered_indexes = calculateRank(drivers_total, 3);
+        
+        ordered_indexes = calculateRank(drivers_total, 3);
+
         for(let i = 0; i < ordered_indexes.length; i++) {
           let div = document.createElement('div');
+          let driver = createRankElement(score[0][ordered_indexes[i]].substring(0, 3), score[gp_index][ordered_indexes[i]], true);
+          
           div.classList.add('col');
           div.classList.add('track-rank-elem');
-
           div.style.borderLeft = '3px solid ' + getLiveryByDriverId(ordered_indexes[i]);
 
-          div.appendChild(createRankElement(score[0][ordered_indexes[i]].substring(0, 3), score[gp_index][ordered_indexes[i]], true))
+          div.appendChild(driver);
           drivers_rank.appendChild(div);
         }
 
+        return drivers_rank;
+      }
 
-
-
+      function getStablesBestAndWorst(score, gp_index) {
         let stables_rank = document.createElement('div');
         let best_stable_div = document.createElement('div');
         let worst_stable_div = document.createElement('div');
 
+        let stable_title = document.createElement('div');
+        let stable_subtitle = document.createElement('div');
+        let best_txt = document.createElement('div');
+        let worst_txt = document.createElement('div');
         
         
         stables_rank.classList.add('row');
-        
         best_stable_div.classList.add('col');
         best_stable_div.classList.add('track-rank-elem');
         worst_stable_div.classList.add('col');
         worst_stable_div.classList.add('track-rank-elem');
-        //team_div.classList.add('col-6');
-        //team_div.classList.add('track-rank-elem');
         
-        let stable_title = document.createElement('div');
         stable_title.classList.add('col-12');
         stable_title.classList.add('rank-title');
         stable_title.innerHTML = 'Scuderie';
-        
-        let stable_subtitle = document.createElement('div');
         stable_subtitle.classList.add('row');
         stable_subtitle.classList.add('rank-subtitle');
-        let best_txt = document.createElement('div');
-        let worst_txt = document.createElement('div');
+
         best_txt.classList.add('col');
         best_txt.innerHTML = 'Migliore';
 
         worst_txt.classList.add('col');
         worst_txt.innerHTML = 'Peggiore';
+
         stable_subtitle.appendChild(best_txt);
         stable_subtitle.appendChild(worst_txt);
-
 
         stables_rank.appendChild(stable_title);
         stables_rank.appendChild(stable_subtitle);
@@ -261,6 +273,7 @@
         for(let i = 1; i <= 10; i++) {
           stable_total.push(getStablePartialPerEachGp(i, score, gp_index)[gp_index - 1]);
         }
+        
         let best_stable = calculateRank(stable_total, 1)[0];
         let worst_stable = calculateRank(stable_total, -1)[0];
 
@@ -270,11 +283,21 @@
         worst_stable_div.appendChild(createRankElement(score[0][20 + worst_stable], score[gp_index][20 + worst_stable], false));
         worst_stable_div.style.borderLeft = '3px solid ' + getLiveryByStableId(worst_stable);
 
+        stables_rank.appendChild(best_stable_div);
+        stables_rank.appendChild(worst_stable_div);
         
+        return stables_rank;
+      }
+
+      function getTeamsBestAndWorst(score, gp_index) {
         let teams_rank = document.createElement('div');
         let best_team_div = document.createElement('div');
         let worst_team_div = document.createElement('div');
+        
         let team_title = document.createElement('div');
+        let team_subtitle = document.createElement('div');
+        let team_best_txt = document.createElement('div');
+        let team_worst_txt = document.createElement('div');
 
         teams_rank.classList.add('row');
 
@@ -287,11 +310,8 @@
         team_title.classList.add('rank-title');
         team_title.innerHTML = 'Squadre';
 
-        let team_subtitle = document.createElement('div');
         team_subtitle.classList.add('row');
         team_subtitle.classList.add('rank-subtitle');
-        let team_best_txt = document.createElement('div');
-        let team_worst_txt = document.createElement('div');
         team_best_txt.classList.add('col');
         team_best_txt.innerHTML = 'Migliore';
 
@@ -329,22 +349,16 @@
                   ));
                 
                 
-                stables_rank.appendChild(best_stable_div);
-                stables_rank.appendChild(worst_stable_div);
+                
                 teams_rank.appendChild(best_team_div);
                 teams_rank.appendChild(worst_team_div);
                 //teams_rank.appendChild(team_div);
               }
             )
           }
-        )
+        );
 
-
-                
-        rank_container.appendChild(drivers_rank);
-        rank_container.appendChild(stables_rank);
-        rank_container.appendChild(teams_rank);
-        return rank_container;
+        return teams_rank;
       }
 
       function calculateRank(arr, rank_dim) {
@@ -368,7 +382,6 @@
           for(let i = 0; i < Math.abs(rank_dim); i++) {
             let min = tmp_arr[0], min_index = -1;
             for(let j = 0; j < tmp_arr.length; j++) {
-              console.log(min + ' ' + tmp_arr[j])
               if(tmp_arr[j] <= min) {
                 min = tmp_arr[j];
                 min_index = j; 
@@ -395,10 +408,12 @@
         score_txt.classList.add('rank-score');
 
         if(driver_flag == false) {
-          val_txt.classList.add('col-12');
+          /*val_txt.classList.add('col-12');
           score_txt.classList.add('col-12');
           val_txt.classList.add('col-sm-6');
-          score_txt.classList.add('col-sm-6');
+          score_txt.classList.add('col-sm-6');*/
+          val_txt.classList.add('col-12');
+          score_txt.classList.add('col-12');
         } else {
           val_txt.classList.add('col');
           score_txt.classList.add('col');
