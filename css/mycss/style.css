@@ -238,11 +238,14 @@ table.table thead {
   width: 100%;
   overflow: hidden;
   position: absolute;
+  background-color: #c67d7da6;
+  top: 0;
+  z-index: -1;
 }
 
 .loader {
   height: 100px;
-  width: 400px;
+  width: 350px;
   background-size: cover;
   position: absolute;
   margin: auto;
@@ -250,15 +253,18 @@ table.table thead {
   bottom: 0;
   left: 0;
   right: 0;
-  display: flex;
 }
 
-.loader>div {
-  height: 100px;
+.loader>div>div {
   width: 100px;
-  background-size: cover;
   margin: 0 auto;
+}
+
+.tires-container > div {
+  height: 100px;
+  background-size: cover;
   animation: jump 1s infinite ease-in-out alternate;
+  z-index: 1;
 }
 
 #firstLoader {
@@ -276,6 +282,21 @@ table.table thead {
   animation-delay: 666ms;
 }
 
+.loader-shadow {
+  width: 82px;
+  height: 30px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background-color: gray;
+  filter: blur(7px);
+  z-index: 0;
+  animation: shadowJump 1s infinite ease-in-out alternate;
+}
+
+#firstLoaderShadow { animation-delay: 0s; }
+#secondLoaderShadow { animation-delay: 333ms; }
+#thirdLoaderShadow { animation-delay: 666ms; }
+
 @keyframes spin {
   100% { transform: rotate(360deg); }
 }
@@ -287,4 +308,9 @@ table.table thead {
 @keyframes jump {
   from { transform: translateY(0) }
   to { transform: translateY(-5rem) }
+}
+
+@keyframes shadowJump {
+  from { transform: scale(1) }
+  to { transform: scale(0.7) }
 }

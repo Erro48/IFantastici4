@@ -788,6 +788,6 @@ function diffDate(date1, date2) {
 /* |>--- | LOADER | --------------------<| */
 
 function removeLoader() {
-  $('.loader').fadeOut(1000);
-  $('.container-fluid').fadeIn(1000);
+  $('.loader-container').fadeOut(1000);
+  $('.content').fadeIn(1000);
 }
