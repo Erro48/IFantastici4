@@ -35,13 +35,15 @@
     <script>
       window.onload = function() {
         setInfoIcon();
+        setTimeout(removeLoader, 2000);
       }
     </script>
   </head>
   <body class="body-pattern">
     <!-- Navbar -->
     <?php include __DIR__."/lib/navbar.php";?>
-    <div class="container">
+    <?php include __DIR__."/lib/loader.php";?>
+    <div class="container content">
       <div class="container main-container rank-container">
         <div class="header">
           <h3>Classifica piloti</h3>
