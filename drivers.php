@@ -23,6 +23,7 @@
     <link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"> 
     <link href="./css/custom.css" rel="stylesheet">
     <link href="./css/mycss/style.css" rel="stylesheet">
+    <link href="./css/mycss/graph.css" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -102,7 +103,7 @@
           <span id="info-icon-container"></span>
         </div>
         <div class="graph-content">
-          <canvas id="driver-graph" width="400" height="400"></canvas>
+          <canvas id="driver-graph" class="graph-canvas" width="400" height="400"></canvas>
         <?php
 
           $drivers_res = getDrivers();

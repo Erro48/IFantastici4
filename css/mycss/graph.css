@@ -1,0 +1,6 @@
+
+@media screen and (max-width: 992px) { .graph-container { max-height: 90vh; } }
+@media screen and (min-width: 992px) { .graph-container { height: 90vh; } }
+
+.graph-content { height: 90%; }
+.graph-canvas { max-height: 100%; }
