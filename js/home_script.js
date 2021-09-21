@@ -917,11 +917,17 @@ function getDriversTrackSlotRank(score, gp_index) {
 
   for(let i = 0; i < ordered_indexes.length; i++) {
     let div = document.createElement('div');
-    let driver = createRankElement(score[0][ordered_indexes[i]].substring(0, 3), score[gp_index][ordered_indexes[i]], true);
+    let driver;
+    
+    if(gp_index <= getLastGpIndex(score)) {
+      driver = createRankElement(score[0][ordered_indexes[i]].substring(0, 3), score[gp_index][ordered_indexes[i]], true);
+      div.style.borderLeft = '3px solid ' + getLiveryByDriverId(ordered_indexes[i]);
+    } else {
+      driver = createRankElement('-', 0, true);
+    }
     
     div.classList.add('col');
     div.classList.add('track-rank-elem');
-    div.style.borderLeft = '3px solid ' + getLiveryByDriverId(ordered_indexes[i]);
 
     div.appendChild(driver);
     drivers_rank.appendChild(div);
@@ -972,12 +978,17 @@ function getStablesBestAndWorst(score, gp_index) {
   
   let best_stable = calculateRank(stable_total, 1)[0];
   let worst_stable = calculateRank(stable_total, -1)[0];
-
-
-  best_stable_div.appendChild(createRankElement(score[0][20 + best_stable], score[gp_index][20 + best_stable], false));
-  best_stable_div.style.borderLeft = '3px solid ' + getLiveryByStableId(best_stable);
-  worst_stable_div.appendChild(createRankElement(score[0][20 + worst_stable], score[gp_index][20 + worst_stable], false));
-  worst_stable_div.style.borderLeft = '3px solid ' + getLiveryByStableId(worst_stable);
+  
+  
+  if(gp_index <= getLastGpIndex(score)) {
+    best_stable_div.appendChild(createRankElement(score[0][20 + best_stable], score[gp_index][20 + best_stable], false));
+    worst_stable_div.appendChild(createRankElement(score[0][20 + worst_stable], score[gp_index][20 + worst_stable], false));
+    best_stable_div.style.borderLeft = '3px solid ' + getLiveryByStableId(best_stable);
+    worst_stable_div.style.borderLeft = '3px solid ' + getLiveryByStableId(worst_stable);
+  } else {
+    best_stable_div.appendChild(createRankElement('-', 0, false));
+    worst_stable_div.appendChild(createRankElement('-', 0, false));
+  }
 
   stables_rank.appendChild(best_stable_div);
   stables_rank.appendChild(worst_stable_div);
@@ -1031,18 +1042,23 @@ function getTeamsBestAndWorst(score, gp_index) {
         function(teams_obj) {
           teams_obj = JSON.parse(teams_obj).map(function(e) { return JSON.parse(e)});
           
-
-          best_team_div.appendChild(createRankElement(
-            teams_obj[teams_score[0][best_team] - 1].nome_squadra,
-            teams_score[gp_index][best_team],
-            false
-            ));
-
-          worst_team_div.appendChild(createRankElement(
-            teams_obj[teams_score[0][worst_team] - 1].nome_squadra,
-            teams_score[gp_index][worst_team],
-            false
-            ));
+          if(gp_index <= getLastGpIndex(score)) {
+            best_team_div.appendChild(createRankElement(
+              teams_obj[teams_score[0][best_team] - 1].nome_squadra,
+              teams_score[gp_index][best_team],
+              false
+              ));
+  
+            worst_team_div.appendChild(createRankElement(
+              teams_obj[teams_score[0][worst_team] - 1].nome_squadra,
+              teams_score[gp_index][worst_team],
+              false
+              ));
+          } else {
+            best_team_div.appendChild(createRankElement('-', 0, false));
+  
+            worst_team_div.appendChild(createRankElement('-', 0, false));
+          }
           
           
           
@@ -1163,6 +1179,11 @@ function createHeaderArrows(side, gp, score) {
     let dropdown_li = document.createElement('li');
     dropdown_li.setAttribute('onclick', 'loadTrackLayoutSlot(\'' + selected_gps[i] + '\')');
     dropdown_li.innerHTML = selected_gps[i];
+
+    if(selected_gps[i] == getLastGpLocation()) {
+      dropdown_li.classList.add('last-gp');
+    }
+
     dropdown_ul.appendChild(dropdown_li);
   }
 
