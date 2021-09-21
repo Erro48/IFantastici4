@@ -861,7 +861,8 @@ function createTrackBody(score, gp) {
   gp_date.classList.add('gp-date');
 
   track_layout.classList.add('track-layout');
-  track_layout.appendChild(getTrackLayout(getGpByIndex(gp_index, score).split('-')[0]));
+  //track_layout.appendChild(getTrackLayout(getGpByIndex(gp_index, score).split('-')[0]));
+  track_layout.appendChild(getTrackLayoutImage(getGpByIndex(gp_index, score).split('-')[0]));
 
   track_rank = getTrackRank(gp_index);
   console.log(track_rank)
