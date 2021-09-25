@@ -260,6 +260,21 @@ function printPersonalDriversData(drivers_datas, personal_section) {
   }
 }
 
+function printDriversImages(drivers_datas) {
+  let images_col = document.getElementsByClassName('driver-image-col');
+  
+  for(let i = 0; i < images_col.length; i++) {
+    let image = document.createElement('img');
+    image.setAttribute('src', './images/drivers/' + drivers_datas[i].driver_surname.toLowerCase() + '.png');
+    image.setAttribute('width', '100%');
+    image.setAttribute('height', '100%');
+    image.setAttribute('alt', 'driver pic');
+
+    images_col.item(i).append(image);
+  }
+  
+}
+
 function printPersonalStableData(stable_data, personal_section) {
   let stable_section = personal_section[5];
   let rows = stable_section.getElementsByClassName('row');
@@ -417,6 +432,7 @@ function loadPersonalData(team_id) {
         let personal_section = document.getElementsByClassName('personal-data-col');
 
         printPersonalDriversData(drivers_datas, personal_section);
+        printDriversImages(drivers_datas);
 
         // fa la scuderia
         getStableDataPromise(team_id).then(

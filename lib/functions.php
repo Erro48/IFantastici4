@@ -352,7 +352,7 @@ function printDriverTabPane($label, $active) {
         </div>
         
 
-        <div class="col-12 col-lg-6 championship-data-col">
+        <div class="col-12 col-lg-6 driver-image-col p-0">
             
         </div>
     </div>
