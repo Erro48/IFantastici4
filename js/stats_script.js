@@ -242,13 +242,13 @@ function printPersonalDriversData(drivers_datas, personal_section) {
   for(let i = 0; i < personal_section.length - 1; i++) {
     let rows = personal_section[i].getElementsByClassName('row');
     let drivers_data_property = Object.getOwnPropertyNames(drivers_datas[0]);
-    let j;
+    let j, length = Object.keys(drivers_datas[0]).length;
     
-    for(j = 0; j < rows.length - 1; j++) {
+    for(j = 0; j < length + 1; j++) {
       if(j == 3 || j == 4) {
         rows[j].childNodes[3].innerHTML = drivers_datas[i][drivers_data_property[j]];
         rows[j].childNodes[3].innerHTML += "$";
-      } if(j == 5) {
+      } else if(j == 5) {
         // imposto la posizione
         rows[j].childNodes[3].innerHTML = getChartPosition(rows[0].childNodes[1].innerHTML, "driver") + '°';
       } else {
@@ -277,15 +277,10 @@ function printPersonalStableData(stable_data, personal_section) {
 }
 
 function printChampionshipDriversData(drivers_data, champ_section) {
-  let offset = 6;
 
-  console.log(champ_section);
-  
   // faccio i piloti
   for(let i = 0; i < champ_section.length - 1; i++) {
     let rows = champ_section[i].getElementsByClassName('row');
-
-    console.log(drivers_data)
     
     rows[6].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].total;
     rows[7].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].average;
@@ -445,7 +440,7 @@ function loadChampionshipData(team_id) {
           getLastGpIndexPromise().then(
             function(last_gp_index) {
               let mod_all_rows = mod_content.split(/\r?\n|\r/);
-              let base_all_rows = scoreConverterToArray(base_content, 31);
+              let base_all_rows = scoreConverterToArray(getCookie('scores_data'), 31);
     
               let team_members_list = stringToArray(getCookie("team"));
               let drivers_list = team_members_list.slice(0, 5);
@@ -529,7 +524,7 @@ function loadChampionshipData(team_id) {
               // creazione oggetti
               let drivers_data = [];
               let stable_data;
-
+              
               for(let i = 0; i < drivers_total.length; i++) {
                 drivers_data.push({
                   total: drivers_total[i],
@@ -554,7 +549,7 @@ function loadChampionshipData(team_id) {
               }
 
               let personal_section = document.getElementsByClassName('personal-data-col');
-
+              
               printChampionshipDriversData(drivers_data, personal_section);
 
               printChampionshipStableData(stable_data);

@@ -312,12 +312,12 @@ function printDriverTabPane($label, $active) {
             </div>
 
             <div class="row">
-              <div class="col-6">Prezzo Reale</div>
+              <div class="col-6">P. reale</div>
               <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
             </div>
 
             <div class="row">
-              <div class="col-6">Prezzo Base</div>
+              <div class="col-6">P. base</div>
               <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
             </div>
 
@@ -327,22 +327,22 @@ function printDriverTabPane($label, $active) {
             </div>
 
             <div class="row">
-              <div class="col-6">Punti Totali</div>
+              <div class="col-6">Totale</div>
               <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
             </div>
 
             <div class="row">
-              <div class="col-6">Media per gp</div>
+              <div class="col-6">Media</div>
               <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
             </div>
 
             <div class="row">
-              <div class="col-7">Miglior Risultato</div>
+              <div class="col-7">Miglior gp</div>
               <div class="col-5 d-flex align-items-center justify-content-end text-end">-</div>
             </div>
 
             <div class="row">
-              <div class="col-7">Peggior Risultato</div>
+              <div class="col-7">Peggior gp</div>
               <div class="col-5 d-flex align-items-center justify-content-end text-end">-</div>
             </div>
         </div>

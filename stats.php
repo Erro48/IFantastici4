@@ -102,7 +102,7 @@
               </div>
               <div class="table-responsive mb-2">
                   <table id="stats-chart" class="table table-sm align-middle table-wrapper table-striped">
-                    <script>createStatsChart();</script>
+                    <!--<script>createStatsChart();</script>-->
                   </table>
                 </div>
             </div>
