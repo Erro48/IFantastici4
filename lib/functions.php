@@ -300,7 +300,7 @@ function printDriverTabPane($label, $active) {
     <div class="row">
         <div class="col-12 col-lg-7 personal-data-col">
           <div class="row">
-            <div class="img-row col-sm-12 col-8">
+            <div class="img-row col-xs-12 col-8">
               <div class="row">
                 <div class="col-12 d-flex align-items-center">'.$label.'</div>
               </div>
@@ -443,6 +443,65 @@ function printStableTabPane($label, $active) {
       <div class="col-12 livery-image-div">
         <img src="./images/liverys/'.strtolower($label_).'.png" alt="car pic" width="100%" height="100%">
         </div>
+    </div>
+  </div>
+  ';
+}
+
+function printTeamTabPane($team_id) {
+  echo '
+  <div class="tab-pane fade show active my-tab-pane" id="'.$team_id.'-tab-pane" role="tabpanel" aria-labelledby="'.$team_id.'-tab">
+    <div class="row">
+        <div class="col-12 personal-team-data-col">
+          <div class="row">
+            <div class="col-4">Team</div>
+            <div class="col-8 text-end">-</div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">Proprietario</div>
+            <div class="col-6 text-end">-</div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">Turbo driver</div>
+            <div class="col-6 text-end">-</div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">Posizione</div>
+            <div class="col-6 text-end">-</div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">Totale</div>
+            <div class="col-6 text-end">-</div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">Media</div>
+            <div class="col-6 text-end">-</div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">Miglior gp</div>
+            <div class="col-6 text-end">-</div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">Peggior gp</div>
+            <div class="col-6 text-end">-</div>
+          </div>
+        </div>
+        
+        <!--<div class="d-lg-none d-flex justify-content-center">
+            <hr class=" w-100">
+        </div> -->
+        
+
+        <!--<div class="col-12 col-lg-6 championship-team-data-col">
+          
+        </div> -->
     </div>
   </div>
   ';

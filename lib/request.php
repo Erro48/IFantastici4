@@ -82,9 +82,9 @@
     $diff_date = diffDate(today(), stringToDateTime($SUMMER_BREAK_DATE));
 
     if($diff_date > 0)
-      $sql = 'SELECT nome_squadra, id_squadra, turbo_driver, mega_driver, id_scuderia, punteggio_squadra, punteggio_precedente_squadra FROM tsquadre, tscuderie WHERE id_scuderia=k_scuderia';
+      $sql = 'SELECT nome_squadra, id_squadra, turbo_driver, mega_driver, id_scuderia, punteggio_squadra, punteggio_precedente_squadra, nome_utente FROM tsquadre, tscuderie, tutenti WHERE id_scuderia=k_scuderia AND k_squadra=id_squadra ORDER BY id_squadra';
     else
-      $sql = 'SELECT nome_squadra, id_squadra, turbo_driver, mega_driver, id_scuderia, punteggio_squadra, punteggio_precedente_squadra FROM tsquadre, tscuderie WHERE id_scuderia=k_2scuderia';
+      $sql = 'SELECT nome_squadra, id_squadra, turbo_driver, mega_driver, id_scuderia, punteggio_squadra, punteggio_precedente_squadra, nome_utente FROM tsquadre, tscuderie, tutenti WHERE id_scuderia=k_2scuderia AND k_squadra=id_squadra ORDER BY id_squadra';
     
     $result = $db->query($sql);
 
@@ -98,6 +98,7 @@
 
         $obj->id_squadra = $row['id_squadra'];
         $obj->nome_squadra = $row['nome_squadra'];
+        $obj->proprietario = $row['nome_utente'];
         $obj->id_scuderia = $row['id_scuderia'];
         $obj->punteggio = $row['punteggio_squadra'];
         $obj->punteggio_precedente = $row['punteggio_precedente_squadra'];

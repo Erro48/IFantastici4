@@ -34,7 +34,7 @@
   <body class="body-pattern">
     <!-- Navbar -->
     <?php include __DIR__."/lib/navbar.php"; ?>
-    <?php include __DIR__."/lib/loader.php";?>
+    <?php //include __DIR__."/lib/loader.php";?>
 
     <div class="container-md container-fluid content">
         <div class="container-md container-fluid main-container mb-2">
@@ -89,7 +89,17 @@
 
               <!-- colonna stats squadra -->
               <div class="col-12 col-sm-6">
-                
+                <div class="tab-content" id="myTabContent">
+
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                  <li class="nav-item my-nav-item" >
+                    <button class="nav-link" id="other-tab">Team</button>
+                  </li>
+                </ul>
+                <?php
+                  printTeamTabPane($_SESSION['id_squadra']);
+                ?>
+                </div>
               </div>
             </div>
 

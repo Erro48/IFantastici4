@@ -1,7 +1,7 @@
 window.onload = function() {
   loadTeamsMembersData(getCookie("id_squadra"));
   setInfoIcon();
-  setTimeout(removeLoader, 2000);
+  setTimeout(removeLoader, 1);
 }
 
 
@@ -241,13 +241,10 @@ return new Promise(function(resolve) {
 function printPersonalDriversData(drivers_datas, personal_section) {
   // fa solo i piloti
   //personal_section[0].getElementsByClassName('row')[0].getElementsByClassName('img-row')[0].getElementsByClassName('row')
-  console.log(drivers_datas)
   for(let i = 0; i < personal_section.length - 1; i++) {
     let rows = personal_section[i].getElementsByClassName('row');
     let drivers_data_property = Object.getOwnPropertyNames(drivers_datas[0]);
     let j, length = Object.keys(drivers_datas[0]).length;
-
-
     
     for(j = 0; j < drivers_data_property.length + 2; j++) {
       if(j < 3) {
@@ -436,6 +433,16 @@ function printStatsChart(data, mod_array) {
 
 }
 
+function printTeamData(team_data, personal_section) {
+  let rows = personal_section.getElementsByClassName('row');
+  let team_data_property = Object.getOwnPropertyNames(team_data);
+
+  for(let i = 0; i < team_data_property.length; i++) {
+    rows[i].getElementsByClassName('text-end')[0].innerHTML = team_data[team_data_property[i]]
+  }
+    
+}
+
 
 
 /* -------------------------------------------------
@@ -447,6 +454,8 @@ function loadTeamsMembersData(team_id) {
   loadPersonalData(team_id);
   
   loadChampionshipData(team_id);
+
+  loadTeamData(team_id);
 }
 
 function loadPersonalData(team_id) {
@@ -599,6 +608,34 @@ function loadChampionshipData(team_id) {
       
     }
   );
+}
+
+function loadTeamData(team_id) {
+  getTeamsInfoPromise().then(
+    function(teams_info) {
+      let personal_section =  document.getElementsByClassName('personal-team-data-col')[0];
+      let team = JSON.parse(JSON.parse(teams_info)[team_id-1]);
+      let position = getChartPosition(team.nome_squadra, 'team');
+      let average;
+      let last_gp_index = getLastGpIndex(scoreConverterToArray(getCookie('scores_data'), 31));
+      average = castScore(team.punteggio) / last_gp_index;
+      average = Math.trunc(average);
+      
+
+      let team_data = {
+        nome_squadra: team.nome_squadra,
+        proprietario: team.proprietario,
+        turbo_driver: drivers[team.turbo_driver-1],
+        posizione: position,
+        totale: team.punteggio.substring(),
+        media: average,
+        miglior_gp: '',
+        peggio_gp: ''
+      }
+
+      printTeamData(team_data, personal_section);
+    }
+  )
 }
 
 function changeNumberOfTimes(new_elem) {
