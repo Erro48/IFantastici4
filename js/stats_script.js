@@ -239,22 +239,44 @@ return new Promise(function(resolve) {
 
 function printPersonalDriversData(drivers_datas, personal_section) {
   // fa solo i piloti
+  //personal_section[0].getElementsByClassName('row')[0].getElementsByClassName('img-row')[0].getElementsByClassName('row')
+  console.log(drivers_datas)
   for(let i = 0; i < personal_section.length - 1; i++) {
     let rows = personal_section[i].getElementsByClassName('row');
     let drivers_data_property = Object.getOwnPropertyNames(drivers_datas[0]);
     let j, length = Object.keys(drivers_datas[0]).length;
+
+
     
-    for(j = 0; j < length + 1; j++) {
-      if(j == 3 || j == 4) {
-        rows[j].childNodes[3].innerHTML = drivers_datas[i][drivers_data_property[j]];
-        rows[j].childNodes[3].innerHTML += "$";
-      } else if(j == 5) {
-        // imposto la posizione
-        rows[j].childNodes[3].innerHTML = getChartPosition(rows[0].childNodes[1].innerHTML, "driver") + '°';
+    for(j = 0; j < drivers_data_property.length + 2; j++) {
+      if(j < 3) {
+        let tmp = rows[0].getElementsByClassName('img-row')[0].getElementsByClassName('row')[j].getElementsByClassName('col-12')[0];
+        tmp.innerHTML = drivers_datas[i][drivers_data_property[j]];
       } else {
-        rows[j].childNodes[1].innerHTML = drivers_datas[i][drivers_data_property[j]];
+        if(j == 4 || j == 5) {
+          rows[j].childNodes[3].innerHTML = drivers_datas[i][drivers_data_property[j-1]];
+          rows[j].childNodes[3].innerHTML += "$";
+        } else if(j == 6) {
+          // imposto la posizione
+          let driver = rows[0].getElementsByClassName('img-row')[0].getElementsByClassName('row')[0].getElementsByClassName('col-12')[0].innerHTML;
+          rows[j].childNodes[3].innerHTML = getChartPosition(driver, "driver") + '°';
+        } else {
+          rows[j].childNodes[1].innerHTML = drivers_datas[i][drivers_data_property[j-1]];
+        }
       }
     }
+
+    let img_row = rows[0].getElementsByClassName('img-row')[1];
+    let img = document.createElement('img');
+    let driver = rows[0].getElementsByClassName('img-row')[0].getElementsByClassName('row')[0].getElementsByClassName('col-12')[0].innerHTML;
+          
+    img.setAttribute('src', './images/drivers/' + driver.toLowerCase() + '.png');
+    img.setAttribute('alt', 'profile pic');
+    img.setAttribute('width', '100%');
+    img.setAttribute('height', '100%');
+    img.style.borderBottom = '3px solid ' + getLiveryByDriverId(getDriverIndex(driver));
+
+    img_row.appendChild(img);
 
     
   }
@@ -269,6 +291,8 @@ function printDriversImages(drivers_datas) {
     image.setAttribute('width', '100%');
     image.setAttribute('height', '100%');
     image.setAttribute('alt', 'driver pic');
+    
+    image.style.borderBottom = '3px solid ' + getLiveryByDriverId(getDriverIndex(drivers_datas[i].driver_surname));
 
     images_col.item(i).append(image);
   }
@@ -297,16 +321,16 @@ function printChampionshipDriversData(drivers_data, champ_section) {
   for(let i = 0; i < champ_section.length - 1; i++) {
     let rows = champ_section[i].getElementsByClassName('row');
     
-    rows[6].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].total;
-    rows[7].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].average;
+    rows[7].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].total;
+    rows[8].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].average;
 
     // per gp mettere un tooltip
     //rows[2].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].best_result.score + " (" + drivers_data[i].best_result.gp.split("-")[0] + ")";
-    rows[8].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].best_result.score + " ";
-    rows[8].getElementsByClassName("text-end")[0].appendChild(getFlagElement(drivers_data[i].best_result.gp.split("-")[0], 'left', true));
+    rows[9].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].best_result.score + " ";
+    rows[9].getElementsByClassName("text-end")[0].appendChild(getFlagElement(drivers_data[i].best_result.gp.split("-")[0], 'left', true));
 
-    rows[9].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].worst_result.score + " ";
-    rows[9].getElementsByClassName("text-end")[0].appendChild(getFlagElement(drivers_data[i].worst_result.gp.split("-")[0], 'left', true));
+    rows[10].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].worst_result.score + " ";
+    rows[10].getElementsByClassName("text-end")[0].appendChild(getFlagElement(drivers_data[i].worst_result.gp.split("-")[0], 'left', true));
 
 
     //rows[3].getElementsByClassName("text-end")[0].innerHTML = drivers_data[i].worst_result.score + " (" + drivers_data[i].worst_result.gp.split("-")[0] + ")";

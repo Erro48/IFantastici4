@@ -298,61 +298,67 @@ function printDriverTabPane($label, $active) {
   echo '
   <div class="tab-pane fade '.$show.'my-tab-pane" id="'.$label_.'-tab-pane" role="tabpanel" aria-labelledby="'.$label_.'-tab">
     <div class="row">
-        <div class="col-12 col-lg-6 personal-data-col">
-            <div class="row">
-              <div class="col-12 d-flex align-items-center">'.$label.'</div>
-            </div>
+        <div class="col-12 col-lg-7 personal-data-col">
+          <div class="row">
+            <div class="img-row col-sm-12 col-8">
+              <div class="row">
+                <div class="col-12 d-flex align-items-center">'.$label.'</div>
+              </div>
 
-            <div class="row">
-              <div class="col-12">Nome</div>
-            </div>
+              <div class="row">
+                <div class="col-12">Nome</div>
+              </div>
 
-            <div class="row">
-              <div class="col-12">Scuderia</div>
+              <div class="row">
+                <div class="col-12">Scuderia</div>
+              </div>
             </div>
+            <div class="img-row d-flex d-lg-none col-4">
+            </div>
+          </div>
 
-            <div class="row">
-              <div class="col-6">P. reale</div>
-              <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
-            </div>
+          <div class="row">
+            <div class="col-6">P. reale</div>
+            <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
+          </div>
 
-            <div class="row">
-              <div class="col-6">P. base</div>
-              <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
-            </div>
+          <div class="row">
+            <div class="col-6">P. base</div>
+            <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
+          </div>
 
-            <div class="row">
-              <div class="col-6">Posizione</div>
-              <div class="col-6 d-flex align-items-center justify-content-end text-end position-text">-</div>
-            </div>
+          <div class="row">
+            <div class="col-6">Posizione</div>
+            <div class="col-6 d-flex align-items-center justify-content-end text-end position-text">-</div>
+          </div>
 
-            <div class="row">
-              <div class="col-6">Totale</div>
-              <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
-            </div>
+          <div class="row">
+            <div class="col-6">Totale</div>
+            <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
+          </div>
 
-            <div class="row">
-              <div class="col-6">Media</div>
-              <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
-            </div>
+          <div class="row">
+            <div class="col-6">Media</div>
+            <div class="col-6 d-flex align-items-center justify-content-end text-end">-</div>
+          </div>
 
-            <div class="row">
-              <div class="col-7">Miglior gp</div>
-              <div class="col-5 d-flex align-items-center justify-content-end text-end">-</div>
-            </div>
+          <div class="row">
+            <div class="col-7">Miglior gp</div>
+            <div class="col-5 d-flex align-items-center justify-content-end text-end">-</div>
+          </div>
 
-            <div class="row">
-              <div class="col-7">Peggior gp</div>
-              <div class="col-5 d-flex align-items-center justify-content-end text-end">-</div>
-            </div>
+          <div class="row">
+            <div class="col-7">Peggior gp</div>
+            <div class="col-5 d-flex align-items-center justify-content-end text-end">-</div>
+          </div>
         </div>
         
-        <div class="d-lg-none d-flex justify-content-center">
+        <!--<div class="d-lg-none d-flex justify-content-center">
             <hr class=" w-100">
-        </div>
+        </div> -->
         
 
-        <div class="col-12 col-lg-6 driver-image-col p-0">
+        <div class="col-12 d-none d-lg-flex col-lg-4 driver-image-col p-0">
             
         </div>
     </div>

@@ -16,11 +16,7 @@
     background-color: inherit;
     padding: 0;
 }
-  
-.personal-data-col, .championship-data-col {
-    line-height: 27px;
-}
-  
+ 
 @media screen and (max-width: 992px) {
     .livery-image-container {
         max-height: 120px;
@@ -32,6 +28,10 @@
         background-size: cover;
         /*height: 12vh;*/
         width: 100%;
+    }
+
+    .personal-data-col{
+        line-height: 27px;
     }
 }
   
@@ -45,6 +45,11 @@
         background-size: cover;
         /*height: 15vh;
         width: 75%;*/
+    }
+
+    .personal-data-col{
+        line-height: 27px;
+        border-right: 2px solid lightgray;
     }
 }
   
@@ -61,3 +66,8 @@
   
 .td-color { color: red }
 .md-color { color: gold }
+
+.driver-image-col {
+    max-height: 270px;
+    margin: 0 auto;
+}
