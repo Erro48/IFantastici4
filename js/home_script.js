@@ -567,7 +567,9 @@ function recursiveGetDrive(json_elem, drivers_list, scores_list, all_rows, last_
     }
 
     team_obj = sortTeamsByScore(team_obj);
+    setCookie('ordered_teams_chart', team_obj.map(function(e) { return e.team_name}), 1);
     printChart(team_obj, "team");
+
 
     
 
