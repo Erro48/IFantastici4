@@ -11,7 +11,7 @@
       header("Location: ./index.php");
     ?>
     <meta charset="utf-8">
-    <title>Stats</title>
+    <title>Squadra</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- To prevent web caching -->
@@ -34,8 +34,9 @@
   <body class="body-pattern">
     <!-- Navbar -->
     <?php include __DIR__."/lib/navbar.php"; ?>
+    <?php include __DIR__."/lib/loader.php";?>
 
-    <div class="container-md container-fluid">
+    <div class="container-md container-fluid content">
         <div class="container-md container-fluid main-container mb-2">
             <div class="header">
                 <h3>Statistiche</h3>

@@ -379,27 +379,27 @@ function printStableTabPane($label, $active) {
     <div class="row">
         <div class="col-12 col-lg-6 personal-data-col">
             <div class="row">
-              <div class="col-6">Nome</div>
-              <div class="col-6 text-end">'.$label.'</div>
+              <div class="col-4">Scuderia</div>
+              <div class="col-8 text-end">'.$label.'</div>
             </div>
 
             <div class="row">
-              <div class="col-6">Primo pilota</div>
+              <div class="col-6">#1 pilota</div>
               <div class="col-6 text-end">-</div>
             </div>
 
             <div class="row">
-              <div class="col-6">Secondo pilota</div>
+              <div class="col-6">#2 pilota</div>
               <div class="col-6 text-end">-</div>
             </div>
 
             <div class="row">
-              <div class="col-6">Prezzo Reale</div>
+              <div class="col-6">P. reale</div>
               <div class="col-6 text-end">-</div>
             </div>
 
             <div class="row">
-              <div class="col-6">Prezzo Base</div>
+              <div class="col-6">P. base</div>
               <div class="col-6 text-end">-</div>
             </div>
 
@@ -408,47 +408,40 @@ function printStableTabPane($label, $active) {
               <div class="col-6 text-end position-text">-</div>
             </div>
 
-            <div class="row p-3 justify-content-center livery-image-container">
-              <div class="col-12 livery-image-div" style="
-                background-image: url(../Fanta/images/liverys/'.strtolower($label_).'.png);"></div>
-            </div>
+            
         </div>
         
-        <div class="d-lg-none d-flex justify-content-center">
+        <!--<div class="d-lg-none d-flex justify-content-center">
             <hr class=" w-100">
-        </div>
+        </div> -->
         
 
         <div class="col-12 col-lg-6 championship-data-col">
-            <div class="row">
-              <div class="col-6">Punti Totali</div>
-              <div class="col-6 text-end">-</div>
-            </div>
+          <div class="row">
+            <div class="col-6">Totale</div>
+            <div class="col-6 text-end">-</div>
+          </div>
 
-            <div class="row">
-              <div class="col-6">Media per gp</div>
-              <div class="col-6 text-end">-</div>
-            </div>
+          <div class="row">
+            <div class="col-6">Media</div>
+            <div class="col-6 text-end">-</div>
+          </div>
 
-            <div class="row">
-              <div class="col-6">Miglior Risultato</div>
-              <div class="col-6 text-end">-</div>
-            </div>
+          <div class="row">
+            <div class="col-6">Miglior gp</div>
+            <div class="col-6 text-end">-</div>
+          </div>
 
-            <div class="row">
-              <div class="col-6">Peggior Risultato</div>
-              <div class="col-6 text-end">-</div>
-            </div>
+          <div class="row">
+            <div class="col-6">Peggior gp</div>
+            <div class="col-6 text-end">-</div>
+          </div>
+        </div>
+    </div>
 
-            <div class="row">
-              <div class="col-6">Numero volte migliore</div>
-              <div class="col-6 text-end">-</div>
-            </div>
-
-            <div class="row">
-              <div class="col-6">Numero di volte peggiore</div>
-              <div class="col-6 text-end">-</div>
-            </div>
+    <div class="row p-3 justify-content-center livery-image-container">
+      <div class="col-12 livery-image-div">
+        <img src="./images/liverys/'.strtolower($label_).'.png" alt="car pic" width="100%" height="100%">
         </div>
     </div>
   </div>

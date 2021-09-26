@@ -1,6 +1,7 @@
 window.onload = function() {
   loadTeamsMembersData(getCookie("id_squadra"));
   setInfoIcon();
+  setTimeout(removeLoader, 2000);
 }
 
 
@@ -304,8 +305,8 @@ function printPersonalStableData(stable_data, personal_section) {
   let rows = stable_section.getElementsByClassName('row');
   let stable_data_property = Object.getOwnPropertyNames(stable_data);
   let i;
-
-  for(i = 0; i < rows.length - 2; i++) {
+  
+  for(i = 0; i < rows.length - 1; i++) {
     rows[i].childNodes[3].innerHTML = stable_data[stable_data_property[i]];
     if(i == 3 || i == 4) {
       rows[i].childNodes[3].innerHTML += "$";
@@ -358,9 +359,6 @@ function printChampionshipStableData(stable_data) {
   rows[2].getElementsByClassName("text-end")[0].appendChild(getFlagElement(stable_data.best_result.gp.split("-")[0], 'left', true));
   rows[3].getElementsByClassName("text-end")[0].innerHTML = stable_data.worst_result.score + " "; // + stable_data.worst_result.gp.split("-")[0] + ")";
   rows[3].getElementsByClassName("text-end")[0].appendChild(getFlagElement(stable_data.worst_result.gp.split("-")[0], 'left', true));
-  
-  rows[4].getElementsByClassName("text-end")[0].innerHTML = stable_data.all_best;
-  rows[5].getElementsByClassName("text-end")[0].innerHTML = stable_data.all_worst;
 
 }
 
@@ -461,7 +459,6 @@ function loadPersonalData(team_id) {
         // fa la scuderia
         getStableDataPromise(team_id).then(
           function(stable_data) {
-
             printPersonalStableData(stable_data, personal_section);
         
           }

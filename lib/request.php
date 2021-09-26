@@ -204,7 +204,7 @@
     } else {
       $sql = 'SELECT nome_scuderia, nome_breve, S.prezzo_reale, S.prezzo_base, FP.cognome_pilota as "primo_pilota", SP.cognome_pilota as "secondo_pilota"
       FROM tscuderie S, tsquadre Q, tpiloti FP, tpiloti SP 
-      WHERE id_squadra='.$_POST['get_stable_data'].' AND Q.k_2scuderia=id_scuderia AND FP.k_2scuderia=id_scuderia AND SP.k_2scuderia=id_scuderia AND FP.id_pilota!=SP.id_pilota AND FP.id_pilota<SP.id_pilota';
+      WHERE id_squadra='.$_POST['get_stable_data'].' AND Q.k_2scuderia=id_scuderia AND FP.k_scuderia=id_scuderia AND SP.k_scuderia=id_scuderia AND FP.id_pilota!=SP.id_pilota AND FP.id_pilota<SP.id_pilota';
     
     }
       
