@@ -71,3 +71,12 @@
     max-height: 270px;
     margin: 0 auto;
 }
+
+.driver-thumb { transition: transform .5s ease-in; }
+.driver-thumb:hover {
+    transform: translateX(-110px) translateY(55px) scale(3);
+    background: white;
+    border-top-right-radius: 10px;
+    border: 1px solid lightgray;
+    border-top-left-radius: 10px;
+}

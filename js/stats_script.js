@@ -272,10 +272,11 @@ function printPersonalDriversData(drivers_datas, personal_section) {
     let driver = rows[0].getElementsByClassName('img-row')[0].getElementsByClassName('row')[0].getElementsByClassName('col-12')[0].innerHTML;
           
     img.setAttribute('src', './images/drivers/' + driver.toLowerCase() + '.png');
-    img.setAttribute('alt', 'profile pic');
+    img.setAttribute('alt', 'driver thumb');
     img.setAttribute('width', '100%');
     img.setAttribute('height', '100%');
     img.style.borderBottom = '3px solid ' + getLiveryByDriverId(getDriverIndex(driver));
+    img.classList.add('driver-thumb');
 
     img_row.appendChild(img);
 
