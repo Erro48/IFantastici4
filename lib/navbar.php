@@ -20,7 +20,7 @@
           <a class="nav-link active" aria-current="page" href="../Fanta/home.php">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link disabled" aria-current="page" href="../Fanta/stats.php">Squadra</a>
+          <a class="nav-link" aria-current="page" href="../Fanta/stats.php">Squadra</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="../Fanta/drivers.php">Piloti</a>
