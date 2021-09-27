@@ -65,6 +65,19 @@ function getDriverTotalPerEachGp(driver_id, data) {
   return total;
 }
 
+function getDriverPartialPerEachGp(driver_id, data) {
+  let partials = [];
+  let i = 1;
+
+  while(data[i][driver_id] != "") {
+    partials.push(castScore(data[i][driver_id]));
+
+    i++;
+  }
+
+  return partials;
+}
+
 function getStableTotalPerEachGp(stable_id, data) {
   let total = [];
   let i = 1;
@@ -109,7 +122,7 @@ function createTeamGraph(json_elem) {
             })
           }
 
-          var ctx = document.getElementById('team_chart').getContext('2d');
+          var ctx = document.getElementById('teams_chart').getContext('2d');
           buildLineGraph(ctx, getRacedGps(transposed_data, getLastGpIndex(data)), datasets_arr);
 
         }
@@ -155,6 +168,28 @@ function createStablesGraph(json_elem) {
   }
 
   var ctx = document.getElementById('stable-graph').getContext('2d');
+  buildLineGraph(ctx, getRacedGps(transposed_score, getLastGpIndex(score)), datasets);
+
+}
+
+function createPersonalTeamGraph(json_elem) {
+  let score = scoreConverterToArray(getCookie('scores_data'), 31);
+  let transposed_score = transposeArr(score);
+
+  let datasets = [];
+
+  for(let i = 0; i < json_elem.length; i++) {
+    let driver_id = json_elem[i].id_pilota;
+    datasets.push({
+      label: json_elem[i].cognome_pilota,
+      data: getDriverPartialPerEachGp((driver_id), score),
+      borderColor: livery[Math.floor((driver_id-1)/2)],
+      borderWidth: 1,
+      borderDash: i % 2 == 0 ? [0, 0] : [10, 10]
+    })
+  }
+
+  var ctx = document.getElementById('teams-graph').getContext('2d');
   buildLineGraph(ctx, getRacedGps(transposed_score, getLastGpIndex(score)), datasets);
 
 }

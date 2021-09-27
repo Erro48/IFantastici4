@@ -110,7 +110,7 @@
               <h3>Grafico</h3>
             </div>
             <div class="graph-content">
-              <canvas id="team_chart" width="400" height="400"></canvas>
+              <canvas id="teams_chart" width="400" height="400"></canvas>
             <?php
 
               // prendo le squadre con le relative info

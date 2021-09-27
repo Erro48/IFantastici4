@@ -119,6 +119,18 @@ function getTeamNameByUserId($user_id) {
   return $result;
 }
 
+function getTeamNameByTeamId($team_id) {
+  global $db;
+  $sql = 'SELECT nome_squadra FROM tsquadre WHERE id_squadra='.$team_id;
+  $res = $db->query($sql);
+  if($res->num_rows > 0) {
+    $row = $res->fetch_assoc();
+    return $row['nome_squadra'];
+  }
+
+  return 'ERROR';
+}
+
 function getTeamInfoByUserId($user_id) {
   global $db;
   $sql = 'SELECT id_squadra, nome_squadra, nome_utente FROM tsquadre, tutenti WHERE id_utente='.$user_id.' AND id_squadra=k_squadra';
@@ -130,7 +142,7 @@ function getTeamInfoByUserId($user_id) {
 // get by team id
 function getDriversByTeamId($team_id, $active, $champ){
   global $db;
-  $sql = 'SELECT cognome_pilota, nome_pilota, T.id_pilota, prezzo_base FROM tpiloti T, rpossiede P WHERE T.id_pilota=P.id_pilota AND P.id_squadra='.$team_id.' AND P.attivo='.$active.' AND P.campionato_corrente='.$champ.' ORDER BY T.id_pilota';
+  $sql = 'SELECT cognome_pilota, nome_pilota, T.id_pilota as id_pilota, nome_breve as nome_scuderia, T.prezzo_base FROM tpiloti T, rpossiede P, tscuderie S WHERE T.id_pilota=P.id_pilota AND k_scuderia=id_scuderia AND P.id_squadra='.$team_id.' AND P.attivo='.$active.' AND P.campionato_corrente='.$champ.' ORDER BY T.id_pilota';
   $result = $db->query($sql);
 
   return $result;

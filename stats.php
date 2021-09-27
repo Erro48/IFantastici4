@@ -23,12 +23,15 @@
     <link href="./css/custom.css" rel="stylesheet">
     <link href="./css/mycss/style.css" rel="stylesheet">
     <link href="./css/mycss/stats.css" rel="stylesheet">
+    <link href="./css/mycss/graph.css" rel="stylesheet">
   
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="./js/script.js"></script>
     <script src="./js/stats_script.js"></script>
+    <script src="./js/graph_script.js"></script>
 
   </head>
   <body class="body-pattern">
@@ -93,7 +96,9 @@
 
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                   <li class="nav-item my-nav-item" >
-                    <button class="nav-link" id="other-tab">Team</button>
+                    <button class="nav-link active" id="other-tab">
+                      <?php echo getTeamNameByTeamId($_SESSION['id_squadra']); ?>
+                    </button>
                   </li>
                 </ul>
                 <?php
@@ -117,8 +122,39 @@
                   </table>
                 </div>
             </div>
-
         </div>
+
+        <div class="container main-container graph-container">
+            <div class="header">
+              <h3>Grafico</h3>
+            </div>
+            <div class="graph-content">
+              <canvas id="teams-graph" class="graph-canvas" width="400" height="400"></canvas>
+              <?php
+
+                $drivers_res = getDriversByTeamId($_SESSION['id_squadra'], 1, 1);
+                
+                $drivers = [];
+
+                for($i = 0; $i < $drivers_res->num_rows; $i++) {
+                  $row = $drivers_res->fetch_assoc();
+
+
+                  $driver = array(
+                    "id_pilota" => $row['id_pilota'],
+                    "cognome_pilota" => $row['cognome_pilota'],
+                    "nome_pilota" => $row['nome_pilota'],
+                    "nome_scuderia" => $row['nome_scuderia']
+                  );
+
+                  array_push($drivers, $driver);
+                }
+
+                echo '<script>createPersonalTeamGraph('.json_encode($drivers).');</script>'
+
+              ?>
+            </div>
+          </div>
     </div>
     
     <!-- Offcanvas -->
