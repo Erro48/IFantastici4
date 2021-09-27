@@ -33,6 +33,10 @@
     .personal-data-col{
         line-height: 27px;
     }
+
+    .personal-team-data-col{
+        line-height: 27px;
+    }
 }
   
 @media screen and (min-width: 992px) {
@@ -48,6 +52,11 @@
     }
 
     .personal-data-col{
+        line-height: 27px;
+        border-right: 2px solid lightgray;
+    }
+
+    .personal-team-data-col{
         line-height: 27px;
         border-right: 2px solid lightgray;
     }

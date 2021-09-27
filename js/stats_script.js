@@ -438,7 +438,20 @@ function printTeamData(team_data, personal_section) {
   let team_data_property = Object.getOwnPropertyNames(team_data);
 
   for(let i = 0; i < team_data_property.length; i++) {
-    rows[i].getElementsByClassName('text-end')[0].innerHTML = team_data[team_data_property[i]]
+    
+
+    if(team_data_property[i] == 'miglior_gp' || team_data_property[i] == 'peggior_gp') {
+      rows[i].getElementsByClassName('text-end')[0].innerHTML = team_data[team_data_property[i]].punti;
+      rows[i].getElementsByClassName("text-end")[0].appendChild(getFlagElement(team_data[team_data_property[i]].gp, 'left', true));
+    } else {
+      rows[i].getElementsByClassName('text-end')[0].innerHTML = team_data[team_data_property[i]];
+    
+      if(team_data_property[i] == 'posizione') {
+        rows[i].getElementsByClassName('text-end')[0].innerHTML += '°';
+      }
+    }
+
+    //rows[i].childNodes[3].innerHTML = getChartPosition(rows[0].childNodes[3].innerHTML, "stable") + '°';  
   }
     
 }
@@ -496,14 +509,10 @@ function loadChampionshipData(team_id) {
               let drivers_indexes = getDriversIndexes(drivers_list);
               let stable_index = getStableIndex(stable);
     
-    
               // totale
               // pilota |--| scuderia
               let drivers_total = getDriversTotalScore(drivers_list, base_all_rows, last_gp_index);
               let stable_total = getStableTotalScore(stable, base_all_rows, last_gp_index);
-
-              console.log(drivers_total)
-              
     
               // media
               // pilota |--| scuderia
@@ -620,20 +629,49 @@ function loadTeamData(team_id) {
       let last_gp_index = getLastGpIndex(scoreConverterToArray(getCookie('scores_data'), 31));
       average = castScore(team.punteggio) / last_gp_index;
       average = Math.trunc(average);
+
+      getFileContentPromise('teams_score.csv').then(
+        function(teams_content) {
+          let teams_all_rows = teams_content.split(/\r?\n|\r/).map(function(e) { return e.split(',')});
+          let transposed_teams = transposeArr(teams_all_rows);
+          let last_gp_index = getLastGpIndex(scoreConverterToArray(getCookie('scores_data'), 31))
+
+          let max, min, max_index, min_index;
+          max = min = transposed_teams[team.id_squadra][1];
+          max_index = min_index = 0;
+
+          for(let i = 1; i <= last_gp_index; i++) {
+            if(castScore(transposed_teams[team.id_squadra][i]) > max) {
+              max = castScore(transposed_teams[team.id_squadra][i]);
+              max_index = i;
+            }
+
+            if(castScore(transposed_teams[team.id_squadra][i]) < min) {
+              min = castScore(transposed_teams[team.id_squadra][i]);
+              min_index = i;
+            }
+          }
+
+          let best_res = { punti: max, gp: transposed_teams[0][max_index].split('-')[0] };
+          let worst_res = { punti: min, gp: transposed_teams[0][min_index].split('-')[0] };
+          
+          let team_data = {
+            nome_squadra: team.nome_squadra,
+            proprietario: team.proprietario,
+            turbo_driver: drivers[team.turbo_driver-1],
+            posizione: position,
+            totale: team.punteggio.substring(),
+            media: average,
+            miglior_gp: best_res,
+            peggior_gp: worst_res
+          }
+    
+          printTeamData(team_data, personal_section);
+        }
+      );
       
 
-      let team_data = {
-        nome_squadra: team.nome_squadra,
-        proprietario: team.proprietario,
-        turbo_driver: drivers[team.turbo_driver-1],
-        posizione: position,
-        totale: team.punteggio.substring(),
-        media: average,
-        miglior_gp: '',
-        peggio_gp: ''
-      }
-
-      printTeamData(team_data, personal_section);
+      
     }
   )
 }

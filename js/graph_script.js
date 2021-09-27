@@ -85,10 +85,6 @@ function getRacedGps(transposed_data, last_gp_index) {
   return transposed_data.slice(0, last_gp_index);
 }
 
-function transposeArr(arr) {
-  return arr[0].map((_, colIndex) => arr.map(row => row[colIndex]));
-}
-
 // id_squadra, nome_squadra, nome_utente
 function createTeamGraph(json_elem) {
 

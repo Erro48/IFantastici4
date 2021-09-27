@@ -754,6 +754,10 @@ function getLiveryByStableId(stable_id) {
   return livery[stable_id-1];
 }
 
+function transposeArr(arr) {
+  return arr[0].map((_, colIndex) => arr.map(row => row[colIndex]));
+}
+
 
 /* |>--- | TIME FUNCTIONS | --------------------<| */
 
@@ -791,3 +795,4 @@ function removeLoader() {
   $('.loader-container').fadeOut(1000);
   $('.content').fadeIn(1000);
 }
+

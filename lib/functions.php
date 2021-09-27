@@ -470,7 +470,7 @@ function printTeamTabPane($team_id) {
 
           <div class="row">
             <div class="col-6">Posizione</div>
-            <div class="col-6 text-end">-</div>
+            <div class="col-6 d-flex align-items-center justify-content-end text-end position-text">-</div>
           </div>
 
           <div class="row">
