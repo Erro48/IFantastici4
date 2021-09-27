@@ -65,7 +65,7 @@ function getDriverTotalPerEachGp(driver_id, data) {
   return total;
 }
 
-function getDriverPartialPerEachGp(driver_id, data) {
+function getDriverPartialPerEachGpGraph(driver_id, data) {
   let partials = [];
   let i = 1;
 
@@ -182,7 +182,7 @@ function createPersonalTeamGraph(json_elem) {
     let driver_id = json_elem[i].id_pilota;
     datasets.push({
       label: json_elem[i].cognome_pilota,
-      data: getDriverPartialPerEachGp((driver_id), score),
+      data: getDriverPartialPerEachGpGraph((driver_id), score),
       borderColor: livery[Math.floor((driver_id-1)/2)],
       borderWidth: 1,
       borderDash: i % 2 == 0 ? [0, 0] : [10, 10]
