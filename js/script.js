@@ -331,7 +331,9 @@ function getLastGpIndex(csv_data) {
 
 function getGpIndex(gp, csv_data) {
   let i = 1;
-  while(csv_data[i][0].split("-")[0] != gp) { i++; }
+  while(csv_data[i][0].split("-")[0] != gp) {
+    i++;
+  }
 
   return i;
 }
@@ -618,7 +620,10 @@ function oldLoadScore() {
 }
 
 function loadScore(load_score_obj) {
-  let gp_index = getGpIndex(load_score_obj.gp.split('-')[0], scoreConverterToArray(getCookie('scores_data'), 31));
+  console.log(load_score_obj.gp.split('-')[0].replace('_', ' '))
+  console.log(scoreConverterToArray(getCookie('scores_data'), 31))
+
+  let gp_index = getGpIndex(load_score_obj.gp.split('-')[0].replace('_', ' '), scoreConverterToArray(getCookie('scores_data'), 31));
   let score_row = [load_score_obj.gp];
 
   score_row = score_row.concat(load_score_obj.drivers_score);
