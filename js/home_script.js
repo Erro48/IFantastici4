@@ -218,6 +218,7 @@ function getObjectElements(object) {
 ----------------------------------------------------- */
 
 function setDriversCardBackground(card, index) {
+    if (card === undefined || card === null) return;
     let header = card.getElementsByClassName('card-header')[0];
   
     header.style.backgroundColor = livery[parseInt((index-1)/2)];
@@ -227,7 +228,9 @@ function setDriversCardBackground(card, index) {
 }
 
 function setLiveryColors(card, index) {
+  if (card === undefined || card === null) return;
   let body_img = card.getElementsByClassName('body-img')[0];
+  if (body_img === undefined) return;
   
   body_img.style.borderBottom = "3px solid " + livery[parseInt((index-1)/2)];
   if(parseInt((index-1)/2) == 9){
@@ -236,6 +239,7 @@ function setLiveryColors(card, index) {
 }
 
 function setStablesCardBackground(card, index) {
+  if (card === undefined || card === null) return;
   let header = card.getElementsByClassName('card-header')[0];
 
   header.style.backgroundColor = livery[castScore(index-1)];
@@ -329,8 +333,11 @@ function printDriversLastGpScore(drivers_last_score) {
   for(let i = 0; i < 5; i++) {
       if(drivers_last_score == null)
         document.getElementsByClassName('last-score')[i].innerHTML = getLastGpLocation() + ": -";
-      else
-        document.getElementsByClassName('last-score')[i].innerHTML = getLastGpLocation() + ": " + drivers_last_score[i];
+      else {
+        if (document.getElementsByClassName('last-score')[i] !== undefined) {
+          document.getElementsByClassName('last-score')[i].innerHTML = getLastGpLocation() + ": " + drivers_last_score[i];
+        }
+      }
   }
 }
 

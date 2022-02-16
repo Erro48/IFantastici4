@@ -161,7 +161,7 @@ function getLastGpTeamScore(drivers_indexes, stable_index) {
 function getPersonalDriversFromCards() {
   let arr = [], cards = document.getElementsByClassName('card');
   
-  for(let i = 0; i < 5; i++) {
+  for(let i = 0; i < cards.length; i++) {
     arr.push(cards[i].id.split('-')[0]);
   }
 
@@ -244,7 +244,13 @@ function getDriverPartialPerEachGp(driver_index, csv_data, last_gp_index) {
 /* |>--- | STABLES FUNCTIONS | --------------------<| */
 
 function getPersonalStableFromCard() {
-  return document.getElementsByClassName('card')[5].id.split('-')[0]
+  let stableCard = document.getElementsByClassName('card');
+  if (stableCard === undefined) {
+    stableCard = stableCard[5].id.split('-')[0];
+  } else {
+    stableCard = null;
+  }
+  return stableCard
 }
 
 function getPersonalStable() {
