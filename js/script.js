@@ -106,7 +106,7 @@ function getTotalPerEachGP(drivers_indexes, csv_data, last_gp_index) {
 }
 
 function getLastGpLocation() {
-  return getCookie("last_gp").split("-")[0];
+  return "Abu_Dhabi";//getCookie("last_gp").split("-")[0];
 }
 
 function getLastGpDate() {
@@ -199,7 +199,7 @@ function getDriversTotalScore(drivers_list, csv_data, last_gp_index) {
   let drivers_index_list = getDriversIndexes(drivers_list);
 
   for(let j = 0; j < drivers_list.length; j++){
-    for(let i = 1; i <= last_gp_index; i++){
+    for(let i = 1; i <= last_gp_index-1; i++){
       let tmp_val = csv_data[i][drivers_index_list[j]];
       drivers_total[j] += castScore(tmp_val);
     }
@@ -211,9 +211,8 @@ function getDriversTotalScore(drivers_list, csv_data, last_gp_index) {
 function getDriversLastScore(drivers_list, csv_data, last_gp_index) {
   let drivers_last = [0, 0, 0, 0, 0];
   let drivers_index_list = getDriversIndexes(drivers_list);
-
   for(let j = 0; j < drivers_list.length; j++){
-    drivers_last[j] = csv_data[last_gp_index][drivers_index_list[j]];
+    drivers_last[j] = csv_data[last_gp_index-1][drivers_index_list[j]];
   }
 
   return drivers_last;
@@ -234,8 +233,7 @@ function getDriversPartialPerEachGp(drivers_indexes, csv_data, last_gp_index) {
 
 function getDriverPartialPerEachGp(driver_index, csv_data, last_gp_index) {
   let partial_result = [];
-
-  for(let i = 1; i <= last_gp_index; i++) {
+  for(let i = 1; i < last_gp_index; i++) {
     partial_result.push(castScore(csv_data[i][driver_index]));
   }
 
@@ -268,7 +266,7 @@ function getStableTotalScore(stable, csv_data, last_gp_index) {
   let stable_total = 0;
   let stable_index = getStableIndex(stable);
 
-  for(let i = 1; i <= last_gp_index; i++){
+  for(let i = 1; i <= last_gp_index-1; i++){
     let tmp_val = csv_data[i][20 + stable_index];
     stable_total += castScore(tmp_val);
   }
@@ -287,13 +285,13 @@ function getStablesTotalScore(stable_list, csv_data, last_gp_index) {
 
 function getStableLastScore(stable, csv_data, last_gp_index) {
   let stable_index = getStableIndex(stable);
-  return csv_data[last_gp_index][20 + stable_index];
+  return csv_data[last_gp_index-1][20 + stable_index];
 }
 
 function getStablePartialPerEachGp(stable_index, csv_data, last_gp_index) {
   let partial_result = [];
 
-  for(let i = 1; i <= last_gp_index; i++) {
+  for(let i = 1; i < last_gp_index; i++) {
     partial_result.push(castScore(csv_data[i][20 + stable_index]));
   }
 
@@ -322,17 +320,18 @@ function getLastGpIndexPromise() {
 }
 
 function getLastGpIndex(csv_data) {
+  return 23;
   let i = 0;
   //let data = scoreConverterToArray(csv_data);
-  while(csv_data[i][1] != "") { i++; }
-
+  while(csv_data[i] != undefined && csv_data[i][1] != "") { i++; }
   return (i-1);
 }
 
 function getGpIndex(gp, csv_data) {
   let i = 1;
-  while(csv_data[i][0].split("-")[0] != gp) {
+  while((tmp = csv_data[i][0].split("-")[0]) != gp) {
     i++;
+
   }
 
   return i;

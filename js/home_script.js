@@ -23,10 +23,10 @@ window.onload = function(){
           for(let i = 0; i < drivers.length; i++) {
             arr.push(drivers[i]);
           }
-
+          
           arr.push(getPersonalStableFromCard());
           setCookie("team", arr, 1);
-
+          
           readCSVFile(mod_scores_data);
           setCardsBackground();
           checkMegaDriver();
@@ -326,12 +326,12 @@ function printTeamLastGpScore(drivers_last_score, stable_last_score) {
  }
 
 function printDriversLastGpScore(drivers_last_score) {
-for(let i = 0; i < 5; i++) {
-    if(drivers_last_score == null)
-    document.getElementsByClassName('last-score')[i].innerHTML = getLastGpLocation() + ": -";
-    else
-    document.getElementsByClassName('last-score')[i].innerHTML = getLastGpLocation() + ": " + drivers_last_score[i];
-}
+  for(let i = 0; i < 5; i++) {
+      if(drivers_last_score == null)
+        document.getElementsByClassName('last-score')[i].innerHTML = getLastGpLocation() + ": -";
+      else
+        document.getElementsByClassName('last-score')[i].innerHTML = getLastGpLocation() + ": " + drivers_last_score[i];
+  }
 }
 
 function printStableLastGpScore(stable_last_score) {
@@ -552,8 +552,8 @@ function recursiveGetDrive(json_elem, drivers_list, scores_list, all_rows, last_
       
       driver_partial = formatDriversPartial(driver_partial);
       driver_partial = extractLastGpScore(driver_partial);
-
-      let team_partial = sumArray(driver_partial) + stable_partial[last_gp_index-1];
+      
+      let team_partial = sumArray(driver_partial) + stable_partial[last_gp_index-2];
 
 
       team_obj.push(
@@ -615,7 +615,7 @@ function formatDriversPartial(drivers_partial) {
 function createTeamChart(json_elem) {
   let mod_score = scoreConverterToArray(getCookie('mod_scores_data'), 31);
   let last_gp_index = getLastGpIndex(mod_score);
-
+  
   let drivers_list = [];
   let scores_list = [];
   recursiveGetDrive(json_elem, drivers_list, scores_list, mod_score, last_gp_index, 0);
