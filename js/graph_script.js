@@ -95,7 +95,7 @@ function getStableTotalPerEachGp(stable_id, data) {
 
 function getRacedGps(transposed_data, last_gp_index) {
   transposed_data = transposed_data[0].slice(1).map(function(e) { return e.split("-")[0]; });
-  return transposed_data.slice(0, last_gp_index);
+  return transposed_data.slice(0, last_gp_index == 0 ? 1 : last_gp_index);
 }
 
 // id_squadra, nome_squadra, nome_utente

@@ -14,7 +14,7 @@ window.onload = function(){
         function(mod_scores_data) {
           setCookie('mod_scores_data', mod_scores_data, 1);
           
-          createTeamScoreFile(mod_scores_data);
+          //createTeamScoreFile(mod_scores_data);
 
           // prendo i piloti e la scuderia della squadra, e li metto nei cookie
           let drivers = getPersonalDriversFromCards();
@@ -31,7 +31,7 @@ window.onload = function(){
           setCardsBackground();
           checkMegaDriver();
           
-          createTrackSlot(getLastGpLocation());
+          createTrackSlot(getLastGpLocation() === "" ? getNextGpLocation() : getLastGpLocation());
           setTimeout(removeLoader, 2000);
           
         }
@@ -331,9 +331,11 @@ function printTeamLastGpScore(drivers_last_score, stable_last_score) {
 
 function printDriversLastGpScore(drivers_last_score) {
   for(let i = 0; i < 5; i++) {
-      if(drivers_last_score == null)
-        document.getElementsByClassName('last-score')[i].innerHTML = getLastGpLocation() + ": -";
-      else {
+      if(drivers_last_score == null) {
+        if (document.getElementsByClassName('last-score')[i] !== undefined) {
+          document.getElementsByClassName('last-score')[i].innerHTML = getLastGpLocation() + ": -";
+        }
+      } else {
         if (document.getElementsByClassName('last-score')[i] !== undefined) {
           document.getElementsByClassName('last-score')[i].innerHTML = getLastGpLocation() + ": " + drivers_last_score[i];
         }
@@ -429,20 +431,19 @@ function readCSVFile(csv_data) {
       gps.push(csv_data[i][0]);
     }
 
-
-
     setCookie("gps", gps, 1);
 
+
     if(last_gp_index == 0){
+
+      setCookie("next_gp", getGpByIndex(last_gp_index+1, csv_data), 1);
+      setCookie("last_gp", getGpByIndex(last_gp_index, csv_data), 1);
+      
       // tabella vuota
       printTeamTotalScore(null);
       printTeamLastGpScore(null);
       printDriversLastGpScore(null);
       printStableLastGpScore(null);
-
-      setCookie("next_gp", getGpByIndex(last_gp_index, csv_data), 1);
-      setCookie("last_gp", null, 1);
-
       return;
     }
     
@@ -760,8 +761,8 @@ function isRowOfPersonalDriverOrStable(row) {
 
 function createTrackSlot(gp_location) {
   let score = scoreConverterToArray(getCookie('scores_data'), 31);
-  let last_gp_date = getGpDate(gp_location);
-  let last_gp_index = getGpIndex(gp_location, score);
+  /*let last_gp_date = getGpDate(gp_location);
+  let last_gp_index = getGpIndex(gp_location, score);*/
 
   let track_slot = document.getElementById('track-slot');
   let header = createTrackHeader(score, gp_location);
@@ -1007,6 +1008,7 @@ function getStablesBestAndWorst(score, gp_index) {
 }
 
 function getTeamsBestAndWorst(score, gp_index) {
+  const offset = 16
   let teams_rank = document.createElement('div');
   let best_team_div = document.createElement('div');
   let worst_team_div = document.createElement('div');
@@ -1046,21 +1048,23 @@ function getTeamsBestAndWorst(score, gp_index) {
       let last_score = teams_score[gp_index].slice(1).map(function(e) { return castScore(e)});
       let best_team = calculateRank(last_score, 1);
       let worst_team = calculateRank(last_score, -1);
-
+      
+      best_team = best_team[0]
+      worst_team = worst_team[0]
       
       getTeamsInfoPromise().then(
         function(teams_obj) {
           teams_obj = JSON.parse(teams_obj).map(function(e) { return JSON.parse(e)});
-          
+
           if(gp_index <= getLastGpIndex(score)) {
             best_team_div.appendChild(createRankElement(
-              teams_obj[teams_score[0][best_team] - 1].nome_squadra,
+              teams_obj[teams_score[0][best_team] - 1 - offset].nome_squadra,
               teams_score[gp_index][best_team],
               false
               ));
   
             worst_team_div.appendChild(createRankElement(
-              teams_obj[teams_score[0][worst_team] - 1].nome_squadra,
+              teams_obj[teams_score[0][worst_team] - 1 - offset].nome_squadra,
               teams_score[gp_index][worst_team],
               false
               ));
@@ -1178,13 +1182,11 @@ function createHeaderArrows(side, gp, score) {
   dropdown_btn.innerHTML = side == 0 ? '<<' : '>>';
 
   dropdown_ul.classList.add('dropdown-menu');
-
-
+  
   let all_gps = getCookie('gps').split(',').map(function(e) { return e.split('-')[0]; });
   let gp_index = getGpIndex(gp, score);
   let selected_gps = side == 0 ? all_gps.slice(0, gp_index - 2) : all_gps.slice(gp_index + 1) ;
 
-  console.log(selected_gps);
   for(let i = 0; i < selected_gps.length; i++) {
     let dropdown_li = document.createElement('li');
     dropdown_li.setAttribute('onclick', 'loadTrackLayoutSlot(\'' + selected_gps[i] + '\')');

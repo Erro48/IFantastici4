@@ -187,6 +187,15 @@
 
                   $count++;
                 }
+              } else {
+                for ($i = 0; $i < 5; $i++) {
+                  if($count == 3){
+                    echo '</div>
+                          <div class="row row-cols-1 row-cols-md-3 g-4 text-dark cards-deck d-flex justify-content-center">';
+                  }
+                  printEmptyDriverCards();
+                  $count++;
+                }
               }
               ?>
             </div>
@@ -199,6 +208,8 @@
               if($stable->num_rows > 0){
                 $row = $stable->fetch_assoc();
                 printStableCard($row);
+              } else {
+                printEmptyStableCard();
               }
               ?>
             </div>

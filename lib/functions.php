@@ -51,7 +51,7 @@ function getUsersId() {
 
 function getDrivers() {
   global $db;
-  $sql = 'SELECT id_pilota, cognome_pilota, nome_pilota, nome_scuderia FROM tpiloti, tscuderie WHERE k_scuderia=id_scuderia ORDER BY id_pilota';
+  $sql = 'SELECT id_pilota, cognome_pilota, nome_pilota, nome_scuderia FROM tpiloti P, tscuderie WHERE k_scuderia=id_scuderia AND P.campionato_corrente=1 ORDER BY id_pilota';
   $result = $db->query($sql);
 
   return $result;
@@ -59,7 +59,7 @@ function getDrivers() {
 
 function getStables() {
   global $db;
-  $sql = 'SELECT * FROM tscuderie ORDER BY id_scuderia';
+  $sql = 'SELECT * FROM tscuderie WHERE campionato_corrente=1 ORDER BY id_scuderia';
   $result = $db->query($sql);
 
   return $result;
@@ -68,9 +68,9 @@ function getStables() {
 function getDriversInfo($stable_short_name) {
   global $db;
   if($stable_short_name == true)
-    $sql = 'SELECT id_pilota, cognome_pilota, nome_pilota, nome_breve as "scuderia" FROM tpiloti, tscuderie WHERE k_scuderia=id_scuderia ORDER BY id_pilota';
+    $sql = 'SELECT id_pilota, cognome_pilota, nome_pilota, nome_breve as "scuderia" FROM tpiloti P, tscuderie WHERE P.campionato_corrente=1 AND k_scuderia=id_scuderia ORDER BY id_pilota';
   else
-    $sql = 'SELECT id_pilota, cognome_pilota, nome_pilota, nome_scuderia as "scuderia" FROM tpiloti, tscuderie WHERE k_scuderia=id_scuderia ORDER BY id_pilota';
+    $sql = 'SELECT id_pilota, cognome_pilota, nome_pilota, nome_scuderia as "scuderia" FROM tpiloti P, tscuderie WHERE P.campionato_corrente=1 AND k_scuderia=id_scuderia ORDER BY id_pilota';
 
   $result = $db->query($sql);
   $drivers = [];
@@ -92,7 +92,7 @@ function getDriversInfo($stable_short_name) {
 
 function getStablesInfo() {
   global $db;
-  $sql = 'SELECT id_scuderia, nome_scuderia, nome_breve FROM tscuderie ORDER BY id_scuderia';
+  $sql = 'SELECT id_scuderia, nome_scuderia, nome_breve FROM tscuderie WHERE campionato_corrente=1 ORDER BY id_scuderia';
   $result = $db->query($sql);
   $stables = [];
 
@@ -142,7 +142,7 @@ function getTeamInfoByUserId($user_id) {
 // get by team id
 function getDriversByTeamId($team_id, $active, $champ){
   global $db;
-  $sql = 'SELECT cognome_pilota, nome_pilota, T.id_pilota as id_pilota, nome_breve as nome_scuderia, T.prezzo_base FROM tpiloti T, rpossiede P, tscuderie S WHERE T.id_pilota=P.id_pilota AND k_scuderia=id_scuderia AND P.id_squadra='.$team_id.' AND P.attivo='.$active.' AND P.campionato_corrente='.$champ.' ORDER BY T.id_pilota';
+  $sql = 'SELECT cognome_pilota, nome_pilota, T.id_pilota as id_pilota, nome_breve as nome_scuderia, T.prezzo_base FROM tpiloti T, rpossiede P, tscuderie S, tsquadre Q WHERE T.id_pilota=P.id_pilota AND T.k_scuderia=S.id_scuderia AND P.id_squadra='.$team_id.' AND P.attivo='.$active.' AND P.campionato_corrente='.$champ.' AND P.id_squadra=Q.id_squadra AND Q.campionato_corrente=1 ORDER BY T.id_pilota';
   $result = $db->query($sql);
 
   return $result;
@@ -197,6 +197,53 @@ function getStableByTeamIdToString($team_id) {
 /* ----------------------------------------
   PRINT
 ------------------------------------------ */
+
+function printEmptyDriverCards() {
+  echo '<div class="col card-col skeleton">
+          <div id="empty-card" class="card text-white bg-dark xs-3">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-9">
+                  <div class="card-title skeleton skeleton-text">Surname</div>
+                  <div class="card-subtitle skeleton skeleton-text">Name</div>
+                </div>
+
+                <div class="col-1 col-sm-3 d-none d-sm-block header-img" >
+                </div>
+
+              </div>
+              
+              
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-7 col-sm-12">
+                  <p class="card-text">
+                    <div class="row md-td-container">
+                      <div class="col-xs-6 md-btn">MD</div>
+                      <div class="col-xs-6 td-btn">TD</div>
+
+                    </div>
+                  </p>
+
+                <div class="row card-info">
+                  <div id="empty-price" class="col-12">Prezzo: 00.00$</div>
+                  <div class="col-12 last-score">Punti: 0</div>
+
+                </div>
+
+                </div> <!-- chiusura col -->
+
+                <div class="col-5 d-sm-none body-img" >
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>';
+}
 
 function printDriverCard($driver, $td_md_info) {
   echo '<div class="col card-col skeleton">
@@ -255,6 +302,26 @@ function printDriverCard($driver, $td_md_info) {
             </div>
           </div>
         </div>';
+}
+
+function printEmptyStableCard() {
+  echo '<div class="col">
+         <div id="stable-card" class="card text-white bg-dark sm-3" >
+           <div class="card-header">
+              <div class="col-9">
+                <div class="card-title">Team</div>
+              </div>
+
+             <div class="col-1 col-sm-3 d-none d-sm-block header-img-stable">
+             </div>
+           </div>
+
+           <div class="card-body">
+             <p id="stable-price" class="card-text">Prezzo: 00.00$</p>
+             <p id="stable-last-score" class="card-text">Punti: 0</p>
+           </div>
+         </div>
+       </div>';
 }
 
 function printStableCard($stable) {

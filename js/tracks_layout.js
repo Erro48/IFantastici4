@@ -316,8 +316,6 @@ function getTrackLayoutImage(gp_location) {
     track.setAttribute('height', '100%');
     track.alt = 'track layout';
 
-    console.log(gp_location)
-
     track_container.appendChild(track);
     return track_container;
 }

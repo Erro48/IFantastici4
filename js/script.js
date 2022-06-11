@@ -1,10 +1,13 @@
 let livery = ['#00d2be' /*Mercedes*/, '#0600ef' /*Red Bull*/, '#ff8700' /*McLaren*/, '#dc0000' /*Ferrari*/, '#006F62' /*Aston Martin*/,
               '#0090FF' /*Alpine*/, '#2B4562' /*Alpha Tauri*/, '#900000' /*Alfa Romeo*/, '#005AFF' /*Williams*/, '#FFFFFF' /*Haas*/];
 
-let drivers = ['Hamilton', 'Bottas', 'Verstappen', 'Perez', 'Ricciardo', 'Norris', 'Leclerc', 'Sainz', 'Vettel', 'Stroll',
-                'Alonso', 'Ocon', 'Gasly', 'Tsunoda', 'Raikkonen', 'Giovinazzi', 'Russel', 'Latifi', 'Schumacher', 'Mazepin']
+//let drivers = ['Hamilton', 'Bottas', 'Verstappen', 'Perez', 'Ricciardo', 'Norris', 'Leclerc', 'Sainz', 'Vettel', 'Stroll',
+//                'Alonso', 'Ocon', 'Gasly', 'Tsunoda', 'Raikkonen', 'Giovinazzi', 'Russel', 'Latifi', 'Schumacher', 'Mazepin']
 
 let stables = ['Mercedes', 'Red Bull', 'McLaren', 'Ferrari', 'Aston Martin', 'Alpine', 'AlphaTauri', 'Alfa Romeo', 'Williams', 'Haas'];
+
+let drivers = ['Hamilton', 'Russel', 'Verstappen', 'Perez', 'Norris', 'Ricciardo', 'Leclerc', 'Sainz', 'Vettel', 'Stroll',
+                'Alonso', 'Ocon', 'Gasly', 'Tsunoda', 'Bottas', 'Zhou', 'Albon', 'Latifi', 'Schumacher', 'Magnussen']
 
 /* TODO:
 - settare next_gp in base alla data
@@ -106,7 +109,7 @@ function getTotalPerEachGP(drivers_indexes, csv_data, last_gp_index) {
 }
 
 function getLastGpLocation() {
-  return "Abu_Dhabi";//getCookie("last_gp").split("-")[0];
+  return getCookie("last_gp").split("-")[0];
 }
 
 function getLastGpDate() {
@@ -326,7 +329,6 @@ function getLastGpIndexPromise() {
 }
 
 function getLastGpIndex(csv_data) {
-  return 23;
   let i = 0;
   //let data = scoreConverterToArray(csv_data);
   while(csv_data[i] != undefined && csv_data[i][1] != "") { i++; }
@@ -625,8 +627,8 @@ function oldLoadScore() {
 }
 
 function loadScore(load_score_obj) {
-  console.log(load_score_obj.gp.split('-')[0].replace('_', ' '))
-  console.log(scoreConverterToArray(getCookie('scores_data'), 31))
+  //console.log(load_score_obj.gp.split('-')[0].replace('_', ' '))
+  //console.log(scoreConverterToArray(getCookie('scores_data'), 31))
 
   let gp_index = getGpIndex(load_score_obj.gp.split('-')[0].replace('_', ' '), scoreConverterToArray(getCookie('scores_data'), 31));
   let score_row = [load_score_obj.gp];
@@ -641,14 +643,14 @@ function loadScore(load_score_obj) {
     function(teams_info) {
       if(score_row == null) return;
 
-      let teams = JSON.parse(teams_info);  // squadre
+      let teams = JSON.parse(teams_info).map(team => JSON.parse(team));  // squadre
       let teams_info_obj = [];
       let new_score = new Array(31);
 
       new_score[0] = score_row[0];
 
       for(let i = 0; i < teams.length; i++) {
-        let team = JSON.parse(teams[i]);
+        let team = teams[i];
         teams_info_obj.push(team);
 
       // inserisce i piloti
@@ -673,7 +675,6 @@ function loadScore(load_score_obj) {
       // scrivo i punteggi in mod_score.csv
       writeRowIn("mod_score.csv", new_score, gp_index);
 
-      console.log(teams_info_obj)
 
       let teams_score = [new_score[0]];
       for(let i = 0; i < teams_info_obj.length; i++) {

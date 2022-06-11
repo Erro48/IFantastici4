@@ -104,7 +104,7 @@
         $obj->punteggio_precedente = $row['punteggio_precedente_squadra'];
 
 // select turbo driver
-        $sql_3 = 'SELECT id_pilota as "id_turbo_driver" FROM tsquadre S, tscuderie, tpiloti WHERE id_scuderia=S.k_scuderia AND turbo_driver=cognome_pilota AND id_squadra='.$row['id_squadra'];
+        $sql_3 = 'SELECT MAX(id_pilota) as "id_turbo_driver" FROM tsquadre S, tscuderie, tpiloti WHERE id_scuderia=S.k_scuderia AND turbo_driver=cognome_pilota AND id_squadra='.$row['id_squadra'];
         $result_3 = $db->query($sql_3);
 
         if($result_3->num_rows > 0){
@@ -112,7 +112,7 @@
           $obj->turbo_driver = $row_3['id_turbo_driver'];
         }
 
-        $sql_4 = 'SELECT P.id_pilota as "id_mega_driver", cognome_pilota, nome_squadra FROM tsquadre S, tpiloti P WHERE mega_driver=cognome_pilota AND id_squadra='.$row['id_squadra'];
+        $sql_4 = 'SELECT MAX(P.id_pilota) as "id_mega_driver", cognome_pilota, nome_squadra FROM tsquadre S, tpiloti P WHERE mega_driver=cognome_pilota AND id_squadra='.$row['id_squadra'];
         $result_4 = $db->query($sql_4);
 
         if($result_4->num_rows > 0){
@@ -267,6 +267,10 @@
 
       $interval = $origin->diff($target);
       $diff_days = intval($interval->format('%R%a'));
+
+      echo $origin->format('Y-m-d');
+      echo $target->format('Y-m-d');
+      echo "diff_days: ".$diff_days;
 
       // positivo se last_score_update è dopo last_gp_date
 
