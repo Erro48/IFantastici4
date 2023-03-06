@@ -6,8 +6,8 @@ let livery = ['#00d2be' /*Mercedes*/, '#0600ef' /*Red Bull*/, '#ff8700' /*McLare
 
 let stables = ['Mercedes', 'Red Bull', 'McLaren', 'Ferrari', 'Aston Martin', 'Alpine', 'AlphaTauri', 'Alfa Romeo', 'Williams', 'Haas'];
 
-let drivers = ['Hamilton', 'Russel', 'Verstappen', 'Perez', 'Norris', 'Ricciardo', 'Leclerc', 'Sainz', 'Vettel', 'Stroll',
-                'Alonso', 'Ocon', 'Gasly', 'Tsunoda', 'Bottas', 'Zhou', 'Albon', 'Latifi', 'Schumacher', 'Magnussen']
+let drivers = ['Hamilton', 'Russel', 'Verstappen', 'Perez', 'Norris', 'Piastri', 'Leclerc', 'Sainz', 'Alonso', 'Stroll',
+                'Gasly', 'Ocon', 'DeVries', 'Tsunoda', 'Bottas', 'Zhou', 'Albon', 'Sargeant', 'Hulkenberg', 'Magnussen']
 
 /* TODO:
 - settare next_gp in base alla data
@@ -339,7 +339,6 @@ function getGpIndex(gp, csv_data) {
   let i = 1;
   while((tmp = csv_data[i][0].split("-")[0]) != gp) {
     i++;
-
   }
 
   return i;
