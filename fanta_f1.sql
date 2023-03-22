@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Lug 16, 2021 alle 10:35
--- Versione del server: 10.4.8-MariaDB
--- Versione PHP: 7.3.11
+-- Creato il: Mar 22, 2023 alle 22:02
+-- Versione del server: 10.4.20-MariaDB
+-- Versione PHP: 8.0.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -41,26 +40,26 @@ CREATE TABLE `rpossiede` (
 --
 
 INSERT INTO `rpossiede` (`id_possessione`, `id_squadra`, `id_pilota`, `attivo`, `campionato_corrente`) VALUES
-(1, 2, 3, b'1', b'1'),
-(2, 2, 14, b'1', b'1'),
-(3, 2, 4, b'1', b'1'),
-(4, 2, 5, b'1', b'1'),
-(5, 2, 11, b'1', b'1'),
-(6, 1, 7, b'1', b'1'),
-(7, 1, 13, b'1', b'1'),
-(8, 1, 6, b'1', b'1'),
-(9, 1, 16, b'1', b'1'),
-(10, 1, 17, b'1', b'1'),
-(11, 3, 1, b'1', b'1'),
-(12, 3, 10, b'1', b'1'),
-(13, 3, 18, b'1', b'1'),
-(14, 3, 12, b'1', b'1'),
-(15, 3, 20, b'1', b'1'),
-(16, 4, 2, b'1', b'1'),
-(17, 4, 8, b'1', b'1'),
-(18, 4, 9, b'1', b'1'),
-(19, 4, 15, b'1', b'1'),
-(20, 4, 19, b'1', b'1');
+(83, 1, 3, b'1', b'1'),
+(84, 1, 7, b'1', b'1'),
+(85, 1, 9, b'1', b'1'),
+(86, 1, 19, b'1', b'1'),
+(87, 1, 14, b'1', b'1'),
+(88, 2, 13, b'1', b'1'),
+(89, 2, 2, b'1', b'1'),
+(90, 2, 12, b'1', b'1'),
+(91, 2, 16, b'1', b'1'),
+(92, 2, 20, b'1', b'1'),
+(93, 3, 1, b'1', b'1'),
+(94, 3, 4, b'1', b'1'),
+(95, 3, 5, b'1', b'1'),
+(96, 3, 17, b'1', b'1'),
+(97, 3, 18, b'1', b'1'),
+(98, 4, 8, b'1', b'1'),
+(99, 4, 6, b'1', b'1'),
+(100, 4, 10, b'1', b'1'),
+(101, 4, 15, b'1', b'1'),
+(102, 4, 11, b'1', b'1');
 
 -- --------------------------------------------------------
 
@@ -74,34 +73,35 @@ CREATE TABLE `tpiloti` (
   `cognome_pilota` varchar(15) NOT NULL,
   `prezzo_base` float(5,2) NOT NULL,
   `prezzo_reale` float(5,2) NOT NULL,
-  `k_scuderia` int(11) NOT NULL
+  `k_scuderia` int(11) NOT NULL,
+  `campionato_corrente` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `tpiloti`
 --
 
-INSERT INTO `tpiloti` (`id_pilota`, `nome_pilota`, `cognome_pilota`, `prezzo_base`, `prezzo_reale`, `k_scuderia`) VALUES
-(1, 'Lewis', 'Hamilton', 33.50, 52.00, 1),
-(2, 'Valtteri', 'Bottas', 23.60, 23.60, 1),
-(3, 'Max', 'Verstappen', 24.80, 35.00, 2),
-(4, 'Sergio', 'Perez', 18.40, 36.00, 2),
-(5, 'Daniel', 'Ricciardo', 17.30, 31.00, 3),
-(6, 'Lando', 'Norris', 13.10, 17.00, 3),
-(7, 'Charles', 'Leclerc', 16.80, 26.00, 4),
-(8, 'Carlos', 'Sainz', 14.40, 16.00, 4),
-(9, 'Sebastian', 'Vettel', 16.20, 32.00, 5),
-(10, 'Lance', 'Stroll', 13.90, 13.90, 5),
-(11, 'Fernando', 'Alonso', 15.60, 18.00, 6),
-(12, 'Esteban', 'Ocon', 10.10, 10.10, 6),
-(13, 'Pierre', 'Gasly', 11.70, 21.00, 7),
-(14, 'Yuki', 'Tsunoda', 8.80, 10.50, 7),
-(15, 'Kimi', 'Raikkonen', 9.60, 18.00, 8),
-(16, 'Antonio', 'Giovinazzi', 7.90, 7.90, 8),
-(17, 'George', 'Russel', 6.20, 7.00, 9),
-(18, 'Nicholas', 'Latifi', 6.50, 6.50, 9),
-(19, 'Mick', 'Schumacher', 5.80, 7.00, 10),
-(20, 'Nikita', 'Mazepin', 5.50, 5.50, 10);
+INSERT INTO `tpiloti` (`id_pilota`, `nome_pilota`, `cognome_pilota`, `prezzo_base`, `prezzo_reale`, `k_scuderia`, `campionato_corrente`) VALUES
+(1, 'Lewis', 'Hamilton', 33.50, 52.00, 1, 0),
+(2, 'George', 'Russel', 23.60, 23.60, 1, 0),
+(3, 'Max', 'Verstappen', 24.80, 35.00, 2, 0),
+(4, 'Sergio', 'Perez', 18.40, 36.00, 2, 0),
+(5, 'Oscar', 'Piastri', 17.30, 31.00, 3, 0),
+(6, 'Lando', 'Norris', 13.10, 17.00, 3, 0),
+(7, 'Charles', 'Leclerc', 16.80, 26.00, 4, 0),
+(8, 'Carlos', 'Sainz', 14.40, 16.00, 4, 0),
+(9, 'Fernando', 'Alonso', 16.20, 32.00, 5, 0),
+(10, 'Lance', 'Stroll', 13.90, 13.90, 5, 0),
+(11, 'Pierre', 'Gasly', 15.60, 18.00, 6, 0),
+(12, 'Esteban', 'Ocon', 10.10, 10.10, 6, 0),
+(13, 'Nick', 'DeVries', 11.70, 21.00, 7, 0),
+(14, 'Yuki', 'Tsunoda', 8.80, 10.50, 7, 0),
+(15, 'Valterri', 'Bottas', 9.60, 18.00, 8, 0),
+(16, 'Guanyu', 'Zhou', 7.90, 7.90, 8, 0),
+(17, 'Alexander', 'Albon', 6.20, 7.00, 9, 0),
+(18, 'Logan', 'Sargeant', 6.50, 6.50, 9, 0),
+(19, 'Kevin', 'Magnussen', 5.80, 7.00, 10, 0),
+(20, 'Nico', 'Hulkenberg', 5.50, 5.50, 10, 0);
 
 -- --------------------------------------------------------
 
@@ -114,24 +114,25 @@ CREATE TABLE `tscuderie` (
   `nome_scuderia` varchar(50) NOT NULL,
   `nome_breve` varchar(20) NOT NULL,
   `prezzo_base` float(5,2) NOT NULL,
-  `prezzo_reale` float(5,2) NOT NULL
+  `prezzo_reale` float(5,2) NOT NULL,
+  `campionato_corrente` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `tscuderie`
 --
 
-INSERT INTO `tscuderie` (`id_scuderia`, `nome_scuderia`, `nome_breve`, `prezzo_base`, `prezzo_reale`) VALUES
-(1, 'Mercedes AMG Petronas', 'Mercedes', 38.00, 38.00),
-(2, 'Red Bull Racing', 'Red Bull', 25.90, 32.00),
-(3, 'McLaren F1 Team', 'McLaren', 18.90, 28.00),
-(4, 'Scuderia Ferrari', 'Ferrari', 18.10, 0.00),
-(5, 'Aston Martin F1 Team', 'Aston Martin', 17.60, 17.60),
-(6, 'Alpine F1 Team', 'Alpine', 15.40, 0.00),
-(7, 'Scuderia AlphaTauri', 'AlphaTauri', 12.70, 0.00),
-(8, 'Alfa Romeo Racing ORLEN', 'Alfa Romeo', 8.90, 0.00),
-(9, 'Williams Racing', 'Williams', 6.30, 0.00),
-(10, 'Uralkali Haas F1 Team', 'Haas', 6.10, 0.00);
+INSERT INTO `tscuderie` (`id_scuderia`, `nome_scuderia`, `nome_breve`, `prezzo_base`, `prezzo_reale`, `campionato_corrente`) VALUES
+(1, 'Mercedes AMG Petronas F1 Team', 'Mercedes', 38.00, 38.00, 0),
+(2, 'Oracle Red Bull Racing', 'Red Bull', 25.90, 32.00, 0),
+(3, 'McLaren F1 Team', 'McLaren', 18.90, 28.00, 0),
+(4, 'Scuderia Ferrari', 'Ferrari', 18.10, 18.10, 0),
+(5, 'Aston Martin Aramco Cognizant F1 Team', 'Aston Martin', 17.60, 17.60, 0),
+(6, 'BWT Alpine F1 Team', 'Alpine', 15.40, 0.00, 0),
+(7, 'Scuderia AlphaTauri', 'AlphaTauri', 12.70, 0.00, 0),
+(8, 'Alfa Romeo F1 Team Stake', 'Alfa Romeo', 8.90, 0.00, 0),
+(9, 'Williams Racing', 'Williams', 6.30, 0.00, 0),
+(10, 'MoneyGram Haas F1 Team', 'Haas', 6.10, 0.00, 0);
 
 -- --------------------------------------------------------
 
@@ -142,21 +143,26 @@ INSERT INTO `tscuderie` (`id_scuderia`, `nome_scuderia`, `nome_breve`, `prezzo_b
 CREATE TABLE `tsquadre` (
   `id_squadra` int(11) NOT NULL,
   `nome_squadra` varchar(50) NOT NULL,
+  `punteggio_squadra` decimal(6,2) NOT NULL DEFAULT 0.00,
+  `punteggio_precedente_squadra` decimal(6,2) NOT NULL DEFAULT 0.00,
+  `ultimo_aggiornamento_punteggio_squadra` date NOT NULL DEFAULT '1000-01-01',
   `turbo_driver` varchar(15) NOT NULL,
   `mega_driver` varchar(15) DEFAULT NULL,
   `mega_driver_flag` tinyint(1) NOT NULL,
-  `k_scuderia` int(11) NOT NULL
+  `k_scuderia` int(11) NOT NULL,
+  `k_2scuderia` int(11) DEFAULT NULL,
+  `campionato_corrente` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `tsquadre`
 --
 
-INSERT INTO `tsquadre` (`id_squadra`, `nome_squadra`, `turbo_driver`, `mega_driver`, `mega_driver_flag`, `k_scuderia`) VALUES
-(1, 'Daniele TEAM', 'Norris', NULL, 1, 1),
-(2, 'Racing Primate', 'Perez', NULL, 1, 5),
-(3, 'Jacopo TEAM', 'Ocon', NULL, 0, 2),
-(4, 'ST97', 'Sainz', NULL, 1, 3);
+INSERT INTO `tsquadre` (`id_squadra`, `nome_squadra`, `punteggio_squadra`, `punteggio_precedente_squadra`, `ultimo_aggiornamento_punteggio_squadra`, `turbo_driver`, `mega_driver`, `mega_driver_flag`, `k_scuderia`, `k_2scuderia`, `campionato_corrente`) VALUES
+(1, 'Daniele TEAM', '170.00', '0.00', '2023-03-05', 'Alonso', NULL, 0, 5, NULL, 1),
+(2, 'Racing Primate', '82.00', '0.00', '2023-03-05', 'Ocon', NULL, 0, 2, NULL, 1),
+(3, 'Jacopo TEAM', '29.00', '0.00', '2023-03-05', 'Piastri', NULL, 0, 4, NULL, 1),
+(4, 'ST97', '129.00', '0.00', '2023-03-05', 'Stroll', NULL, 0, 1, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -178,7 +184,7 @@ CREATE TABLE `tutenti` (
 INSERT INTO `tutenti` (`id_utente`, `nome_utente`, `password_utente`, `k_squadra`) VALUES
 (2, 'Enrico', '$2y$10$dimepRex9Kyfogn6OlQ9Yu.OP/u.nBaGlZXZD.QLy7y4AZOwp7HL2', 2),
 (3, 'Daniele', '$2y$10$zPQhY0V3sxeogAiY7UuGW.ucLeMZkEVRf/dOA1Bh0cbT8EILVMRV.', 1),
-(4, 'Jacopo', '$2y$10$uup4x2oBNu1r4ErX/r/v2u14hsbPTWNtIVjpW65duFNwYqonvFfna', 3),
+(4, 'Jacopo', '$2y$10$dimepRex9Kyfogn6OlQ9Yu.OP/u.nBaGlZXZD.QLy7y4AZOwp7HL2', 3),
 (5, 'Sara', '$2y$10$OuKZLTceMHib1GdAjiAxNuLMHmG6xMr2Gx/O9PFhEtBXRs89Lpk0m', 4);
 
 --
@@ -204,15 +210,14 @@ ALTER TABLE `tpiloti`
 -- Indici per le tabelle `tscuderie`
 --
 ALTER TABLE `tscuderie`
-  ADD PRIMARY KEY (`id_scuderia`),
-  ADD UNIQUE KEY `nome_scuderia` (`nome_scuderia`);
+  ADD PRIMARY KEY (`id_scuderia`);
 
 --
 -- Indici per le tabelle `tsquadre`
 --
 ALTER TABLE `tsquadre`
   ADD PRIMARY KEY (`id_squadra`),
-  ADD UNIQUE KEY `nome_squadra` (`nome_squadra`),
+  ADD UNIQUE KEY `k_2scuderia` (`k_2scuderia`),
   ADD KEY `k_scuderia` (`k_scuderia`);
 
 --
@@ -231,25 +236,25 @@ ALTER TABLE `tutenti`
 -- AUTO_INCREMENT per la tabella `rpossiede`
 --
 ALTER TABLE `rpossiede`
-  MODIFY `id_possessione` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id_possessione` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 
 --
 -- AUTO_INCREMENT per la tabella `tpiloti`
 --
 ALTER TABLE `tpiloti`
-  MODIFY `id_pilota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id_pilota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT per la tabella `tscuderie`
 --
 ALTER TABLE `tscuderie`
-  MODIFY `id_scuderia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_scuderia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT per la tabella `tsquadre`
 --
 ALTER TABLE `tsquadre`
-  MODIFY `id_squadra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_squadra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT per la tabella `tutenti`
@@ -278,7 +283,8 @@ ALTER TABLE `tpiloti`
 -- Limiti per la tabella `tsquadre`
 --
 ALTER TABLE `tsquadre`
-  ADD CONSTRAINT `tsquadre_ibfk_1` FOREIGN KEY (`k_scuderia`) REFERENCES `tscuderie` (`id_scuderia`);
+  ADD CONSTRAINT `tsquadre_ibfk_1` FOREIGN KEY (`k_scuderia`) REFERENCES `tscuderie` (`id_scuderia`),
+  ADD CONSTRAINT `tsquadre_ibfk_2` FOREIGN KEY (`k_2scuderia`) REFERENCES `tscuderie` (`id_scuderia`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limiti per la tabella `tutenti`
